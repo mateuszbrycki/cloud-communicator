@@ -94,7 +94,7 @@
     </bean>
 
     <bean id="clients" class="org.pac4j.core.client.Clients">
-        <constructor-arg name="callbackUrl" value="https://localhost:8443/spring-webmvc-pac4j-demo/callback" />
+        <constructor-arg name="callbackUrl" value="https://localhost:8443/cloud-communicator/callback" />
         <constructor-arg name="clients">
             <list>
                 <ref bean="oidClient" />
