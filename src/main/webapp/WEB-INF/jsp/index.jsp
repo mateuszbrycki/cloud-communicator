@@ -15,7 +15,7 @@
 <a href="dba/index.html">Protected url by DirectBasicAuthClient (POST the <em>Authorization</em> header with value: <em>Basic amxlbGV1OmpsZWxldQ==</em>) then by ParameterClient (with request parameter: token=<em>jwt_generated_token</em>): /dba/index.html</a><br />
 <a href="rest-jwt/index.html">Protected url by ParameterClient (with JwtAuthenticator): /rest-jwt/index.html?token=<em>jwt_generated_token</em></a><br />
 <br />
-<a href="logout?url=https://localhost:8443/cas/logout">logout</a>
+<a href="logout?url=https://localhost:8443/cas/logout?service=https://localhost:8443/cloud-communicator">logout</a>
 <br /><br />
 profile : ${profile}
 <br /><br />
