@@ -1,37 +1,64 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.pac4j.demo</groupId>
-    <artifactId>spring-webmvc-pac4j-demo</artifactId>
+    <artifactId>cloud-communicator</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>spring-webmvc-pac4j demo</name>
+    <name>cloud-communicator</name>
 
     <repositories>
-        <repository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+                <repository>
+                    <id>sonatype-nexus-snapshots</id>
+                    <name>Sonatype Nexus Snapshots</name>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+        </repositories>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.2.6.RELEASE</version>
+    </parent>
 
     <properties>
+        <java.version>1.7</java.version>
+        <spring-webmvc-pac4j.version>1.0.0</spring-webmvc-pac4j.version>
         <pac4j.version>1.8.1-SNAPSHOT</pac4j.version>
-        <spring-webmvc-pac4j.version>1.0.1-SNAPSHOT</spring-webmvc-pac4j.version>
+        <tomcat.version>7.0.56</tomcat.version>
+
+        <javax-servlet-sp-api.version>3.1.0</javax-servlet-sp-api.version>
+        <javax-servlet-jsp-api.version>2.2.1</javax-servlet-jsp-api.version>
+        <javax-servlet-jstl.version>1.2</javax-servlet-jstl.version>
+
+        <javax-inject.version>1</javax-inject.version>
+
+        <tomcat7-maven-plugin.version>2.2</tomcat7-maven-plugin.version>
+
+        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
     </properties>
 
     <dependencies>
+        <!-- Spring Boot -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
-            <scope>provided</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j</artifactId>
+        </dependency>
+
+        <!-- Pac4J -->
         <dependency>
             <groupId>org.pac4j</groupId>
             <artifactId>spring-webmvc-pac4j</artifactId>
@@ -39,32 +66,7 @@
         </dependency>
         <dependency>
             <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-oauth</artifactId>
-            <version>${pac4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-openid</artifactId>
-            <version>${pac4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-cas</artifactId>
-            <version>${pac4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-saml</artifactId>
-            <version>${pac4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-gae</artifactId>
-            <version>${pac4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-oidc</artifactId>
+            <artifactId>pac4j-core</artifactId>
             <version>${pac4j.version}</version>
         </dependency>
         <dependency>
@@ -74,80 +76,57 @@
         </dependency>
         <dependency>
             <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-ldap</artifactId>
+            <artifactId>pac4j-cas</artifactId>
             <version>${pac4j.version}</version>
         </dependency>
+
+        <!-- Javax Servlet -->
         <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-jwt</artifactId>
-            <version>${pac4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-sql</artifactId>
-            <version>${pac4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-mongo</artifactId>
-            <version>${pac4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.pac4j</groupId>
-            <artifactId>pac4j-stormpath</artifactId>
-            <version>${pac4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.1.3</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax-servlet-sp-api.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>javax.servlet.jsp-api</artifactId>
-            <version>2.2.1</version>
+            <version>${javax-servlet-jsp-api.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
-            <version>1.2</version>
+            <version>${javax-servlet-jstl.version}</version>
         </dependency>
+
+        <!-- Javax Inject -->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${javax-inject.version}</version>
+        </dependency>
+
     </dependencies>
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.10</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <wtpversion>2.0</wtpversion>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
-            <!--<plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>9.3.5.v20151012</version>
-                <configuration>
-                    <webApp>
-                        <contextPath>/</contextPath>
-                    </webApp>
-                </configuration>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
+                <version>${tomcat7-maven-plugin.version}</version>
                 <configuration>
                     <hostName>localhost</hostName>
                     <aliases>
