@@ -7,6 +7,7 @@ import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
 import org.pac4j.demo.spring.authorizer.CustomAuthorizer;
 
+import org.pac4j.demo.spring.authorizer.RolesAuthorizationGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,11 +34,13 @@ public class Pac4jConfig {
         casClient.setCasLoginUrl(environment.getProperty("cas.login.page"));
         casClient.setCasProtocol(CasClient.CasProtocol.CAS20);
         casClient.setLogoutHandler(new CasSingleSignOutHandler());
+        casClient.addAuthorizationGenerator(new RolesAuthorizationGenerator());
 
         final Clients clients = new Clients(environment.getProperty("pac4j.application.callback"), casClient);
 
         final Config config = new Config(clients);
         config.addAuthorizer("admin", new RequireAnyRoleAuthorizer("ROLE_ADMIN"));
+        config.addAuthorizer("user", new RequireAnyRoleAuthorizer("ROLE_USER", "ROLE_ADMIN"));
         config.addAuthorizer("custom", new CustomAuthorizer());
 
         return config;

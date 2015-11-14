@@ -1,6 +1,7 @@
 package org.pac4j.demo.spring;
 
 import org.pac4j.cas.client.CasClient;
+import org.pac4j.cas.credentials.CasCredentials;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
@@ -40,7 +41,6 @@ public class Application {
 
 
         final CasClient casClient = (CasClient) clients.findClient(context, "CasClient");
-
         //logs debug message
         if(logger.isDebugEnabled()){
             logger.debug(casClient.getCasLoginUrl());
@@ -76,6 +76,11 @@ public class Application {
     @RequestMapping("/protected/index.html")
     public String protect(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
         return protectedIndex(request, response, map);
+    }
+
+    @RequestMapping("/admin/index.html")
+    public String protectAdmin(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        return "admin";
     }
 
 
