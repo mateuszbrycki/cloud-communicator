@@ -1,4 +1,4 @@
-package org.pac4j.demo.spring;
+package org.pac4j.demo.spring.controller;
 
 import org.springframework.boot.autoconfigure.web.BasicErrorController;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
@@ -10,9 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class ErrorController extends BasicErrorController {
+public class MyErrorController extends BasicErrorController {
 
-    public ErrorController() {
+    public MyErrorController() {
         super(new DefaultErrorAttributes());
     }
 

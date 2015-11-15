@@ -10,7 +10,6 @@ import java.util.Arrays;
  */
 public class RolesAuthorizationGenerator <U extends CommonProfile> implements AuthorizationGenerator<U> {
 
-    // default name of the CAS attribute for remember me authentication (CAS 3.4.10+)
     private String rolesAttributeName = "roles";
 
     @Override
