@@ -8,9 +8,6 @@
 	</sec:authorize>
 
 	<sec:authorize access="isAnonymous()">
-		<div class="col-sm-5 col-md-6" style="top: 25%">
-			<jsp:include page="../user/form/login.jsp" />
-		</div>
 		<div class="col-sm-5 col-sm-offset-2 col-md-6 col-md-offset-0" style="top: 25%">
 			<jsp:include page="../user/form/register.jsp" />
 		</div>

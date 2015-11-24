@@ -4,7 +4,6 @@ package com.cloud.communicator.module.user.service;
 import com.cloud.communicator.filter.FilterManager;
 import com.cloud.communicator.module.user.User;
 import com.cloud.communicator.module.user.dao.UserDao;
-import com.cloud.communicator.module.user.filter.UserMailFilter;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -33,15 +32,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean checkIfUserWithMailExists(String mail) {
-        FilterManager filterManager = new FilterManager();
-        filterManager.addFilter(new UserMailFilter(mail));
-        List<User> users = userDao.find(filterManager);
+        return userDao.checkIfUserWithMailExists(mail);
+    }
 
-        if(users.size() == 0) {
-            return false;
-        }
-
-        return true;
+    @Override
+    public Boolean checkIfUserWithUsernameExists(String username) {
+       return userDao.checkIfUserWithUsernameExists(username);
     }
 }
 

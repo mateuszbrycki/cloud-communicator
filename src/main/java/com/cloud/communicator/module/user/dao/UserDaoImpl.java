@@ -32,16 +32,29 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
         query.executeUpdate();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List<User> find(FilterManager filterManager) {
-        Criteria criteria = getSession().createCriteria(User.class);
-        criteria = HibernatePrepareFilters.prepareCriteria(criteria, filterManager);
+    public Boolean checkIfUserWithMailExists(String mail) {
+        Query query = getSession().createSQLQuery("SELECT count(*) FROM user u WHERE u.mail = :mail");
+        query.setString("mail", mail);
 
-        List<User> users = criteria.list();
+        //TODO mbrycki pokara mnie za to
+        if(((Number)query.uniqueResult()).longValue() != 0) {
+            return true;
+        }
 
-        return users;
+        return false;
     }
 
+    @Override
+    public Boolean checkIfUserWithUsernameExists(String username) {
+        Query query = getSession().createSQLQuery("SELECT count(*) FROM user u WHERE u.username = :username");
+        query.setString("username", username);
 
+        //TODO mbrycki pokara mnie za to
+        if(((Number)query.uniqueResult()).longValue() != 0) {
+            return true;
+        }
+
+        return false;
+    }
 }
