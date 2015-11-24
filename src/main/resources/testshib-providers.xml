@@ -1,7 +1,8 @@
 <EntitiesDescriptor Name="urn:mace:shibboleth:testshib:two"
-    xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
-    xmlns:mdalg="urn:oasis:names:tc:SAML:metadata:algsupport" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
-    xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                    xmlns:mdalg="urn:oasis:names:tc:SAML:metadata:algsupport"
+                    xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui"
+                    xmlns:shibmd="urn:mace:shibboleth:metadata:1.0">
 
     <!-- This file contains the metadata for the testing IdP and SP
      that are operated by TestShib as a service for testing new
