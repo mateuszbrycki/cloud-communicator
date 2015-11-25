@@ -36,8 +36,6 @@
     </div>
 
     <input type="submit" id="register-user" name="submit" value="<spring:message code="user.register" />" class="btn btn-primary"/>
-
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
   </form>
 
 
