@@ -24,7 +24,6 @@
     <script src="<c:url value="/js/lib/jquery_validate_1_12_0_min.js" />" type="text/javascript"></script>
 
     <script src="<c:url value="/js/common.js" />" type="text/javascript"></script>
-    <script src="<c:url value="/js/validators.js" />" type="text/javascript"></script>
     <script>
         var ctx = "${pageContext.request.contextPath}";
         var languageCookieName = "org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE";

@@ -4,7 +4,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@page session="true"%>
 
-
   <form id='user-register-form' action="${pageContext.request.contextPath}<%=UserUrls.USER_REGISTER_FORM%>" method='POST' class="form-horizontal">
 
     <div class="form-group">
@@ -31,7 +30,7 @@
     <div class="form-group">
       <label class="control-label col-sm-3" for="userPasswordRepeat"><spring:message code="user.repeatPassword" />:</label>
       <div class="col-sm-5">
-        <input type="password" name="password_repeat" class="form-control"/>
+        <input type="password" name="passwordRepeat" class="form-control"/>
       </div>
     </div>
 

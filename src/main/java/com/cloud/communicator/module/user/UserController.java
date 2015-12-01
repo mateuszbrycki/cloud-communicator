@@ -6,17 +6,15 @@ import com.cloud.communicator.module.user.service.UserService;
 import com.cloud.communicator.util.UserUtils;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.WebContext;
-import org.pac4j.core.profile.ProfileManager;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Locale;
 import org.apache.log4j.Logger;
 
@@ -55,24 +53,23 @@ public class UserController {
         return this.viewPath + "register";
     }
 
-    @RequestMapping(value = UserUrls.USER_REGISTER, method = RequestMethod.POST)
-    public String registerPage(@RequestParam("username") String username,
-                               @RequestParam("mail") String mail,
-                               @RequestParam("password") String password,
-                               @RequestParam("password_repeat") String passwordRepeat,
+    @RequestMapping(value = UserUrls.USER_REGISTER, method = RequestMethod.POST, headers = "content-type=application/x-www-form-urlencoded")
+    public String registerPage(@ModelAttribute @Valid UserDTO userDTO,
                                ModelMap model, Locale locale) {
 
-        Boolean equals = password.equals(passwordRepeat);
-        Boolean userMailExists = userService.checkIfUserWithMailExists(mail);
-        Boolean usernameExist = userService.checkIfUserWithUsernameExists(username);
+        Boolean passwordsAreEqual = userDTO.getPassword().equals(userDTO.getPasswordRepeat());
+        Boolean userMailExists = userService.checkIfUserWithMailExists(userDTO.getMail());
+        Boolean usernameExist = userService.checkIfUserWithUsernameExists(userDTO.getUsername());
 
         String[] args = {};
 
-        if(!userMailExists && !usernameExist && equals) {
+        logger.debug(userDTO);
+
+        if(!userMailExists && !usernameExist && passwordsAreEqual) {
             User user = new User();
-            user.setUsername(username);
-            user.setMail(mail);
-            user.setPassword(password);
+            user.setUsername(userDTO.getUsername());
+            user.setMail(userDTO.getMail());
+            user.setPassword(userDTO.getPassword());
             user.setIsEnabled(User.DEFAULT_IS_ENABLED);
             user.setIsPublic(User.DEFAULT_IS_PUBLIC);
             user.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
@@ -82,7 +79,6 @@ public class UserController {
             model.addAttribute("success", messageSource.getMessage("user.message.success.register", args, locale));
 
         } else {
-
             if (userMailExists) {
                 model.addAttribute("error", messageSource.getMessage("user.message.error.mail", args, locale));
             } else if (usernameExist) {
@@ -90,7 +86,6 @@ public class UserController {
             }  else {
                 model.addAttribute("error",  messageSource.getMessage("user.message.error.passwords", args, locale));
             }
-
         }
 
         return this.viewPath + "register";
