@@ -16,8 +16,9 @@ public interface UserDao {
 
     void deleteUserById(Integer id);
 
-    List<User> find(FilterManager filterManager);
+    Boolean checkIfUserWithMailExists(String mail);
 
+    Boolean checkIfUserWithUsernameExists(String username);
 
 }
 

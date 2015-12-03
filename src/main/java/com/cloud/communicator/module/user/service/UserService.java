@@ -14,4 +14,6 @@ public interface UserService {
     void deleteUserById(Integer id);
 
     Boolean checkIfUserWithMailExists(String mail);
+
+    Boolean checkIfUserWithUsernameExists(String username);
 }

@@ -1,4 +1,4 @@
-package com.cloud.communicator.controller;
+package com.cloud.communicator.module.base;
 
 import org.springframework.boot.autoconfigure.web.BasicErrorController;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
@@ -10,9 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class MyErrorController extends BasicErrorController {
+public class ErrorController extends BasicErrorController {
 
-    public MyErrorController() {
+    public ErrorController() {
         super(new DefaultErrorAttributes());
     }
 

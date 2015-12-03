@@ -17,7 +17,7 @@ public class SecurityConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new RequiresAuthenticationInterceptor(config, "CasClient", "user")).addPathPatterns("/cas/*");
+        registry.addInterceptor(new RequiresAuthenticationInterceptor(config, "CasClient", "user")).addPathPatterns("/cas/*", "/app/*");
         registry.addInterceptor(new RequiresAuthenticationInterceptor(config, "CasClient", "admin")).addPathPatterns("/admin/*");
     }
 }

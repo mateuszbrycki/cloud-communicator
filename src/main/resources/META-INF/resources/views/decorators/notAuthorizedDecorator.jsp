@@ -15,7 +15,5 @@
 
     <sitemesh:write property='body'/>
 
-    <jsp:include page="../include/navbar.jsp" />
-
 </div>
 <jsp:include page="../include/footer.jsp" />
