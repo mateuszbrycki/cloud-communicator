@@ -9,15 +9,16 @@ import javax.validation.constraints.NotNull;
  * Created by Mateusz Brycki on 12/05/2015.
  */
 @Entity
-@Table(name="user")
+@Table(name="user_account")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_id")
     private int id;
 
     @NotNull
     @OneToOne
-    @JoinColumn(name="fk_user_role")
+    @JoinColumn(name="fk_role_id")
     private UserRole role;
 
     @NotNull
@@ -33,31 +34,18 @@ public class User {
     private String password;
 
     @NotNull
-    @Column(name="is_public")
-    private boolean isPublic;
+    @Column(name="is_active")
+    private boolean isActive;
 
-    @NotNull
-    @Column(name="is_enabled")
-    private boolean isEnabled;
-
-    public static Boolean DEFAULT_IS_PUBLIC = true;
-    public static Boolean DEFAULT_IS_ENABLED = true;
+    public static Boolean DEFAULT_IS_ACTIVE = true;
     public static String DEFAULT_ROLE = "ROLE_USER";
 
-    public boolean isEnabled() {
-        return isEnabled;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setIsEnabled(boolean isEnabled) {
-        this.isEnabled = isEnabled;
-    }
-
-    public boolean isPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     public String getPassword() {

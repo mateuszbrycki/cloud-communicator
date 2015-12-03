@@ -21,7 +21,7 @@ public class UserRoleDaoImpl extends AbstractDao implements UserRoleDao {
 
     @Override
     public UserRole findById(Integer id) {
-        Query query = getSession().createSQLQuery("select * from user_role where id = :id");
+        Query query = getSession().createSQLQuery("select * from user_role where role_id = :id");
         query.setString("id", id.toString());
 
         return this.mapUserRoleObject(query.list());
@@ -37,7 +37,7 @@ public class UserRoleDaoImpl extends AbstractDao implements UserRoleDao {
 
     @Override
     public Set<UserRole> findByUserId(Integer id) {
-        Query query = getSession().createSQLQuery("select * from user_role where id = :id");
+        Query query = getSession().createSQLQuery("select * from user_role where role_id = :id");
         query.setString("id", id.toString());
 
         return new HashSet<UserRole>();

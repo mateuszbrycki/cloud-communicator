@@ -70,8 +70,7 @@ public class UserController {
             user.setUsername(userDTO.getUsername());
             user.setMail(userDTO.getMail());
             user.setPassword(userDTO.getPassword());
-            user.setIsEnabled(User.DEFAULT_IS_ENABLED);
-            user.setIsPublic(User.DEFAULT_IS_PUBLIC);
+            user.setIsActive(User.DEFAULT_IS_ACTIVE);
             user.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
 
             userService.saveUser(user);

@@ -27,14 +27,14 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
 
     @Override
     public void deleteUserById(Integer id) {
-        Query query = getSession().createSQLQuery("DELETE u.* FROM user u WHERE u.id = :id");
+        Query query = getSession().createSQLQuery("DELETE u.* FROM user_account u WHERE u.user_id = :id");
         query.setString("id", id.toString());
         query.executeUpdate();
     }
 
     @Override
     public Boolean checkIfUserWithMailExists(String mail) {
-        Query query = getSession().createSQLQuery("SELECT count(*) FROM user u WHERE u.mail = :mail");
+        Query query = getSession().createSQLQuery("SELECT count(*) FROM user_account u WHERE u.mail = :mail");
         query.setString("mail", mail);
 
         //TODO mbrycki pokara mnie za to
@@ -47,7 +47,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
 
     @Override
     public Boolean checkIfUserWithUsernameExists(String username) {
-        Query query = getSession().createSQLQuery("SELECT count(*) FROM user u WHERE u.username = :username");
+        Query query = getSession().createSQLQuery("SELECT count(*) FROM user_account u WHERE u.username = :username");
         query.setString("username", username);
 
         //TODO mbrycki pokara mnie za to
