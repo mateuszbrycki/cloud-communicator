@@ -44,9 +44,7 @@ public class UserController {
     @RequestMapping(value = UserUrls.USER_REGISTER, method = RequestMethod.GET)
     public String registerFormPage(HttpServletRequest request, HttpServletResponse response) {
 
-        final WebContext context = new J2EContext(request, response);
-
-        if(UserUtils.isAutheniticated(context)) {
+        if(UserUtils.isAutheniticated(request, response)) {
             return "redirect:" + BaseUrls.APPLICATION;
         }
 

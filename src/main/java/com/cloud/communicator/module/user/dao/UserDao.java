@@ -20,5 +20,7 @@ public interface UserDao {
 
     Boolean checkIfUserWithUsernameExists(String username);
 
+    User findUserById(Integer userId);
+
 }
 

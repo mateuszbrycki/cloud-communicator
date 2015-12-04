@@ -2,6 +2,7 @@ package com.cloud.communicator.module.user.dao;
 
 
 import com.cloud.communicator.filter.hibernate.HibernatePrepareFilters;
+import com.cloud.communicator.module.userrole.service.UserRoleService;
 import org.hibernate.Criteria;
 import com.cloud.communicator.AbstractDao;
 import com.cloud.communicator.filter.FilterManager;
@@ -9,6 +10,7 @@ import com.cloud.communicator.module.user.User;
 import org.springframework.stereotype.Repository;
 import org.hibernate.Query;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -16,6 +18,9 @@ import java.util.List;
  */
 @Repository("userDao")
 public class UserDaoImpl extends AbstractDao implements UserDao {
+
+    @Inject
+    private UserRoleService userRoleService;
 
     @Override
     public void saveUser(User user) {
@@ -57,4 +62,25 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
 
         return false;
     }
+
+    @Override
+    public User findUserById(Integer userId) {
+        Query query = getSession().createSQLQuery("SELECT * FROM user_account u WHERE u.user_id = :id");
+        query.setString("id", userId.toString());
+
+        return this.mapUserObject((Object[])query.uniqueResult());
+
+    }
+
+    private User mapUserObject(Object[] userObject) {
+
+        User user = new User();
+        user.setId((Integer)userObject[0]);
+        user.setUsername((String) userObject[1]);
+        user.setRole(this.userRoleService.findById((Integer) userObject[2]));
+        user.setMail((String)userObject[3]);
+        user.setIsActive((Boolean)userObject[5]);
+        return user;
+    }
+
 }

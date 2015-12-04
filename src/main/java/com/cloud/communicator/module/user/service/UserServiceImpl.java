@@ -39,5 +39,10 @@ public class UserServiceImpl implements UserService {
     public Boolean checkIfUserWithUsernameExists(String username) {
        return userDao.checkIfUserWithUsernameExists(username);
     }
+
+    @Override
+    public User findUserById(Integer userId) {
+        return userDao.findUserById(userId);
+    }
 }
 

@@ -22,5 +22,8 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public UserRole findByName(String role) { return userRoleDao.findByName(role); }
 
+    @Override
+    public UserRole findById(Integer id) { return userRoleDao.findById(id); }
+
 }
 

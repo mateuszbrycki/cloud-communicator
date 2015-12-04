@@ -21,9 +21,8 @@ public class BaseController {
 
     @RequestMapping("/")
     public String root(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) throws RequiresHttpAction {
-        final WebContext context = new J2EContext(request, response);
 
-        if(UserUtils.isAutheniticated(context)) {
+        if(UserUtils.isAutheniticated(request, response)) {
             return "redirect:" + BaseUrls.APPLICATION;
         }
 
