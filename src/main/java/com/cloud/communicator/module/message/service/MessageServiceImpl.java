@@ -2,7 +2,6 @@ package com.cloud.communicator.module.message.service;
 
 import com.cloud.communicator.module.message.Message;
 import com.cloud.communicator.module.message.dao.MessageDao;
-import org.hibernate.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

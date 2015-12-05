@@ -1,17 +1,13 @@
 package com.cloud.communicator.module.user.dao;
 
 
-import com.cloud.communicator.filter.hibernate.HibernatePrepareFilters;
-import com.cloud.communicator.module.userrole.service.UserRoleService;
-import org.hibernate.Criteria;
 import com.cloud.communicator.AbstractDao;
-import com.cloud.communicator.filter.FilterManager;
 import com.cloud.communicator.module.user.User;
-import org.springframework.stereotype.Repository;
+import com.cloud.communicator.module.userrole.service.UserRoleService;
 import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * Created by Mateusz Brycki on 02/05/2015.

@@ -3,11 +3,8 @@ package com.cloud.communicator.module.message.dao;
 import com.cloud.communicator.AbstractDao;
 import com.cloud.communicator.module.message.Message;
 import com.cloud.communicator.module.user.service.UserService;
-import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
-import sun.misc.resources.Messages;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -27,7 +24,7 @@ public class MessageDaoImpl extends AbstractDao implements MessageDao {
 
     @Override
     public void deleteMessage(Integer id) {
-        Query query = getSession().createSQLQuery("DELETE m.* FROM mesage m WHERE m.message_id = :id");
+        Query query = getSession().createSQLQuery("DELETE m.* FROM message m WHERE m.message_id = :id");
         query.setString("id", id.toString());
         query.executeUpdate();
     }
