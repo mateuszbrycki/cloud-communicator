@@ -1,3 +1,9 @@
 .container {
     height: 95%;
 }
+
+#inbox-table .btn {
+    display: block;
+    float: left;
+    margin: 0px 2px;
+}

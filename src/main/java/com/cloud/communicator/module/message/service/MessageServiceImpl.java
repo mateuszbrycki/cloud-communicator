@@ -32,4 +32,9 @@ public class MessageServiceImpl implements MessageService {
     public List<Message> findUserInboxMessages(Integer userId) {
         return messageDao.findUserInboxMessages(userId);
     }
+
+    @Override
+    public Message findMessageById(Integer messageId) {
+        return this.messageDao.findMessageById(messageId);
+    }
 }

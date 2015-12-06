@@ -1,6 +1,119 @@
-/**
- * Created by Mateusz Brycki on 24/11/2015.
- */
+
+function renderInboxList(data) {
+    if (!$('#inbox-list').length) {
+        return;
+    }
+
+    var oldPanelGroup = document.getElementById('inbox-list');
+    var newPanelGroup = document.createElement('div');
+    newPanelGroup.id = 'inbox-list';
+    newPanelGroup.className = 'table-responsive';
+
+    var tableElement = document.createElement('table');
+    var tableBody = document.createElement("tbody");
+
+    if(data.length == 0) {
+        var alertDiv = getEmptyAlert(translations['message-inbox-empty']);
+        newPanelGroup.appendChild(alertDiv);
+    } else {
+
+        tableElement.className = "table table-hover table-striped";
+        tableElement.id = "inbox-table";
+
+        var tableHeader = document.createElement('tr');
+
+        var firstColumn = document.createElement('th');
+
+        var secondColumn = document.createElement('th');
+        secondColumn.appendChild(document.createTextNode(translations['author']));
+
+        var thirdColumn = document.createElement('th');
+        thirdColumn.appendChild(document.createTextNode(translations['topic']));
+
+        var fourthColumn = document.createElement('th');
+        fourthColumn.appendChild(document.createTextNode(translations['text']));
+
+        var fifthColumn = document.createElement('th');
+
+        tableHeader.appendChild(firstColumn);
+        tableHeader.appendChild(secondColumn);
+        tableHeader.appendChild(thirdColumn);
+        tableHeader.appendChild(fourthColumn);
+        tableHeader.appendChild(fifthColumn);
+
+        tableBody.appendChild(tableHeader);
+    }
+
+
+    console.log(data);
+    for(var i = 0; i < data.length; i++) {
+        var tableRow = document.createElement('tr');
+
+        if(data[i].isRead != true) {
+            tableRow.setAttribute("style", "font-weight: bold");
+        }
+
+        var firstColumn = document.createElement('td');
+        firstColumn.appendChild(document.createTextNode(data[i].sendDate));
+
+        var secondColumn = document.createElement('td');
+        secondColumn.appendChild(document.createTextNode(data[i].author.username));
+
+        var thirdColumn = document.createElement('td');
+        thirdColumn.appendChild(document.createTextNode(data[i].topic));
+
+        var fourthColumn = document.createElement('td');
+        fourthColumn.appendChild(document.createTextNode(data[i].text));
+
+        var fifthColumn = document.createElement('td');
+
+        var changeStatusButton = document.createElement('button');
+        changeStatusButton.className = 'message-change-status btn btn-primary';
+        changeStatusButton.type = 'button';
+        changeStatusButton.setAttribute('href', ctx + url['api_message_change_status'] + '/' + data[i].id);
+
+        var changeStatusGlyphicon = document.createElement('span');
+        changeStatusGlyphicon.className = 'glyphicon glyphicon-ok';
+
+        var deleteButton = document.createElement('button');
+        deleteButton.className = 'message-delete btn btn-primary';
+        deleteButton.type = 'button';
+        deleteButton.setAttribute('href', ctx + url['api_message_delete'] + '/' + data[i].id);
+
+        var deleteGlyphicon = document.createElement('span');
+        deleteGlyphicon.className = 'glyphicon glyphicon-remove';
+
+        changeStatusButton.appendChild(changeStatusGlyphicon);
+        deleteButton.appendChild(deleteGlyphicon);
+
+        fifthColumn.appendChild(changeStatusButton);
+        fifthColumn.appendChild(deleteButton);
+
+        tableRow.appendChild(firstColumn);
+        tableRow.appendChild(secondColumn);
+        tableRow.appendChild(thirdColumn);
+        tableRow.appendChild(fourthColumn);
+        tableRow.appendChild(fifthColumn);
+
+        tableBody.appendChild(tableRow);
+    }
+
+    tableElement.appendChild(tableBody);
+    newPanelGroup.appendChild(tableElement);
+
+    oldPanelGroup.parentElement.replaceChild(newPanelGroup, oldPanelGroup);
+}
+
+function getEmptyAlert(element) {
+    var alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-info';
+    alertDiv.setAttribute('role', 'alert');
+
+    alertDiv.appendChild(document.createTextNode(element));
+
+    return alertDiv;
+}
+
 
 function changeLanguage(data) {
 
@@ -17,7 +130,24 @@ function changeLanguage(data) {
     });
 }
 
+function reloadInboxList() {
+
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "GET",
+        url:  ctx + url['api_messages'] + "/",
+        success : function(callback) {
+            renderInboxList(callback);
+        },
+        error : function (callback) {
+            console.log(translations['request-failed']);
+        }
+    });
+}
+
 $(document).ready(function() {
+    //language select
     if($.cookie(languageCookieName)) {
         $('#language-select').val($.cookie(languageCookieName));
     } else {
@@ -30,6 +160,24 @@ $(document).ready(function() {
         console.log(e.message);
     }
 
+    $(document).on('click', '.message-change-status', function(e) {
+        e.preventDefault();
+        $.ajax({
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            type: "GET",
+            url:  ctx + $(this).attr('href'),
+            success : function(callback) {
+                reloadInboxList();
+            },
+            error : function (callback) {
+                console.log(translations['request-failed']);
+            }
+        });
+    });
+
+
+    //form validation
     $('#user-register-form').validate({
         rules: {
             username: {

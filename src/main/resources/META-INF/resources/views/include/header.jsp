@@ -1,4 +1,4 @@
-
+<%@ page import="com.cloud.communicator.module.message.MessageUrls" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
@@ -25,6 +25,20 @@
 
     <script src="<c:url value="/js/common.js" />" type="text/javascript"></script>
     <script>
+        var translations = {
+            'request-failed': "<spring:message code="request.failed" />",
+            'author': "<spring:message code="message.author" />",
+            'topic': "<spring:message code="message.topic" />",
+            'text': "<spring:message code="message.text" />",
+            'message-inbox-empty': "<spring:message code="message.inbox.empty" />"
+        };
+
+        var url = {
+            'api_message_change_status': "<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>",
+            'api_message_delete': "<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>",
+            'api_messages': "<%=MessageUrls.Api.MESSAGES%>"
+        };
+
         var ctx = "${pageContext.request.contextPath}";
         var languageCookieName = "org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE";
     </script>
