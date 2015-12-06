@@ -29,7 +29,7 @@
                                 <span class="glyphicon glyphicon-ok"></span>
                             </button>
 
-                            <button type="button" class="message-delete btn btn-primary" href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>/${message.id}">
+                            <button type="button" class="message-delete btn btn-primary" href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_DELETE_FULL%>/${message.id}">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </button>
 

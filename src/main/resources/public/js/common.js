@@ -176,6 +176,21 @@ $(document).ready(function() {
         });
     });
 
+    $(document).on('click', '.message-delete', function(e) {
+        e.preventDefault();
+        $.ajax({
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            type: "DELETE",
+            url:  ctx + $(this).attr('href'),
+            success : function(callback) {
+                reloadInboxList();
+            },
+            error : function (callback) {
+                console.log(translations['request-failed']);
+            }
+        });
+    });
 
     //form validation
     $('#user-register-form').validate({

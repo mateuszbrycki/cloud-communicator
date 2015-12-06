@@ -27,4 +27,9 @@ public class MessageReceiverServiceImpl implements MessageReceiverService{
     public void changeMessageReadStatus(Integer messageId, Integer userId) {
         this.messageReceiverDao.changeMessageReadStatus(messageId, userId);
     }
+
+    @Override
+    public void deleteMessageForUser(Integer messageId, Integer userId) {
+        this.messageReceiverDao.deleteMessageForUser(messageId, userId);
+    }
 }

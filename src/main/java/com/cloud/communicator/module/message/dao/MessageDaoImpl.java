@@ -40,7 +40,8 @@ public class MessageDaoImpl extends AbstractDao implements MessageDao {
                 "SELECT m.message_id, m.fk_author_id, m.topic, m.text, m.audit_cd, mr.is_read " +
                         "FROM message m " +
                         "JOIN message_receiver mr ON m.message_id = mr.fk_message_id " +
-                        "WHERE mr.fk_user_id = :id");
+                        "WHERE mr.fk_user_id = :id " +
+                        "ORDER BY m.audit_cd DESC");
         query.setString("id", userId.toString());
 
         List<Message> messages = new ArrayList<>();
@@ -74,7 +75,6 @@ public class MessageDaoImpl extends AbstractDao implements MessageDao {
         message.setText((String) messageObject[3]);
         message.setSendDate((Date) messageObject[4]);
         message.setIsRead((Boolean) messageObject[5]);
-
         message.setReceivers(
                 this.messageReceiverService.findMessageReceivers(message.getId())
         );

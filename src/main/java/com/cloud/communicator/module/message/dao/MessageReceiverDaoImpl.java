@@ -50,6 +50,18 @@ public class MessageReceiverDaoImpl extends AbstractDao implements MessageReceiv
         query.executeUpdate();
     }
 
+    @Override
+    public void deleteMessageForUser(Integer messageId, Integer userId) {
+        Query query = getSession().createSQLQuery(
+                "DELETE FROM message_receiver " +
+                        "WHERE fk_message_id = :messageId AND fk_user_id = :userId"
+        );
+        query.setString("messageId", messageId.toString());
+        query.setString("userId", userId.toString());
+
+        query.executeUpdate();
+    }
+
     private MessageReceiver mapMessageReceiverObject(Object[] messageReceiverObject) {
 
         MessageReceiver messageReceiver = new MessageReceiver();

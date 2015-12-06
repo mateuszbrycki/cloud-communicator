@@ -13,4 +13,6 @@ public interface MessageReceiverService {
     List<MessageReceiver> findMessageReceivers(Integer messageId);
 
     void changeMessageReadStatus(Integer messageId, Integer userId);
+
+    void deleteMessageForUser(Integer messageId, Integer userId);
 }

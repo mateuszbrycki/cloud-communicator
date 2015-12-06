@@ -35,7 +35,7 @@
 
         var url = {
             'api_message_change_status': "<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>",
-            'api_message_delete': "<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>",
+            'api_message_delete': "<%=MessageUrls.Api.MESSAGE_DELETE_FULL%>",
             'api_messages': "<%=MessageUrls.Api.MESSAGES%>"
         };
 

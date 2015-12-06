@@ -30,13 +30,26 @@ public class RestMessageController {
                                                 HttpServletResponse response) {
 
         try {
-
             Integer userId = UserUtils.getUserId(request, response);
             messageReceiverService.changeMessageReadStatus(id, userId);
-
         } catch(NullPointerException e) {
             return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.FORBIDDEN);
         }
+        return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = MessageUrls.Api.MESSAGE_DELETE_ID, method = RequestMethod.DELETE)
+    public ResponseEntity<Message> deleteMessage(@PathVariable("messageId") Integer id,
+                                                HttpServletRequest request,
+                                                HttpServletResponse response) {
+
+        try {
+            Integer userId = UserUtils.getUserId(request, response);
+            messageReceiverService.deleteMessageForUser(id, userId);
+        } catch(NullPointerException e) {
+            return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.FORBIDDEN);
+        }
+
         return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.OK);
     }
 
