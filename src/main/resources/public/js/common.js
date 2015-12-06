@@ -44,8 +44,6 @@ function renderInboxList(data) {
         tableBody.appendChild(tableHeader);
     }
 
-
-    console.log(data);
     for(var i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
 
@@ -76,7 +74,7 @@ function renderInboxList(data) {
         changeStatusGlyphicon.className = 'glyphicon glyphicon-ok';
 
         var deleteButton = document.createElement('button');
-        deleteButton.className = 'message-delete btn btn-primary';
+        deleteButton.className = 'message-delete btn btn-warning';
         deleteButton.type = 'button';
         deleteButton.setAttribute('href', ctx + url['api_message_delete'] + '/' + data[i].id);
 
@@ -130,8 +128,17 @@ function changeLanguage(data) {
     });
 }
 
+function changeLoadingOverlay(flag) {
+    if(flag) {
+        document.getElementById('loading-overlay').style.display = 'block';
+    } else {
+        document.getElementById('loading-overlay').style.display = 'none';
+    }
+}
+
 function reloadInboxList() {
 
+    changeLoadingOverlay(true);
     $.ajax({
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -139,9 +146,13 @@ function reloadInboxList() {
         url:  ctx + url['api_messages'] + "/",
         success : function(callback) {
             renderInboxList(callback);
+
+            changeLoadingOverlay(false);
         },
         error : function (callback) {
             console.log(translations['request-failed']);
+
+            changeLoadingOverlay(false);
         }
     });
 }
@@ -191,6 +202,12 @@ $(document).ready(function() {
             }
         });
     });
+
+    $(document).on('click', '.reload-inbox', function(e) {
+        e.preventDefault();
+        reloadInboxList();
+    });
+
 
     //form validation
     $('#user-register-form').validate({

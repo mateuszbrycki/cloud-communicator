@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="<c:url value="/css/msdropdown_dd.css" />">
     <link rel="stylesheet" href="<c:url value="/css/styles.css" />">
     <link rel="stylesheet" href="<c:url value="/css/bootstrap-glyphicons.css" />">
+    <link rel="stylesheet" href="<c:url value="/css/spinners.css" />">
 
     <script src="<c:url value="/js/lib/jquery_1_11_1_min.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/bootstrap_3_2_0_min.js" />" type="text/javascript"></script>
