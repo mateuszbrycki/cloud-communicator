@@ -47,8 +47,10 @@ function renderInboxList(data) {
     for(var i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
 
+        var statusIcon = "glyphicon glyphicon-eye-close";
         if(data[i].isRead != true) {
             tableRow.setAttribute("style", "font-weight: bold");
+            statusIcon = "glyphicon glyphicon-eye-open";
         }
 
         var firstColumn = document.createElement('td');
@@ -71,7 +73,7 @@ function renderInboxList(data) {
         changeStatusButton.setAttribute('href', ctx + url['api_message_change_status'] + '/' + data[i].id);
 
         var changeStatusGlyphicon = document.createElement('span');
-        changeStatusGlyphicon.className = 'glyphicon glyphicon-ok';
+        changeStatusGlyphicon.className = statusIcon;
 
         var deleteButton = document.createElement('button');
         deleteButton.className = 'message-delete btn btn-warning';

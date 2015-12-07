@@ -42,7 +42,16 @@
                         <td>
                             <button type="button" class="message-change-status btn btn-primary"
                                     href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>/${message.id}">
-                                <span class="glyphicon glyphicon-ok"></span>
+
+                                <c:choose>
+                                    <c:when test="${message.isRead != true}">
+                                        <span class="glyphicon  glyphicon-eye-open"></span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="glyphicon  glyphicon-eye-close"></span>
+                                    </c:otherwise>
+                                </c:choose>
+
                             </button>
 
                             <button type="button" class="message-delete btn btn-warning"
