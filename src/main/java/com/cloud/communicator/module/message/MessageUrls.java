@@ -18,5 +18,7 @@ public class MessageUrls implements UrlSpace {
         public static final String MESSAGE_DELETE = "/delete";
         public static final String MESSAGE_DELETE_FULL = Api.MESSAGE + Api.MESSAGE_DELETE;
         public static final String MESSAGE_DELETE_ID = MESSAGE_DELETE + "/{messageId}";
+
     }
 }
+

@@ -71,4 +71,11 @@ public class MessageReceiver {
     public void setReadDate(Date readDate) {
         this.readDate = readDate;
     }
+
+    @Override
+    public String toString() {
+        return "MessageReceiver {receiver: " + this.getReceiver() +
+                ", is read: " + this.getIsRead() +
+                ", read date: " + this.getReadDate() + "}";
+    }
 }

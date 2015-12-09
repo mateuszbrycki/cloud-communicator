@@ -1,23 +1,15 @@
 package com.cloud.communicator.module.message;
 
-import com.cloud.communicator.module.base.ApplicationController;
+
+import com.cloud.communicator.module.message.service.MessageReceiverService;
 import com.cloud.communicator.module.message.service.MessageService;
-import com.cloud.communicator.module.user.UserController;
-import com.cloud.communicator.module.user.UserDTO;
-import com.cloud.communicator.module.user.UserUrls;
 import com.cloud.communicator.module.user.service.UserService;
-import com.cloud.communicator.module.user.service.UserServiceImpl;
 import com.cloud.communicator.util.UserUtils;
-import org.hibernate.service.spi.InjectService;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -39,12 +31,11 @@ public class RestMessageController {
     private MessageSource messageSource;
 
     @Inject
-    private ApplicationController applicationController;
-    
+    MessageReceiverService messageReceiverService;
 
     @RequestMapping(value = MessageUrls.Api.MESSAGE, method = RequestMethod.POST, headers = "content-type=application/x-www-form-urlencoded")
     public ResponseEntity<String> sendMessage(@ModelAttribute @Valid MessageDTO messageDTO,
-                              ModelMap model, Locale locale, HttpServletRequest request, HttpServletResponse response) {
+                                              ModelMap model, Locale locale, HttpServletRequest request, HttpServletResponse response) {
 
         String[] args = {};
 
@@ -67,9 +58,41 @@ public class RestMessageController {
                 messageReceiver.setReceiverId(userService.getUserIdByUsername(r));
                 messageReceiver.setMessageId(message.getId());
                 messageReceiver.setIsRead(false);
-                messageRe
+
             }
 
         return new ResponseEntity<String>( messageSource.getMessage("message.success.send", args, locale), HttpStatus.OK);
+    }
+
+
+
+
+    @RequestMapping(value = MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_ID, method = RequestMethod.GET)
+    public ResponseEntity<Message> markAsUnread(@PathVariable("messageId") Integer id,
+                                                HttpServletRequest request,
+                                                HttpServletResponse response) {
+
+        try {
+            Integer userId = UserUtils.getUserId(request, response);
+            messageReceiverService.changeMessageReadStatus(id, userId);
+        } catch(NullPointerException e) {
+            return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = MessageUrls.Api.MESSAGE_DELETE_ID, method = RequestMethod.DELETE)
+    public ResponseEntity<Message> deleteMessage(@PathVariable("messageId") Integer id,
+                                                HttpServletRequest request,
+                                                HttpServletResponse response) {
+
+        try {
+            Integer userId = UserUtils.getUserId(request, response);
+            messageReceiverService.deleteMessageForUser(id, userId);
+        } catch(NullPointerException e) {
+            return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.OK);
     }
 }
