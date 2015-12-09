@@ -3,6 +3,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <body>
+<nav id="inbox-toolbar">
+    <button type="button" class="send-message-button btn btn-default">
+            <span class="glyphicon glyphicon-plus"></span>
+    </button>
+</nav>
 
 <c:choose>
     <c:when test="${fn:length(messages) gt 0}">

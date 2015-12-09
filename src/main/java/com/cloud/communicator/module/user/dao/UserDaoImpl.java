@@ -68,6 +68,15 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
 
     }
 
+    @Override
+    public Integer getUserIdByUsername(String username)
+    {
+        Query query = getSession().createSQLQuery("SELECT u.user_id FROM user_account u WHERE u.username = :username");
+        query.setString("username", username);
+
+        return (Integer) query.uniqueResult();
+    }
+
     private User mapUserObject(Object[] userObject) {
 
         User user = new User();
@@ -78,5 +87,6 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
         user.setIsActive((Boolean)userObject[5]);
         return user;
     }
+
 
 }

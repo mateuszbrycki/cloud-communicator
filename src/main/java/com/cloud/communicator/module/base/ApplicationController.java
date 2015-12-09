@@ -5,6 +5,7 @@ import com.cloud.communicator.module.message.service.MessageService;
 import com.cloud.communicator.util.UserUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +39,5 @@ public class ApplicationController {
 
         return "controller/message/inbox";
     }
-
 
 }

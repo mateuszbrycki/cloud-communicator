@@ -17,6 +17,16 @@ function changeLanguage(data) {
     });
 }
 
+function showSendMessageForm() {
+    $('#send-message-modal').modal({keyboard: true});
+    $("#send-message-modal").modal('show');
+}
+
+$(document).on('click', '.send-message-button', function(e) {
+           e.preventDefault();
+           showSendMessageForm();
+       });
+
 $(document).ready(function() {
     if($.cookie(languageCookieName)) {
         $('#language-select').val($.cookie(languageCookieName));

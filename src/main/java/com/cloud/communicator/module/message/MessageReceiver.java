@@ -1,11 +1,13 @@
 package com.cloud.communicator.module.message;
 
 import com.cloud.communicator.module.user.User;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+@Service("messageReceiver")
 @Entity
 @Table(name="message_receiver")
 public class MessageReceiver {
@@ -15,14 +17,12 @@ public class MessageReceiver {
     private int id;
 
     @NotNull
-    @OneToOne
-    @JoinColumn(name="fk_message_id")
-    private Message message;
+    @Column(name="fk_message_id")
+    private Integer messageId;
 
     @NotNull
-    @OneToOne
-    @JoinColumn(name="fk_user_id")
-    private User receiver;
+    @Column(name="fk_user_id")
+    private Integer receiverId;
 
     @NotNull
     @Column(name="is_read")
@@ -40,20 +40,20 @@ public class MessageReceiver {
         this.id = id;
     }
 
-    public Message getMessage() {
-        return message;
+    public Integer getMessageId() {
+        return messageId;
     }
 
-    public void setMessage(Message message) {
-        this.message = message;
+    public void setMessageId(Integer messageId) {
+        this.messageId = messageId;
     }
 
-    public User getReceiver() {
-        return receiver;
+    public Integer getReceiver() {
+        return receiverId;
     }
 
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
+    public void setReceiverId(Integer receiverId) {
+        this.receiverId = receiverId;
     }
 
     public Boolean getIsRead() {

@@ -64,5 +64,4 @@ public class UserDTO {
     public String toString() {
         return "Username: " + this.username + ", mail: " + this.mail + ", password: " + this.password + ", repeat: " + this.passwordRepeat;
     }
-
 }
