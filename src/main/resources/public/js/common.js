@@ -44,13 +44,13 @@ function renderInboxList(data) {
         tableBody.appendChild(tableHeader);
     }
 
-
-    console.log(data);
     for(var i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
 
+        var statusIcon = "glyphicon glyphicon-eye-close";
         if(data[i].isRead != true) {
             tableRow.setAttribute("style", "font-weight: bold");
+            statusIcon = "glyphicon glyphicon-eye-open";
         }
 
         var firstColumn = document.createElement('td');
@@ -73,10 +73,10 @@ function renderInboxList(data) {
         changeStatusButton.setAttribute('href', ctx + url['api_message_change_status'] + '/' + data[i].id);
 
         var changeStatusGlyphicon = document.createElement('span');
-        changeStatusGlyphicon.className = 'glyphicon glyphicon-ok';
+        changeStatusGlyphicon.className = statusIcon;
 
         var deleteButton = document.createElement('button');
-        deleteButton.className = 'message-delete btn btn-primary';
+        deleteButton.className = 'message-delete btn btn-warning';
         deleteButton.type = 'button';
         deleteButton.setAttribute('href', ctx + url['api_message_delete'] + '/' + data[i].id);
 
@@ -130,8 +130,17 @@ function changeLanguage(data) {
     });
 }
 
+function changeLoadingOverlay(flag) {
+    if(flag) {
+        document.getElementById('loading-overlay').style.display = 'block';
+    } else {
+        document.getElementById('loading-overlay').style.display = 'none';
+    }
+}
+
 function reloadInboxList() {
 
+    changeLoadingOverlay(true);
     $.ajax({
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -139,9 +148,13 @@ function reloadInboxList() {
         url:  ctx + url['api_messages'] + "/",
         success : function(callback) {
             renderInboxList(callback);
+
+            changeLoadingOverlay(false);
         },
         error : function (callback) {
             console.log(translations['request-failed']);
+
+            changeLoadingOverlay(false);
         }
     });
 }
@@ -191,6 +204,12 @@ $(document).ready(function() {
             }
         });
     });
+
+    $(document).on('click', '.reload-inbox', function(e) {
+        e.preventDefault();
+        reloadInboxList();
+    });
+
 
     //form validation
     $('#user-register-form').validate({
