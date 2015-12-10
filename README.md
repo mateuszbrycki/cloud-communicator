@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://pac4j.github.io/pac4j/img/logo-spring-webmvc.png" width="300" />
-</p>
-
 ## Start & test
 
 Build the project and launch the web app with tomcat on [http://localhost:8081](http://localhost:8081):
