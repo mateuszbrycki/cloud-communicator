@@ -1,8 +1,8 @@
 package com.cloud.communicator.filter.hibernate;
 
 
-import org.hibernate.Criteria;
 import com.cloud.communicator.filter.FilterManager;
+import org.hibernate.Criteria;
 
 import java.util.List;
 

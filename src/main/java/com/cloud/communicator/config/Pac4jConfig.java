@@ -1,13 +1,12 @@
 package com.cloud.communicator.config;
 
 import com.cloud.communicator.authorizer.CustomAuthorizer;
+import com.cloud.communicator.authorizer.RolesAuthorizationGenerator;
 import org.pac4j.cas.client.CasClient;
 import org.pac4j.cas.logout.CasSingleSignOutHandler;
 import org.pac4j.core.authorization.RequireAnyRoleAuthorizer;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
-
-import com.cloud.communicator.authorizer.RolesAuthorizationGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

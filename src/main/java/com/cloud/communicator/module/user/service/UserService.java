@@ -16,4 +16,6 @@ public interface UserService {
     Boolean checkIfUserWithMailExists(String mail);
 
     Boolean checkIfUserWithUsernameExists(String username);
+
+    User findUserById(Integer userId);
 }
