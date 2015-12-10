@@ -21,6 +21,7 @@
         <javax.inject.version>1</javax.inject.version>
         <apache-commons.version>3.4</apache-commons.version>
         <log4j.version>1.2.17</log4j.version>
+        <postgresql.verion>9.1-901-1.jdbc4</postgresql.verion>
     </properties>
 
     <repositories>
@@ -109,6 +110,13 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
+        </dependency>
+
+        <!--PostgreSQL -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.verion}</version>
         </dependency>
 
         <!-- Inject -->

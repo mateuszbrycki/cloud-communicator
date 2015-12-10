@@ -16,11 +16,6 @@ public class MessageReceiver {
 
     @NotNull
     @OneToOne
-    @JoinColumn(name="fk_message_id")
-    private Message message;
-
-    @NotNull
-    @OneToOne
     @JoinColumn(name="fk_user_id")
     private User receiver;
 
@@ -38,14 +33,6 @@ public class MessageReceiver {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Message getMessage() {
-        return message;
-    }
-
-    public void setMessage(Message message) {
-        this.message = message;
     }
 
     public User getReceiver() {
@@ -70,5 +57,12 @@ public class MessageReceiver {
 
     public void setReadDate(Date readDate) {
         this.readDate = readDate;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageReceiver {receiver: " + this.getReceiver() +
+                ", is read: " + this.getIsRead() +
+                ", read date: " + this.getReadDate() + "}";
     }
 }

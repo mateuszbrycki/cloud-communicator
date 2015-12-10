@@ -12,7 +12,7 @@ import java.util.List;
  * Created by Mateusz on 04.12.2015.
  */
 @Service("messageService")
-@Transactional
+@Transactional(value = "transactionManagerPostgreSQL")
 public class MessageServiceImpl implements MessageService {
 
     @Inject
@@ -31,5 +31,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> findUserInboxMessages(Integer userId) {
         return messageDao.findUserInboxMessages(userId);
+    }
+
+    @Override
+    public Message findMessageById(Integer messageId) {
+        return this.messageDao.findMessageById(messageId);
     }
 }

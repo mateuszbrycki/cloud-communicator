@@ -13,4 +13,6 @@ public interface MessageDao {
     void deleteMessage(Integer id);
 
     List<Message> findUserInboxMessages(Integer userId);
+
+    Message findMessageById(Integer messageId);
 }
