@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 
 @Service("userRoleService")
-@Transactional
+@Transactional(value = "transactionManagerMySQL")
 public class UserRoleServiceImpl implements UserRoleService {
 
     @Inject

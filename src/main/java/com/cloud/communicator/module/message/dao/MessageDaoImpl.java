@@ -1,6 +1,6 @@
 package com.cloud.communicator.module.message.dao;
 
-import com.cloud.communicator.AbstractDao;
+import com.cloud.communicator.AbstractDaoPostgreSQL;
 import com.cloud.communicator.module.message.Message;
 import com.cloud.communicator.module.message.service.MessageReceiverService;
 import com.cloud.communicator.module.user.service.UserService;
@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository("messageDao")
-public class MessageDaoImpl extends AbstractDao implements MessageDao {
+public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao {
 
     @Inject
     UserService userService;
@@ -40,9 +40,9 @@ public class MessageDaoImpl extends AbstractDao implements MessageDao {
                 "SELECT m.message_id, m.fk_author_id, m.topic, m.text, m.audit_cd, mr.is_read " +
                         "FROM message m " +
                         "JOIN message_receiver mr ON m.message_id = mr.fk_message_id " +
-                        "WHERE mr.fk_user_id = :id " +
-                        "ORDER BY m.audit_cd DESC");
-        query.setString("id", userId.toString());
+                        "WHERE mr.fk_user_id = :userId " +
+                        " ORDER BY m.audit_cd DESC");
+        query.setInteger("userId", userId);
 
         List<Message> messages = new ArrayList<>();
 
@@ -60,7 +60,7 @@ public class MessageDaoImpl extends AbstractDao implements MessageDao {
                 "SELECT m.* " +
                         "FROM message m " +
                         "WHERE m.message_id = :id LIMIT 1");
-        query.setString("id", messageId.toString());
+        query.setInteger("id", messageId);
 
         return this.mapMessageObject((Object[]) query.uniqueResult());
     }

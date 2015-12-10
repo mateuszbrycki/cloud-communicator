@@ -1,20 +1,6 @@
-CREATE TABLE user_role (
-	role_id INTEGER PRIMARY KEY,
-	role VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE user_account (
-	user_id INTEGER PRIMARY KEY,
-	username VARCHAR NOT NULL,
-	fk_role_id INTEGER NOT NULL REFERENCES user_role (role_id) ON UPDATE CASCADE,
-	mail VARCHAR(255) NOT NULL,
-	password VARCHAR(255) NOT NULL,
-	is_active BOOLEAN DEFAULT TRUE,
-	audit_cd TIMESTAMP NOT NULL,
-	audit_md TIMESTAMP
-);
 CREATE TABLE message (
 	message_id INTEGER PRIMARY KEY,
+	fk_author_id INTEGER NOT NULL,
 	topic TEXT NOT NULL,
 	text TEXT NOT NULL,
 	audit_cd TIMESTAMP NOT NULL,
@@ -22,11 +8,11 @@ CREATE TABLE message (
 );
 CREATE TABLE message_receiver (
 	fk_message_id INTEGER REFERENCES message (message_id) ON UPDATE CASCADE,
-	fk_user_id INTEGER REFERENCES user_account (user_id) ON UPDATE CASCADE,
+	fk_user_id INTEGER,
 	is_read boolean NOT NULL,
 	read_date TIMESTAMP,
 	audit_cd TIMESTAMP NOT NULL,
-	autid_md TIMESTAMP NOT NULL,
+	autid_md TIMESTAMP,
 	PRIMARY KEY(fk_message_id, fk_user_id)
 );
 CREATE TABLE folder (
@@ -40,24 +26,31 @@ CREATE TABLE folder (
 );
 CREATE TABLE user_message_folder (
 	fk_message_id INTEGER REFERENCES message (message_id) ON UPDATE CASCADE,
-	fk_user_id INTEGER REFERENCES user_account (user_id) ON UPDATE CASCADE,
+	fk_user_id INTEGER,
 	fk_folder_id INTEGER REFERENCES folder (folder_id) ON UPDATE CASCADE,
 	PRIMARY KEY(fk_message_id, fk_user_id, fk_folder_id)
 );
 
 CREATE TABLE contact_book (
 	contact_book_id INTEGER PRIMARY KEY,
-	fk_owner_id INTEGER REFERENCES user_account (user_id) ON UPDATE CASCADE,
+	fk_owner_id INTEGER,
 	description VARCHAR,
 	audit_cd TIMESTAMP,
 	audit_md TIMESTAMP
 );
 
 CREATE TABLE user_contacts (
-	fk_user_id INTEGER REFERENCES user_account (user_id)  ON UPDATE CASCADE,
+	fk_user_id INTEGER,
 	fk_contact_book_id INTEGER REFERENCES contact_book (contact_book_id) ON UPDATE CASCADE,
-	fk_person_in_book_id INTEGER REFERENCES user_account (user_id) ON UPDATE CASCADE,
+	fk_person_in_book_id INTEGER,
 	PRIMARY KEY(fk_user_id, fk_contact_book_id, fk_person_in_book_id)
 );
 
+INSERT INTO message (message_id, fk_author_id, topic, text, audit_cd, audit_md) VALUES
+	(1, 2, 'New message.', 'First new message.', '2015-12-04 20:25:25', NULL),
+	(2, 2, 'Next one new message.', 'This is second message. Lets check if dump will be saved.', '2015-12-08 03:29:45', NULL);
 
+INSERT INTO message_receiver (fk_message_id, fk_user_id, is_read, read_date, audit_cd, autid_md) VALUES
+	(1, 1, true, NULL, '2015-12-10 04:56:35', NULL),
+	(2, 1, true, NULL, '2015-12-08 05:31:35', NULL),
+	(2, 3, true, NULL, '2015-12-04 16:54:46', NULL);
