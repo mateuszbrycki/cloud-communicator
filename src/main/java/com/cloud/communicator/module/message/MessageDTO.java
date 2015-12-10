@@ -13,11 +13,11 @@ public class MessageDTO {
     private String receivers;
 
     @NotNull
-    @Length(min = 5)
+    @Length(min = 3)
     private String topic;
 
     @NotNull
-    @Length(min = 5)
+    @Length(min = 3)
     private String text;
 
     public MessageDTO() {}
@@ -48,6 +48,6 @@ public class MessageDTO {
 
     @Override
     public String toString() {
-        return "Mail: " + this.receivers + ", topic: " + this.topic + ", text: " + this.text;
+        return "MessageDTO: {Mail: " + this.receivers + ", topic: " + this.topic + ", text: " + this.text + "}";
     }
 }

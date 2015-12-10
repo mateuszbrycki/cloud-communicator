@@ -1,20 +1,19 @@
 package com.cloud.communicator.module.message;
 
-import com.cloud.communicator.module.user.User;
-import org.springframework.stereotype.Service;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 
-@Service("messageReceiver")
+
 @Entity
 @Table(name="message_receiver")
 public class MessageReceiver {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name="message_receiver_id")
+    private int messageReceiverId;
 
     @NotNull
     @Column(name="fk_message_id")
@@ -28,7 +27,6 @@ public class MessageReceiver {
     @Column(name="is_read")
     private Boolean isRead;
 
-    @NotNull
     @Column(name="read_date")
     private Date readDate;
 

@@ -44,8 +44,6 @@ function renderInboxList(data) {
         tableBody.appendChild(tableHeader);
     }
 
-
-    console.log(data);
     for(var i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
 
@@ -114,7 +112,6 @@ function getEmptyAlert(element) {
     return alertDiv;
 }
 
-
 function changeLanguage(data) {
 
     $.ajax({
@@ -130,12 +127,10 @@ function changeLanguage(data) {
     });
 }
 
-
 function showSendMessageForm() {
     $('#send-message-modal').modal({keyboard: true});
     $("#send-message-modal").modal('show');
 }
-
 
 
 function reloadInboxList() {
@@ -154,6 +149,14 @@ function reloadInboxList() {
     });
 }
 
+function refreshForm(form) {
+    //przy dodwaniu nowej karty z poziomu projektu usuwane było id projektu z pola hidden, jeżeli będzie powodowało
+    //problemy czyszczenie należy rozbić na różne metody lub ifować
+    //form.find("input[type=hidden]").val("");
+    form.trigger("reset");
+    form.validate().resetForm();
+}
+
 
 $(document).ready(function() {
     //language select
@@ -169,8 +172,7 @@ $(document).ready(function() {
         console.log(e.message);
     }
 
-    $(document).on('click', '.send-message-button', function(e) {
-        e.preventDefault();
+    $(document).on('click', '.send-message-button', function() {
         showSendMessageForm();
     });
 
@@ -205,6 +207,57 @@ $(document).ready(function() {
                 console.log(translations['request-failed']);
             }
         });
+    });
+
+    $(document).on('submit', '#send-message-form', function(e) {
+        var frm = $('#send-message-form');
+        e.preventDefault();
+
+        var data = {};
+
+        $.each(this, function(i, v){
+            var input = $(v);
+            data[input.attr("name")] = input.val();
+            delete data["undefined"];
+        });
+
+        console.log(JSON.stringify(data));
+
+        if(frm.valid()) {
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                type: frm.attr('method'),
+                url: frm.attr('action'),
+                data: JSON.stringify(data),
+                success: function(callback) {
+                    console.log(callback);
+                },
+                error: function (callback) {
+                    console.log(callback);
+                }
+            });
+
+            refreshForm(frm);
+            $("#send-message-form").modal('hide');
+        }
+    });
+
+    $('#send-message-form').validate({
+        rules: {
+            receivers: {
+                required: true,
+                minlength: 3
+            },
+            topic: {
+                required: true,
+                minlength: 3
+            },
+            text: {
+                required: true,
+                minlength: 3
+            }
+        }
     });
 
     //form validation

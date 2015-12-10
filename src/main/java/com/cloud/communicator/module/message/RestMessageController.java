@@ -5,6 +5,7 @@ import com.cloud.communicator.module.message.service.MessageReceiverService;
 import com.cloud.communicator.module.message.service.MessageService;
 import com.cloud.communicator.module.user.service.UserService;
 import com.cloud.communicator.util.UserUtils;
+import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,9 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 @RestController
@@ -33,9 +37,16 @@ public class RestMessageController {
     @Inject
     MessageReceiverService messageReceiverService;
 
-    @RequestMapping(value = MessageUrls.Api.MESSAGE, method = RequestMethod.POST, headers = "content-type=application/x-www-form-urlencoded")
-    public ResponseEntity<String> sendMessage(@ModelAttribute @Valid MessageDTO messageDTO,
-                                              ModelMap model, Locale locale, HttpServletRequest request, HttpServletResponse response) {
+    private static final Logger logger = Logger.getLogger(RestMessageController.class);
+
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    public ResponseEntity<String> sendMessage(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              @RequestBody @Valid MessageDTO messageDTO,
+                                              ModelMap model,
+                                              Locale locale) {
+
+        logger.debug(messageDTO);
 
         String[] args = {};
 
@@ -51,6 +62,9 @@ public class RestMessageController {
             message.setAuthor(userService.findUserById(UserUtils.getUserId(request, response)));
             message.setTopic(messageDTO.getTopic());
             message.setText(messageDTO.getText());
+
+            message.setSendDate(new Date());
+
             messageService.saveMessage(message);
 
             for (String r : receivers) {
@@ -59,6 +73,7 @@ public class RestMessageController {
                 messageReceiver.setMessageId(message.getId());
                 messageReceiver.setIsRead(false);
 
+                messageReceiverService.saveMessageReceiver(messageReceiver);
             }
 
         return new ResponseEntity<String>( messageSource.getMessage("message.success.send", args, locale), HttpStatus.OK);

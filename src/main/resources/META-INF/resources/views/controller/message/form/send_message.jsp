@@ -8,7 +8,7 @@
                 <button type="button" class="close send-message-form-close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="send-message-modal-title"><spring:message code="message.title.send" /></h4>
             </div>
-            <form method="PUT" id="send-message-form" action="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE%>" class="form-horizontal" >
+            <form method="PUT" id="send-message-form" action="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE%>/" class="form-horizontal" >
 
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="receivers"><spring:message code="message.modal.receivers" />:</label>

@@ -10,6 +10,13 @@ import java.util.List;
 
 
 public interface MessageReceiverService {
+
+    void saveMessageReceiver(MessageReceiver messageReceiver);
+
+    void updateMessageReceiver(MessageReceiver messageReceiver);
+
+    void deleteMessageReceiver(Integer id);
+
     List<MessageReceiver> findMessageReceivers(Integer messageId);
 
     void changeMessageReadStatus(Integer messageId, Integer userId);

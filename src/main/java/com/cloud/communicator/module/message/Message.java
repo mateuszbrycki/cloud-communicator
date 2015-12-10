@@ -23,7 +23,6 @@ public class Message {
     private User author;
 
     @OneToMany
-    @NotNull
     @JoinColumn(name="message_id")
     @JsonIgnore
     private List<MessageReceiver> receivers;
@@ -36,8 +35,7 @@ public class Message {
     @Column(name="text")
     private String text;
 
-    @NotNull
-    @Column(name="is_read")
+    @Transient
     private Boolean isRead;
 
     @NotNull
