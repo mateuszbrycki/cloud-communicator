@@ -2,15 +2,17 @@ package com.cloud.communicator;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;
 
-public class AbstractDao {
+public class AbstractDaoMySQL {
     @Inject
-    private SessionFactory sessionFactory;
+    @Qualifier("sessionFactoryMySQL")
+    private SessionFactory sessionFactoryMySQL;
 
     protected Session getSession(){
-        return sessionFactory.getCurrentSession();
+        return sessionFactoryMySQL.getCurrentSession();
     }
 
     public void persist(Object entity) {

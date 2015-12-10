@@ -11,4 +11,6 @@ public interface UserRoleService {
     void saveUserRole(UserRole userRole);
 
     UserRole findByName(String role);
+
+    UserRole findById(Integer id);
 }

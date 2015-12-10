@@ -1,6 +1,6 @@
 package com.cloud.communicator.module.userrole.dao;
 
-import com.cloud.communicator.AbstractDao;
+import com.cloud.communicator.AbstractDaoMySQL;
 import com.cloud.communicator.module.userrole.UserRole;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,7 @@ import java.util.Set;
  * Created by Mateusz Brycki on 02/05/2015.
  */
 @Repository("userRoleDao")
-public class UserRoleDaoImpl extends AbstractDao implements UserRoleDao {
+public class UserRoleDaoImpl extends AbstractDaoMySQL implements UserRoleDao {
 
     public void saveUserRole(UserRole userRole) {
         persist(userRole);
@@ -21,8 +21,8 @@ public class UserRoleDaoImpl extends AbstractDao implements UserRoleDao {
 
     @Override
     public UserRole findById(Integer id) {
-        Query query = getSession().createSQLQuery("select * from user_role where id = :id");
-        query.setString("id", id.toString());
+        Query query = getSession().createSQLQuery("select * from user_role where role_id = :id");
+        query.setInteger("id", id);
 
         return this.mapUserRoleObject(query.list());
     }
@@ -37,8 +37,8 @@ public class UserRoleDaoImpl extends AbstractDao implements UserRoleDao {
 
     @Override
     public Set<UserRole> findByUserId(Integer id) {
-        Query query = getSession().createSQLQuery("select * from user_role where id = :id");
-        query.setString("id", id.toString());
+        Query query = getSession().createSQLQuery("select * from user_role where role_id = :id");
+        query.setInteger("id", id);
 
         return new HashSet<UserRole>();
     }

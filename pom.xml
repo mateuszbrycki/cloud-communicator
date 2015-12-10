@@ -20,6 +20,8 @@
         <sitemesh.version>3.0.0</sitemesh.version>
         <javax.inject.version>1</javax.inject.version>
         <apache-commons.version>3.4</apache-commons.version>
+        <log4j.version>1.2.17</log4j.version>
+        <postgresql.verion>9.1-901-1.jdbc4</postgresql.verion>
     </properties>
 
     <repositories>
@@ -50,6 +52,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -104,6 +110,13 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
+        </dependency>
+
+        <!--PostgreSQL -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.verion}</version>
         </dependency>
 
         <!-- Inject -->

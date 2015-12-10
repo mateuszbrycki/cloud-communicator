@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 
 @Service("userRoleService")
-@Transactional
+@Transactional(value = "transactionManagerMySQL")
 public class UserRoleServiceImpl implements UserRoleService {
 
     @Inject
@@ -21,6 +21,9 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public UserRole findByName(String role) { return userRoleDao.findByName(role); }
+
+    @Override
+    public UserRole findById(Integer id) { return userRoleDao.findById(id); }
 
 }
 

@@ -7,7 +7,6 @@
 <body>
 
   <c:if test="${not empty error}">
-    <div class="col-sm-5 col-md-6">
      <div class="alert alert-danger" role="alert">
       <span class="sr-only"><spring:message code="error" />:</span>
       ${error}
