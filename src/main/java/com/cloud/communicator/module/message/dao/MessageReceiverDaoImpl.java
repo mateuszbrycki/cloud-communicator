@@ -1,7 +1,6 @@
 package com.cloud.communicator.module.message.dao;
 
-import com.cloud.communicator.AbstractDao;
-import com.cloud.communicator.module.message.Message;
+import com.cloud.communicator.AbstractDaoPostgreSQL;
 import com.cloud.communicator.module.message.MessageReceiver;
 import com.cloud.communicator.module.user.service.UserService;
 import org.hibernate.Query;
@@ -16,7 +15,7 @@ import java.util.List;
  * Created by Mateusz on 05.12.2015.
  */
 @Repository("messageReceiverDao")
-public class MessageReceiverDaoImpl extends AbstractDao implements MessageReceiverDao {
+public class MessageReceiverDaoImpl extends AbstractDaoPostgreSQL implements MessageReceiverDao {
 
     @Inject
     UserService userService;
@@ -39,7 +38,7 @@ public class MessageReceiverDaoImpl extends AbstractDao implements MessageReceiv
         Query query = getSession().createSQLQuery(
                 "SELECT mr.* FROM message_receiver mr WHERE mr.fk_message_id = :id"
         );
-        query.setString("id", messageId.toString());
+        query.setInteger("id", messageId);
 
         List<MessageReceiver> receivers = new ArrayList<>();
 
@@ -58,8 +57,8 @@ public class MessageReceiverDaoImpl extends AbstractDao implements MessageReceiv
                         "SET is_read = NOT is_read " +
                         "WHERE fk_message_id = :messageId AND fk_user_id = :userId"
         );
-        query.setString("messageId", messageId.toString());
-        query.setString("userId", userId.toString());
+        query.setInteger("messageId", messageId);
+        query.setInteger("userId", userId);
 
         query.executeUpdate();
     }
@@ -70,8 +69,8 @@ public class MessageReceiverDaoImpl extends AbstractDao implements MessageReceiv
                 "DELETE FROM message_receiver " +
                         "WHERE fk_message_id = :messageId AND fk_user_id = :userId"
         );
-        query.setString("messageId", messageId.toString());
-        query.setString("userId", userId.toString());
+        query.setInteger("messageId", messageId);
+        query.setInteger("userId", userId);
 
         query.executeUpdate();
     }

@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Mateusz on 05.12.2015.
  */
 @Service("messageReceiverService")
-@Transactional
+@Transactional(value = "transactionManagerPostgreSQL")
 public class MessageReceiverServiceImpl implements MessageReceiverService{
 
     @Inject

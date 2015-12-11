@@ -1,7 +1,6 @@
 package com.cloud.communicator.module.user.dao;
 
-
-import com.cloud.communicator.AbstractDao;
+import com.cloud.communicator.AbstractDaoMySQL;
 import com.cloud.communicator.module.user.User;
 import com.cloud.communicator.module.userrole.service.UserRoleService;
 import org.hibernate.Query;
@@ -13,7 +12,7 @@ import javax.inject.Inject;
  * Created by Mateusz Brycki on 02/05/2015.
  */
 @Repository("userDao")
-public class UserDaoImpl extends AbstractDao implements UserDao {
+public class UserDaoImpl extends AbstractDaoMySQL implements UserDao {
 
     @Inject
     private UserRoleService userRoleService;
@@ -29,7 +28,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
     @Override
     public void deleteUserById(Integer id) {
         Query query = getSession().createSQLQuery("DELETE u.* FROM user_account u WHERE u.user_id = :id");
-        query.setString("id", id.toString());
+        query.setInteger("id", id);
         query.executeUpdate();
     }
 
@@ -62,7 +61,7 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
     @Override
     public User findUserById(Integer userId) {
         Query query = getSession().createSQLQuery("SELECT * FROM user_account u WHERE u.user_id = :id");
-        query.setString("id", userId.toString());
+        query.setInteger("id", userId);
 
         return this.mapUserObject((Object[])query.uniqueResult());
 

@@ -12,7 +12,7 @@ import javax.inject.Inject;
  * Created by Mateusz Brycki on 28/04/2015.
  */
 @Service("userService")
-@Transactional
+@Transactional(value = "transactionManagerMySQL")
 public class UserServiceImpl implements UserService {
 
     @Inject

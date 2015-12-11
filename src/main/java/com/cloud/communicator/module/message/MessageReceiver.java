@@ -15,10 +15,12 @@ public class MessageReceiver {
     @Column(name="message_receiver_id")
     private int messageReceiverId;
 
+    @Id
     @NotNull
     @Column(name="fk_message_id")
     private Integer messageId;
 
+    @Id
     @NotNull
     @Column(name="fk_user_id")
     private Integer receiverId;
@@ -30,13 +32,6 @@ public class MessageReceiver {
     @Column(name="read_date")
     private Date readDate;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public Integer getMessageId() {
         return messageId;

@@ -7,6 +7,8 @@
 
 <div class="container">
 
+    <jsp:include page="../include/loading-overlay.jsp" />
+
     <select id="language-select" onchange="changeLanguage(this.value)">
         <option value="en" data-image="<c:url value="/img/language/en.png" />"></option>
         <option value="pl_PL" data-image="<c:url value="/img/language/pl_PL.png" />"></option>
