@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <jsp:include page="../include/header.jsp" />
+<jsp:include page="../controller/message/form/send_message.jsp" />
 
 <div class="container">
 

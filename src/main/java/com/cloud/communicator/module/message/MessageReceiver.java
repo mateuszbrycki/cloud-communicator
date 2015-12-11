@@ -1,46 +1,47 @@
 package com.cloud.communicator.module.message;
 
-import com.cloud.communicator.module.user.User;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
+
 
 @Entity
 @Table(name="message_receiver")
-public class MessageReceiver {
+public class MessageReceiver implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
     @NotNull
-    @OneToOne
-    @JoinColumn(name="fk_user_id")
-    private User receiver;
+    @Column(name="fk_message_id")
+    private Integer messageId;
+
+    @Id
+    @NotNull
+    @Column(name="fk_user_id")
+    private Integer receiverId;
 
     @NotNull
     @Column(name="is_read")
     private Boolean isRead;
 
-    @NotNull
     @Column(name="read_date")
     private Date readDate;
 
-    public int getId() {
-        return id;
+
+    public Integer getMessageId() {
+        return messageId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setMessageId(Integer messageId) {
+        this.messageId = messageId;
     }
 
-    public User getReceiver() {
-        return receiver;
+    public Integer getReceiver() {
+        return receiverId;
     }
 
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
+    public void setReceiverId(Integer receiverId) {
+        this.receiverId = receiverId;
     }
 
     public Boolean getIsRead() {

@@ -2,6 +2,7 @@ package com.cloud.communicator.module.message.service;
 
 import com.cloud.communicator.module.message.MessageReceiver;
 import com.cloud.communicator.module.message.dao.MessageReceiverDao;
+import org.hibernate.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,15 @@ public class MessageReceiverServiceImpl implements MessageReceiverService{
 
     @Inject
     MessageReceiverDao messageReceiverDao;
+
+    @Override
+    public void saveMessageReceiver(MessageReceiver messageReceiver) { this.messageReceiverDao.saveMessageReceiver(messageReceiver); }
+
+    @Override
+    public void updateMessageReceiver(MessageReceiver messageReceiver) { this.messageReceiverDao.updateMessageReceiver(messageReceiver); }
+
+    @Override
+    public void deleteMessageReceiver(Integer id) { this.messageReceiverDao.deleteMessageReceiver(id); }
 
     @Override
     public List<MessageReceiver> findMessageReceivers(Integer messageId) {

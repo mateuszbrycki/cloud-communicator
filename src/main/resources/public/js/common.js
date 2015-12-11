@@ -17,6 +17,10 @@ function renderInboxList(data) {
         newPanelGroup.appendChild(alertDiv);
     } else {
 
+        if ($('.inbox-empty-alert').length) {
+            $('.inbox-empty-alert').hide();
+        }
+
         tableElement.className = "table table-hover table-striped";
         tableElement.id = "inbox-table";
 
@@ -114,7 +118,6 @@ function getEmptyAlert(element) {
     return alertDiv;
 }
 
-
 function changeLanguage(data) {
 
     $.ajax({
@@ -128,6 +131,11 @@ function changeLanguage(data) {
             console.log(callback);
         }
     });
+}
+
+function showSendMessageForm() {
+    $('#send-message-modal').modal({keyboard: true});
+    $("#send-message-modal").modal('show');
 }
 
 function changeLoadingOverlay(flag) {
@@ -148,16 +156,24 @@ function reloadInboxList() {
         url:  ctx + url['api_messages'] + "/",
         success : function(callback) {
             renderInboxList(callback);
-
             changeLoadingOverlay(false);
         },
         error : function (callback) {
             console.log(translations['request-failed']);
-
+            location.reload();
             changeLoadingOverlay(false);
         }
     });
 }
+
+function refreshForm(form) {
+    //przy dodwaniu nowej karty z poziomu projektu usuwane było id projektu z pola hidden, jeżeli będzie powodowało
+    //problemy czyszczenie należy rozbić na różne metody lub ifować
+    //form.find("input[type=hidden]").val("");
+    form.trigger("reset");
+    form.validate().resetForm();
+}
+
 
 $(document).ready(function() {
     //language select
@@ -172,6 +188,10 @@ $(document).ready(function() {
     } catch(e) {
         console.log(e.message);
     }
+
+    $(document).on('click', '.send-message-button', function() {
+        showSendMessageForm();
+    });
 
     $(document).on('click', '.message-change-status', function(e) {
         e.preventDefault();
@@ -205,11 +225,61 @@ $(document).ready(function() {
         });
     });
 
+    $(document).on('submit', '#send-message-form', function(e) {
+        var frm = $('#send-message-form');
+        e.preventDefault();
+
+        var data = {};
+
+        $.each(this, function(i, v){
+            var input = $(v);
+            data[input.attr("name")] = input.val();
+            delete data["undefined"];
+        });
+
+        console.log(JSON.stringify(data));
+
+        if(frm.valid()) {
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                type: frm.attr('method'),
+                url: frm.attr('action'),
+                data: JSON.stringify(data),
+                success: function(callback) {
+                    console.log(callback);
+                },
+                error: function (callback) {
+                    console.log(callback);
+                }
+            });
+
+            refreshForm(frm);
+            $("#send-message-form").modal('hide');
+        }
+    });
+
     $(document).on('click', '.reload-inbox', function(e) {
         e.preventDefault();
         reloadInboxList();
     });
 
+    $('#send-message-form').validate({
+        rules: {
+            receivers: {
+                required: true,
+                minlength: 3
+            },
+            topic: {
+                required: true,
+                minlength: 3
+            },
+            text: {
+                required: true,
+                minlength: 3
+            }
+        }
+    });
 
     //form validation
     $('#user-register-form').validate({

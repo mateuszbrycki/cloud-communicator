@@ -21,6 +21,19 @@ public class MessageReceiverDaoImpl extends AbstractDaoPostgreSQL implements Mes
     UserService userService;
 
     @Override
+    public void saveMessageReceiver(MessageReceiver messageReceiver) { persist(messageReceiver);}
+
+    @Override
+    public void updateMessageReceiver(MessageReceiver messageReceiver) { update(messageReceiver);}
+
+    @Override
+    public void deleteMessageReceiver(Integer id) {
+        Query query = getSession().createSQLQuery("DELETE m.* FROM message m WHERE m.message_id = :id");
+        query.setString("id", id.toString());
+        query.executeUpdate();
+    }
+
+    @Override
     public List<MessageReceiver> findMessageReceivers(Integer messageId) {
         Query query = getSession().createSQLQuery(
                 "SELECT mr.* FROM message_receiver mr WHERE mr.fk_message_id = :id"
@@ -66,7 +79,7 @@ public class MessageReceiverDaoImpl extends AbstractDaoPostgreSQL implements Mes
 
         MessageReceiver messageReceiver = new MessageReceiver();
 
-        messageReceiver.setReceiver(userService.findUserById((Integer) messageReceiverObject[1]));
+        messageReceiver.setReceiverId((Integer) messageReceiverObject[1]);
         messageReceiver.setIsRead((Boolean) messageReceiverObject[2]);
         messageReceiver.setReadDate((Date)messageReceiverObject[3]);
 
