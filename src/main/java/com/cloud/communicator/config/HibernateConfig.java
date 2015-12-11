@@ -27,7 +27,10 @@ public class HibernateConfig {
     public LocalSessionFactoryBean sessionFactoryMySQL() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSourceMySQL());
-        sessionFactory.setPackagesToScan(new String[]{"com.cloud.communicator"});
+        sessionFactory.setPackagesToScan(new String[]{
+                "com.cloud.communicator.module.user",
+                "com.cloud.communicator.module.userrole"
+        });
         sessionFactory.setHibernateProperties(hibernatePropertiesMySQL());
         return sessionFactory;
     }
@@ -63,7 +66,9 @@ public class HibernateConfig {
     public LocalSessionFactoryBean sessionFactoryPostgres() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSourcePostgres());
-        sessionFactory.setPackagesToScan(new String[]{"com.cloud.communicator"});
+        sessionFactory.setPackagesToScan(new String[]{
+                "com.cloud.communicator"
+        });
         sessionFactory.setHibernateProperties(hibernatePropertiesPostgres());
         return sessionFactory;
     }

@@ -103,12 +103,6 @@ INSERT INTO `user_role` (`id`, `role_id`) VALUES
 (2, 'ROLE_MODERATOR'),
 (3, 'ROLE_USER');
 
---DROP TABLE user_contacts;
---DROP TABLE contact_book;
---DROP TABLE user_message_folder;
---DROP TABLE folder;
---DROP TABLE message_receiver;
---DROP TABLE message;
 --DROP TABLE user_account;
 --DROP TABLE user_role;
 

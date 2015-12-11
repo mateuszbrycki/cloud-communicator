@@ -3,6 +3,8 @@ package com.cloud.communicator.module.message;
 import com.cloud.communicator.module.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,10 +14,12 @@ import java.util.List;
 @Entity
 @Table(name="message")
 public class Message {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="message_message_id_seq")
+    @SequenceGenerator(name="message_message_id_seq", sequenceName="message_message_id_seq", allocationSize=1)
     @Column(name="message_id")
-    private int id;
+    private Integer id;
 
     @NotNull
     @OneToOne
@@ -23,7 +27,6 @@ public class Message {
     private User author;
 
     @OneToMany
-    @JoinColumn(name="message_id")
     @JsonIgnore
     private List<MessageReceiver> receivers;
 

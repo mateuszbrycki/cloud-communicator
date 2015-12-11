@@ -54,32 +54,29 @@ public class RestMessageController {
         String[] receivers;
         receivers = receiversField.split(" ");
 
-        //sprawdzenie poprawności wprowadzonych danych oraz utworzenie wiadomości
+        Message message = new Message();
+        message.setAuthor(userService.findUserById(UserUtils.getUserId(request, response)));
+        message.setTopic(messageDTO.getTopic());
+        message.setText(messageDTO.getText());
+        message.setSendDate(new Date());
 
-            Message message = new Message();
+        messageService.saveMessage(message);
 
-            //ustawienieautora, tematu, tekstu
-            message.setAuthor(userService.findUserById(UserUtils.getUserId(request, response)));
-            message.setTopic(messageDTO.getTopic());
-            message.setText(messageDTO.getText());
-
-            message.setSendDate(new Date());
-
-            messageService.saveMessage(message);
-
-            for (String r : receivers) {
-                MessageReceiver messageReceiver = new MessageReceiver();
-                messageReceiver.setReceiverId(userService.getUserIdByUsername(r));
-                messageReceiver.setMessageId(message.getId());
-                messageReceiver.setIsRead(false);
-
-                messageReceiverService.saveMessageReceiver(messageReceiver);
+        for (String r : receivers) {
+            MessageReceiver messageReceiver = new MessageReceiver();
+            Integer userId = userService.getUserIdByUsername(r);
+            if(userId == null) {
+                return new ResponseEntity<String>(messageSource.getMessage("message.receiver.not.found", args, locale), HttpStatus.NOT_ACCEPTABLE);
             }
+            messageReceiver.setReceiverId(userId);
+            messageReceiver.setMessageId(message.getId());
+            messageReceiver.setIsRead(false);
 
-        return new ResponseEntity<String>( messageSource.getMessage("message.success.send", args, locale), HttpStatus.OK);
+            messageReceiverService.saveMessageReceiver(messageReceiver);
+        }
+
+        return new ResponseEntity<String>(messageSource.getMessage("message.success.send", args, locale), HttpStatus.OK);
     }
-
-
 
 
     @RequestMapping(value = MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_ID, method = RequestMethod.GET)
@@ -90,7 +87,7 @@ public class RestMessageController {
         try {
             Integer userId = UserUtils.getUserId(request, response);
             messageReceiverService.changeMessageReadStatus(id, userId);
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.OK);
@@ -98,13 +95,13 @@ public class RestMessageController {
 
     @RequestMapping(value = MessageUrls.Api.MESSAGE_DELETE_ID, method = RequestMethod.DELETE)
     public ResponseEntity<Message> deleteMessage(@PathVariable("messageId") Integer id,
-                                                HttpServletRequest request,
-                                                HttpServletResponse response) {
+                                                 HttpServletRequest request,
+                                                 HttpServletResponse response) {
 
         try {
             Integer userId = UserUtils.getUserId(request, response);
             messageReceiverService.deleteMessageForUser(id, userId);
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.FORBIDDEN);
         }
 

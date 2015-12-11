@@ -8,12 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name="message_receiver")
-public class MessageReceiver {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="message_receiver_id")
-    private int messageReceiverId;
+public class MessageReceiver implements Serializable{
 
     @Id
     @NotNull

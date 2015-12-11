@@ -17,6 +17,10 @@ function renderInboxList(data) {
         newPanelGroup.appendChild(alertDiv);
     } else {
 
+        if ($('.inbox-empty-alert').length) {
+            $('.inbox-empty-alert').hide();
+        }
+
         tableElement.className = "table table-hover table-striped";
         tableElement.id = "inbox-table";
 
@@ -152,12 +156,11 @@ function reloadInboxList() {
         url:  ctx + url['api_messages'] + "/",
         success : function(callback) {
             renderInboxList(callback);
-
             changeLoadingOverlay(false);
         },
         error : function (callback) {
             console.log(translations['request-failed']);
-
+            location.reload();
             changeLoadingOverlay(false);
         }
     });
@@ -205,7 +208,6 @@ $(document).ready(function() {
             }
         });
     });
-
 
     $(document).on('click', '.message-delete', function(e) {
         e.preventDefault();
@@ -257,6 +259,11 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('click', '.reload-inbox', function(e) {
+        e.preventDefault();
+        reloadInboxList();
+    });
+
     $('#send-message-form').validate({
         rules: {
             receivers: {
@@ -272,11 +279,6 @@ $(document).ready(function() {
                 minlength: 3
             }
         }
-    });
-
-    $(document).on('click', '.reload-inbox', function(e) {
-        e.preventDefault();
-        reloadInboxList();
     });
 
     //form validation
