@@ -1,6 +1,7 @@
 package com.cloud.communicator.module.message.service;
 
 import com.cloud.communicator.module.message.Message;
+import com.cloud.communicator.module.message.MessageReceiver;
 import com.cloud.communicator.module.message.dao.MessageDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,5 +37,19 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Message findMessageById(Integer messageId) {
         return this.messageDao.findMessageById(messageId);
+    }
+
+    @Override
+    public Boolean isAllowedToSeeMessage(Message message, Integer userID){
+
+        for(MessageReceiver messageReceiver: message.getReceivers())
+        {
+            if(messageReceiver.getReceiverId().equals(userID))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

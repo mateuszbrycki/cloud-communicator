@@ -3,9 +3,10 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <html>
 <body>
-
+<jsp:include page="form/received_message.jsp" />
 <script type="text/javascript">
     //refreshing inbox, 2 minutes interval
     setInterval(reloadInboxList, 120000);
@@ -34,7 +35,7 @@
         </tr>
 
         <c:forEach items="${messages}" var="message">
-        <tr <c:if test="${message.isRead != true}"> style="font-weight: bold; "</c:if>>
+        <tr class="inbox-element" <c:if test="${message.isRead != true}"> style="font-weight: bold; "</c:if> message-id="${message.id}">
             <td><fmt:formatDate value="${message.sendDate}" pattern="d.MM"/></td>
             <td>${message.author.username}</td>
             <td>${message.topic}</td>

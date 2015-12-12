@@ -8,6 +8,8 @@ public class MessageUrls implements UrlSpace {
 
     public class Api {
         public static final String MESSAGE = "/api"  + MessageUrls.MESSAGE;
+        public static final String MESSAGE_ID = "/{messageId}";
+        public static final String MESSAGE_FULL = Api.MESSAGE + "/";
 
         public static final String MESSAGES = "/api" + MessageUrls.MESSAGES;
 

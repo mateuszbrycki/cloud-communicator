@@ -107,4 +107,21 @@ public class RestMessageController {
 
         return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.OK);
     }
+
+    @RequestMapping(value = MessageUrls.Api.MESSAGE_ID, method = RequestMethod.GET)
+    public ResponseEntity<Object> getMessage(@PathVariable("messageId") Integer id,
+                                                 HttpServletRequest request,
+                                                 HttpServletResponse response,
+                                                 Locale locale) {
+
+        String[] args = {};
+        Message message = messageService.findMessageById(id);
+
+        if (messageService.isAllowedToSeeMessage(message, UserUtils.getUserId(request, response)))
+        {
+            return new ResponseEntity<Object>(message, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<Object>(messageSource.getMessage("message.user.notallowed", args, locale), HttpStatus.FORBIDDEN);
+    }
 }

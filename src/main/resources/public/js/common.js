@@ -174,6 +174,36 @@ function refreshForm(form) {
     form.validate().resetForm();
 }
 
+function renderMessageModal(data){
+
+    var author = document.getElementsByClassName("receiver-message-modal-author");
+    author.innerHTML = data.author.username;
+
+    var topic = document.getElementsByClassName("receiver-message-modal-topic");
+    topic.innerHTML = data.topic;
+
+    var text = document.getElementsByClassName("receiver-message-modal-text");
+    text.innerHTML = data.text;
+
+    $('#received-message-modal').modal({keyboard: true});
+    $("#received-message-modal").modal('show');
+}
+
+function showMessageModal(messageId){
+
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "GET",
+        url:  ctx + url['api_message'] + messageId,
+        success : function(callback) {
+            renderMessageModal(callback);
+        },
+        error : function (callback) {
+            console.log(translations['request-failed']);
+        }
+    });
+}
 
 $(document).ready(function() {
     //language select
@@ -262,6 +292,15 @@ $(document).ready(function() {
     $(document).on('click', '.reload-inbox', function(e) {
         e.preventDefault();
         reloadInboxList();
+    });
+
+
+
+
+    //wyświetlanie wiadomości
+    $(document).on('click', ".inbox-element", function(e){
+
+        showMessageModal($(this).attr('message-id'));
     });
 
     $('#send-message-form').validate({
