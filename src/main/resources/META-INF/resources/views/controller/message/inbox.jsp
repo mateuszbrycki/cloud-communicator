@@ -36,10 +36,10 @@
 
         <c:forEach items="${messages}" var="message">
         <tr class="inbox-element" <c:if test="${message.isRead != true}"> style="font-weight: bold; "</c:if> message-id="${message.id}">
-            <td><fmt:formatDate value="${message.sendDate}" pattern="d.MM"/></td>
-            <td>${message.author.username}</td>
-            <td>${message.topic}</td>
-            <td>${message.text}</td>
+            <td class="active-modal"><fmt:formatDate value="${message.sendDate}" pattern="d.MM"/></td>
+            <td class="active-modal">${message.author.username}</td>
+            <td class="active-modal">${message.topic}</td>
+            <td class="active-modal">${message.text}</td>
             <td>
                 <button type="button" class="message-change-status btn btn-primary"
                         href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>/${message.id}">

@@ -116,9 +116,11 @@ public class RestMessageController {
 
         String[] args = {};
         Message message = messageService.findMessageById(id);
+        Integer userId = UserUtils.getUserId(request, response);
 
-        if (messageService.isAllowedToSeeMessage(message, UserUtils.getUserId(request, response)))
+        if (messageService.isAllowedToSeeMessage(message, userId))
         {
+            messageReceiverService.setMessageAsRead(message.getId(), userId);
             return new ResponseEntity<Object>(message, HttpStatus.OK);
         }
 

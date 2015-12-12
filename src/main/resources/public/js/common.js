@@ -1,4 +1,3 @@
-
 function renderInboxList(data) {
     if (!$('#inbox-list').length) {
         return;
@@ -12,7 +11,7 @@ function renderInboxList(data) {
     var tableElement = document.createElement('table');
     var tableBody = document.createElement("tbody");
 
-    if(data.length == 0) {
+    if (data.length == 0) {
         var alertDiv = getEmptyAlert(translations['message-inbox-empty']);
         newPanelGroup.appendChild(alertDiv);
     } else {
@@ -48,25 +47,31 @@ function renderInboxList(data) {
         tableBody.appendChild(tableHeader);
     }
 
-    for(var i = 0; i < data.length; i++) {
+    for (var i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
+        tableRow.className = "inbox-element";
+        tableRow.setAttribute('message-id', data[i].id);
 
         var statusIcon = "glyphicon glyphicon-eye-close";
-        if(data[i].isRead != true) {
+        if (data[i].isRead != true) {
             tableRow.setAttribute("style", "font-weight: bold");
             statusIcon = "glyphicon glyphicon-eye-open";
         }
 
         var firstColumn = document.createElement('td');
+        firstColumn.className = "active-modal";
         firstColumn.appendChild(document.createTextNode(data[i].sendDate));
 
         var secondColumn = document.createElement('td');
+        secondColumn.className = "active-modal";
         secondColumn.appendChild(document.createTextNode(data[i].author.username));
 
         var thirdColumn = document.createElement('td');
+        thirdColumn.className = "active-modal";
         thirdColumn.appendChild(document.createTextNode(data[i].topic));
 
         var fourthColumn = document.createElement('td');
+        fourthColumn.className = "active-modal";
         fourthColumn.appendChild(document.createTextNode(data[i].text));
 
         var fifthColumn = document.createElement('td');
@@ -124,7 +129,7 @@ function changeLanguage(data) {
         contentType: "application/text; charset=utf-8",
         type: "GET",
         url: ctx + "?language=" + data,
-        success: function(callback) {
+        success: function (callback) {
             location.reload();
         },
         error: function (callback) {
@@ -139,7 +144,7 @@ function showSendMessageForm() {
 }
 
 function changeLoadingOverlay(flag) {
-    if(flag) {
+    if (flag) {
         document.getElementById('loading-overlay').style.display = 'block';
     } else {
         document.getElementById('loading-overlay').style.display = 'none';
@@ -153,12 +158,12 @@ function reloadInboxList() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         type: "GET",
-        url:  ctx + url['api_messages'] + "/",
-        success : function(callback) {
+        url: ctx + url['api_messages'] + "/",
+        success: function (callback) {
             renderInboxList(callback);
             changeLoadingOverlay(false);
         },
-        error : function (callback) {
+        error: function (callback) {
             console.log(translations['request-failed']);
             location.reload();
             changeLoadingOverlay(false);
@@ -174,40 +179,40 @@ function refreshForm(form) {
     form.validate().resetForm();
 }
 
-function renderMessageModal(data){
+function renderMessageModal(data) {
 
-    var author = document.getElementsByClassName("receiver-message-modal-author");
-    author.innerHTML = data.author.username;
-
-    var topic = document.getElementsByClassName("receiver-message-modal-topic");
-    topic.innerHTML = data.topic;
-
-    var text = document.getElementsByClassName("receiver-message-modal-text");
-    text.innerHTML = data.text;
+    $(".receiver-message-modal-author").html("<p>" + data.author.username + "</p>");
+    $(".receiver-message-modal-topic").html("<p>" + data.topic + "</p>");
+    $(".receiver-message-modal-text").html("<p>" + data.text + "</p>");
 
     $('#received-message-modal').modal({keyboard: true});
     $("#received-message-modal").modal('show');
 }
 
-function showMessageModal(messageId){
+function showMessageModal(messageId) {
 
     $.ajax({
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         type: "GET",
-        url:  ctx + url['api_message'] + messageId,
-        success : function(callback) {
+        url: ctx + url['api_message'] + messageId,
+        success: function (callback) {
             renderMessageModal(callback);
         },
-        error : function (callback) {
+        error: function (callback) {
             console.log(translations['request-failed']);
         }
     });
 }
 
-$(document).ready(function() {
+function hideMessageModal() {
+    $("#received-message-modal").modal('hide');
+    reloadInboxList();
+}
+
+$(document).ready(function () {
     //language select
-    if($.cookie(languageCookieName)) {
+    if ($.cookie(languageCookieName)) {
         $('#language-select').val($.cookie(languageCookieName));
     } else {
         $("#language-select").val($("#language-select").val());
@@ -215,53 +220,53 @@ $(document).ready(function() {
     try {
         $("#language-select").msDropDown();
         $("#language-select_msdd").width(80);
-    } catch(e) {
+    } catch (e) {
         console.log(e.message);
     }
 
-    $(document).on('click', '.send-message-button', function() {
+    $(document).on('click', '.send-message-button', function () {
         showSendMessageForm();
     });
 
-    $(document).on('click', '.message-change-status', function(e) {
+    $(document).on('click', '.message-change-status', function (e) {
         e.preventDefault();
         $.ajax({
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             type: "GET",
-            url:  ctx + $(this).attr('href'),
-            success : function(callback) {
+            url: ctx + $(this).attr('href'),
+            success: function (callback) {
                 reloadInboxList();
             },
-            error : function (callback) {
+            error: function (callback) {
                 console.log(translations['request-failed']);
             }
         });
     });
 
-    $(document).on('click', '.message-delete', function(e) {
+    $(document).on('click', '.message-delete', function (e) {
         e.preventDefault();
         $.ajax({
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             type: "DELETE",
-            url:  ctx + $(this).attr('href'),
-            success : function(callback) {
+            url: ctx + $(this).attr('href'),
+            success: function (callback) {
                 reloadInboxList();
             },
-            error : function (callback) {
+            error: function (callback) {
                 console.log(translations['request-failed']);
             }
         });
     });
 
-    $(document).on('submit', '#send-message-form', function(e) {
+    $(document).on('submit', '#send-message-form', function (e) {
         var frm = $('#send-message-form');
         e.preventDefault();
 
         var data = {};
 
-        $.each(this, function(i, v){
+        $.each(this, function (i, v) {
             var input = $(v);
             data[input.attr("name")] = input.val();
             delete data["undefined"];
@@ -269,14 +274,14 @@ $(document).ready(function() {
 
         console.log(JSON.stringify(data));
 
-        if(frm.valid()) {
+        if (frm.valid()) {
             $.ajax({
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 type: frm.attr('method'),
                 url: frm.attr('action'),
                 data: JSON.stringify(data),
-                success: function(callback) {
+                success: function (callback) {
                     console.log(callback);
                 },
                 error: function (callback) {
@@ -289,18 +294,17 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('click', '.reload-inbox', function(e) {
+    $(document).on('click', '.reload-inbox', function (e) {
         e.preventDefault();
         reloadInboxList();
     });
 
+    $(document).on('click', ".active-modal", function (e) {
+        showMessageModal($(this).parent().attr('message-id'));
+    });
 
-
-
-    //wyświetlanie wiadomości
-    $(document).on('click', ".inbox-element", function(e){
-
-        showMessageModal($(this).attr('message-id'));
+    $(document).on('click', '.received-message-form-close', function() {
+        hideMessageModal();
     });
 
     $('#send-message-form').validate({
