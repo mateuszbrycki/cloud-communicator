@@ -36,7 +36,7 @@ public class MessageReceiver implements Serializable{
         this.messageId = messageId;
     }
 
-    public Integer getReceiver() {
+    public Integer getReceiverId() {
         return receiverId;
     }
 
@@ -62,7 +62,7 @@ public class MessageReceiver implements Serializable{
 
     @Override
     public String toString() {
-        return "MessageReceiver {receiver: " + this.getReceiver() +
+        return "MessageReceiver {receiver: " + this.getReceiverId() +
                 ", is read: " + this.getIsRead() +
                 ", read date: " + this.getReadDate() + "}";
     }

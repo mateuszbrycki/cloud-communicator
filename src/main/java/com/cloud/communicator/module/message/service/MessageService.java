@@ -18,4 +18,7 @@ public interface MessageService {
     List<Message> findUserInboxMessages(Integer userId);
 
     Message findMessageById(Integer messageId);
+
+    Boolean isAllowedToSeeMessage(Message message, Integer userID);
+
 }

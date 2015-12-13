@@ -22,4 +22,6 @@ public interface MessageReceiverService {
     void changeMessageReadStatus(Integer messageId, Integer userId);
 
     void deleteMessageForUser(Integer messageId, Integer userId);
+
+    void setMessageAsRead(Integer messageId, Integer userId);
 }
