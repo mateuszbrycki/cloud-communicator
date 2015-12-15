@@ -13,6 +13,8 @@ public interface MessageService {
 
     void updateMessage(Message message);
 
+    void deleteMessage(Message message);
+
     void deleteMessage(Integer id);
 
     List<Message> findUserInboxMessages(Integer userId);

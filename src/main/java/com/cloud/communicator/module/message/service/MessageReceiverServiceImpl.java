@@ -26,7 +26,12 @@ public class MessageReceiverServiceImpl implements MessageReceiverService{
     public void updateMessageReceiver(MessageReceiver messageReceiver) { this.messageReceiverDao.updateMessageReceiver(messageReceiver); }
 
     @Override
-    public void deleteMessageReceiver(Integer id) { this.messageReceiverDao.deleteMessageReceiver(id); }
+    public void deleteMessageReceiver(MessageReceiver messageReceiver) { this.messageReceiverDao.deleteMessageReceiver(messageReceiver); }
+
+    @Override
+    public MessageReceiver findMessageReceiver(Integer messageId, Integer userId) {
+        return this.messageReceiverDao.findMessageReceiver(messageId, userId);
+    }
 
     @Override
     public List<MessageReceiver> findMessageReceivers(Integer messageId) {

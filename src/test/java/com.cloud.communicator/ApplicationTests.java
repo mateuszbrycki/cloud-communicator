@@ -40,4 +40,10 @@ public class ApplicationTests {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void loginRequired() throws Exception {
+        mockMvc.perform(get("/app/"))
+                .andExpect(status().is3xxRedirection());
+    }
 }

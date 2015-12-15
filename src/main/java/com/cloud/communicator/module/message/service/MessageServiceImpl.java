@@ -27,6 +27,9 @@ public class MessageServiceImpl implements MessageService {
     public void updateMessage(Message message) { messageDao.updateMessage(message); }
 
     @Override
+    public void deleteMessage(Message message) { messageDao.deleteMessage(message); }
+
+    @Override
     public void deleteMessage(Integer id) { messageDao.deleteMessage(id); }
 
     @Override
