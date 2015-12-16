@@ -142,6 +142,7 @@ public class MessageReceiverServiceTests {
 
         assertEquals( (Integer) testUser3.getId(), (Integer) findedReceiver.getReceiverId());
 
+        
         userService.deleteUserById(testUser3.getId());
         messageService.deleteMessage(testMessage3);
         messageReceiverService.deleteMessageReceiver(messageReceiver1);
