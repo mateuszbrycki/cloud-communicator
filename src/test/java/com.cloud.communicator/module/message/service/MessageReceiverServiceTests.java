@@ -116,6 +116,36 @@ public class MessageReceiverServiceTests {
         assertNull(deletedMessageReceiver);
     }
 
+    public void findMessageReceiver()
+    {
+        User testUser3 = new User();
+        testUser3.setMail("tes3t@test.gmail.com");
+        testUser3.setUsername("testusername3");
+        testUser3.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
+        testUser3.setPassword("testpassword3");
+        userService.saveUser(testUser3);
+
+        Message testMessage3 = new Message();
+        testMessage3.setAuthor(testUser3);
+        testMessage3.setTopic("Test message3 topic.");
+        testMessage3.setText("Test message3.");
+        testMessage3.setSendDate(new Date());
+        messageService.saveMessage(testMessage3);
+
+        MessageReceiver messageReceiver1 = new MessageReceiver();
+        messageReceiver1.setIsRead(false);
+        messageReceiver.setMessageId(testMessage3.getId());
+        messageReceiver.setReceiverId(testUser3.getId());
+        messageReceiverService.saveMessageReceiver(messageReceiver);
+
+        MessageReceiver findedReceiver = messageReceiverService.findMessageReceiver(testMessage3.getId(), testUser3.getId());
+
+        assertEquals( (Integer) testUser3.getId(), (Integer) findedReceiver.getReceiverId());
+
+        userService.deleteUserById(testUser3.getId());
+        messageService.deleteMessage(testMessage3);
+        messageReceiverService.deleteMessageReceiver(messageReceiver1);
+    }
 
     @After
     public void clearDatabase() {

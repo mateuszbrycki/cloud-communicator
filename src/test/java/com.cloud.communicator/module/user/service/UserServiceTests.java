@@ -59,7 +59,7 @@ public class UserServiceTests {
         assertNotNull(newUser);
         assertEquals("test@test.gmail.com", newUser.getMail());
         assertEquals("testusername", newUser.getUsername());
-        assertEquals(User.DEFAULT_ROLE,newUser.getRole());
+        assertEquals(User.DEFAULT_ROLE, newUser.getRole().getRole());
         assertEquals("testpassword", newUser.getPassword());
 
     }
@@ -80,9 +80,11 @@ public class UserServiceTests {
 
     @Test
     public void deleteUserById() {
+        int temp = testUser.getId();
+
         userService.deleteUserById(testUser.getId());
 
-        User deletedUser = userService.findUserById(testUser.getId());
+        User deletedUser = userService.findUserById(temp);
 
         assertNull(deletedUser);
     }
@@ -98,6 +100,49 @@ public class UserServiceTests {
 
         assertTrue(userService.checkIfUserWithMailExists("test2@test.gmail.com"));
         assertFalse(userService.checkIfUserWithMailExists("exampleusername"));
+
+        userService.deleteUserById(testUser2.getId());
+    }
+
+    @Test
+    public void checkIfUserWithUsernameExists() {
+        User testUser2 = new User();
+        testUser2.setMail("test2@test.gmail.com");
+        testUser2.setUsername("testusername2");
+        testUser2.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
+        testUser2.setPassword("testpassword2");
+        userService.saveUser(testUser2);
+
+        assertTrue(userService.checkIfUserWithUsernameExists("testusername2"));
+        assertFalse(userService.checkIfUserWithUsernameExists("exampleusername"));
+
+        userService.deleteUserById(testUser2.getId());
+    }
+
+    @Test
+    public void getUserIdByUsername() {
+        User testUser2 = new User();
+        testUser2.setMail("test2@test.gmail.com");
+        testUser2.setUsername("testusername2");
+        testUser2.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
+        testUser2.setPassword("testpassword2");
+        userService.saveUser(testUser2);
+
+        assertEquals( (Integer) testUser2.getId(), (Integer) userService.getUserIdByUsername("testusername2"));
+
+        userService.deleteUserById(testUser2.getId());
+    }
+
+    @Test
+    public void findUserById() {
+        User testUser2 = new User();
+        testUser2.setMail("test2@test.gmail.com");
+        testUser2.setUsername("testusername2");
+        testUser2.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
+        testUser2.setPassword("testpassword2");
+        userService.saveUser(testUser2);
+
+        assertEquals("testusername2", userService.findUserById(testUser2.getId()).getUsername());
 
         userService.deleteUserById(testUser2.getId());
     }
