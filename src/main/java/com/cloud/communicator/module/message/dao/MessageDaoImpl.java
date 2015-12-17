@@ -28,9 +28,12 @@ public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao 
     public void updateMessage(Message message) { update(message);}
 
     @Override
+    public void deleteMessage(Message message) { delete(message);}
+
+    @Override
     public void deleteMessage(Integer id) {
-        Query query = getSession().createSQLQuery("DELETE m.* FROM message m WHERE m.message_id = :id");
-        query.setString("id", id.toString());
+        Query query = getSession().createSQLQuery("DELETE FROM message m WHERE m.message_id = :id");
+        query.setInteger("id", id);
         query.executeUpdate();
     }
 
@@ -68,6 +71,10 @@ public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao 
     private Message mapMessageObject(Object[] messageObject) {
 
         Message message = new Message();
+
+        if(messageObject == null) {
+            return null;
+        }
 
         message.setId((Integer) messageObject[0]);
         message.setAuthor(this.userService.findUserById((Integer) messageObject[1]));

@@ -15,7 +15,9 @@ public interface MessageReceiverDao {
 
     void updateMessageReceiver(MessageReceiver messageReceiver);
 
-    void deleteMessageReceiver(Integer id);
+    void deleteMessageReceiver(MessageReceiver messageReceiver);
+
+    MessageReceiver findMessageReceiver(Integer messageId, Integer userId);
 
     List<MessageReceiver> findMessageReceivers(Integer messageId);
 

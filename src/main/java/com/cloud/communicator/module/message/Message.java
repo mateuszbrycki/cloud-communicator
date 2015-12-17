@@ -28,6 +28,7 @@ public class Message {
 
     @OneToMany
     @JsonIgnore
+    @Transient
     private List<MessageReceiver> receivers;
 
     @NotNull

@@ -78,11 +78,16 @@ public class UserDaoImpl extends AbstractDaoMySQL implements UserDao {
 
     private User mapUserObject(Object[] userObject) {
 
+        if(userObject == null) {
+            return null;
+        }
+
         User user = new User();
         user.setId((Integer)userObject[0]);
         user.setUsername((String) userObject[1]);
         user.setRole(this.userRoleService.findById((Integer) userObject[2]));
         user.setMail((String)userObject[3]);
+        user.setPassword((String)userObject[4]);
         user.setIsActive((Boolean)userObject[5]);
         return user;
     }
