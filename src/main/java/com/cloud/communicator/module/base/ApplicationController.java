@@ -1,6 +1,8 @@
 package com.cloud.communicator.module.base;
 
+import com.cloud.communicator.module.message.Folder;
 import com.cloud.communicator.module.message.Message;
+import com.cloud.communicator.module.message.service.FolderService;
 import com.cloud.communicator.module.message.service.MessageService;
 import com.cloud.communicator.util.UserUtils;
 import org.apache.log4j.Logger;
@@ -25,6 +27,9 @@ public class ApplicationController {
     @Inject
     private MessageService messageService;
 
+    @Inject
+    private FolderService folderService;
+
     private static final Logger logger = Logger.getLogger(ApplicationController.class);
 
     @RequestMapping(method = RequestMethod.GET)
@@ -32,6 +37,10 @@ public class ApplicationController {
 
         Integer userId = UserUtils.getUserId(request, response);
         logger.debug(userId);
+
+        List<Folder> folders = folderService.findUserFoldersByUserId(userId);
+        model.addAttribute("folders", folders);
+        logger.debug(folders);
 
         List<Message> messages = messageService.findUserInboxMessages(userId);
         model.addAttribute("messages", messages);

@@ -1,6 +1,7 @@
 package com.cloud.communicator.module.message.service;
 
 import com.cloud.communicator.module.message.Message;
+import com.cloud.communicator.module.user.User;
 
 import java.util.List;
 
@@ -19,8 +20,12 @@ public interface MessageService {
 
     List<Message> findUserInboxMessages(Integer userId);
 
+    List<Message> findUserFolderMessages(Integer userId, Integer folderId);
+
     Message findMessageById(Integer messageId);
 
     Boolean isAllowedToSeeMessage(Message message, Integer userID);
+
+    void sendMessage(Message message, List<User> receivers);
 
 }

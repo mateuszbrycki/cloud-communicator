@@ -27,3 +27,19 @@
     font-size: 35px;
     margin: 10px 0px;
 }
+
+.container {
+    width: 90%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#folders-list .add-new-folder{
+    color: #959595;
+}
+
+#folders-list .add-new-folder .glyphicon {
+    float: right;
+}

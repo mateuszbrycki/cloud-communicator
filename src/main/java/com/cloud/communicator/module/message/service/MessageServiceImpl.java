@@ -1,8 +1,11 @@
 package com.cloud.communicator.module.message.service;
 
+import com.cloud.communicator.module.message.Folder;
 import com.cloud.communicator.module.message.Message;
 import com.cloud.communicator.module.message.MessageReceiver;
+import com.cloud.communicator.module.message.UserMessageFolder;
 import com.cloud.communicator.module.message.dao.MessageDao;
+import com.cloud.communicator.module.user.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,15 @@ public class MessageServiceImpl implements MessageService {
 
     @Inject
     private MessageDao messageDao;
+
+    @Inject
+    FolderService folderService;
+
+    @Inject
+    MessageReceiverService messageReceiverService;
+
+    @Inject
+    UserMessageFolderService userMessageFolderService;
 
 
     @Override
@@ -38,6 +50,11 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public List<Message> findUserFolderMessages(Integer userId, Integer folderId) {
+        return messageDao.findUserFolderMessages(userId, folderId);
+    }
+
+    @Override
     public Message findMessageById(Integer messageId) {
         return this.messageDao.findMessageById(messageId);
     }
@@ -54,5 +71,35 @@ public class MessageServiceImpl implements MessageService {
         }
 
         return false;
+    }
+
+    @Override
+    public void sendMessage(Message message, List<User> receivers) {
+
+        //save message
+        this.saveMessage(message);
+
+        for(User receiver : receivers) {
+
+            MessageReceiver messageReceiver = new MessageReceiver();
+
+            messageReceiver.setReceiverId(receiver.getId());
+            messageReceiver.setMessageId(message.getId());
+            messageReceiver.setIsRead(false);
+
+            //save receiver
+            this.messageReceiverService.saveMessageReceiver(messageReceiver);
+
+            UserMessageFolder userMessageFolder = new UserMessageFolder();
+            userMessageFolder.setMessageId(message.getId());
+            userMessageFolder.setUserId(receiver.getId());
+
+            Folder defaultUserFolder = this.folderService.findUserDefaultFolder(receiver.getId());
+            userMessageFolder.setFolderId(defaultUserFolder.getId());
+
+            //assign message to user default folder - inbox
+            this.userMessageFolderService.saveUserMessageFolder(userMessageFolder);
+        }
+
     }
 }

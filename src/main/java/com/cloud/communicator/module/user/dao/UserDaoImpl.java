@@ -68,6 +68,14 @@ public class UserDaoImpl extends AbstractDaoMySQL implements UserDao {
     }
 
     @Override
+    public User findUserByUsername(String username) {
+        Query query = getSession().createSQLQuery("SELECT * FROM user_account u WHERE u.username = :username");
+        query.setString("username", username);
+
+        return this.mapUserObject((Object[])query.uniqueResult());
+    }
+
+    @Override
     public Integer getUserIdByUsername(String username)
     {
         Query query = getSession().createSQLQuery("SELECT u.user_id FROM user_account u WHERE u.username = :username");

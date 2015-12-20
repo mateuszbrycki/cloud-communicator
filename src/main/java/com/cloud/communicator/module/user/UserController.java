@@ -1,6 +1,8 @@
 package com.cloud.communicator.module.user;
 
 import com.cloud.communicator.module.base.BaseUrls;
+import com.cloud.communicator.module.message.Folder;
+import com.cloud.communicator.module.message.service.FolderService;
 import com.cloud.communicator.module.user.service.UserService;
 import com.cloud.communicator.module.userrole.service.UserRoleService;
 import com.cloud.communicator.util.UserUtils;
@@ -24,6 +26,10 @@ public class UserController {
 
     @Inject
     private UserService userService;
+
+
+    @Inject
+    private FolderService folderService;
 
     @Inject
     private UserRoleService userRoleService;
@@ -64,14 +70,23 @@ public class UserController {
         logger.debug(userDTO);
 
         if(!userMailExists && !usernameExist && passwordsAreEqual) {
+
+            //create user
             User user = new User();
             user.setUsername(userDTO.getUsername());
             user.setMail(userDTO.getMail());
             user.setPassword(userDTO.getPassword());
             user.setIsActive(User.DEFAULT_IS_ACTIVE);
             user.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
-
             userService.saveUser(user);
+
+            //creating default folder
+            Folder folder = new Folder();
+            folder.setOwner(user);
+            folder.setName(Folder.DEFAULT_FOLDER_NAME);
+            folder.setDescription(Folder.DEFAULT_FOLDER_DESCRIPTION);
+            folder.setIsUserDefaultFolder(true);
+            folderService.saveFolder(folder);
 
             model.addAttribute("success", messageSource.getMessage("user.message.success.register", args, locale));
 

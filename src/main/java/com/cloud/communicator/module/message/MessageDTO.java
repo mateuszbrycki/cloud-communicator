@@ -3,9 +3,6 @@ package com.cloud.communicator.module.message;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotNull;
 
-/**
- * Created by Mateusz on 09.12.2015.
- */
 public class MessageDTO {
 
     @NotNull

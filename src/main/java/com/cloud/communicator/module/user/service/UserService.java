@@ -19,5 +19,7 @@ public interface UserService {
 
     User findUserById(Integer userId);
 
+    User findUserByUsername(String username);
+
     Integer getUserIdByUsername(String username);
 }

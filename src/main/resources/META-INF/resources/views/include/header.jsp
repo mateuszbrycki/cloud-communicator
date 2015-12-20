@@ -1,4 +1,5 @@
 <%@ page import="com.cloud.communicator.module.message.MessageUrls" %>
+<%@ page import="com.cloud.communicator.module.message.FolderUrls" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
@@ -31,18 +32,23 @@
             'author': "<spring:message code="message.author" />",
             'topic': "<spring:message code="message.topic" />",
             'text': "<spring:message code="message.text" />",
-            'message-inbox-empty': "<spring:message code="message.inbox.empty" />"
+            'message-inbox-empty': "<spring:message code="message.inbox.empty" />",
+            'folder-add':  "<spring:message code="folder.add" />"
         };
 
         var url = {
             'api_message_change_status': "<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>",
             'api_message_delete': "<%=MessageUrls.Api.MESSAGE_DELETE_FULL%>",
             'api_message': "<%=MessageUrls.Api.MESSAGE_FULL%>",
-            'api_messages': "<%=MessageUrls.Api.MESSAGES%>"
+            'api_messages': "<%=MessageUrls.Api.MESSAGES%>",
+            'api_folders': "<%=FolderUrls.Api.FOLDERS%>",
+            'api_messages_folder': "<%=MessageUrls.Api.MESSAGES_FOLDER_FULL%>"
         };
 
         var ctx = "${pageContext.request.contextPath}";
         var languageCookieName = "org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE";
+
+        var currentFolder = null;
     </script>
 
 </head>

@@ -20,7 +20,8 @@ CREATE TABLE folder (
 	name VARCHAR(255) NOT NULL,
 	description TEXT NOT NULL,
 	label_color INTEGER,
-	owner_id INTEGER NOT NULL,
+	fk_owner_id INTEGER NOT NULL,
+	is_default_user_folder boolean,
 	audit_cd TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	audit_md TIMESTAMP
 );
