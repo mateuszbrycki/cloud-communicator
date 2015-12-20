@@ -231,6 +231,14 @@ function reloadFoldersList() {
 
 
 function renderFolderMessages(folderId){
+
+    $(document).ajaxStop(function() {
+        $(this).unbind("ajaxStop");
+        changeLoadingOverlay(false);
+    });
+
+    changeLoadingOverlay(true);
+
     currentFolder = folderId;
     $.ajax({
         contentType: "application/json; charset=utf-8",
@@ -249,18 +257,14 @@ function renderFolderMessages(folderId){
 
 //refreshing whole dashboard
 function refreshDashboard() {
-    changeLoadingOverlay(true);
-
-    reloadMessagesList();
-    reloadFoldersList();
-
     $(document).ajaxStop(function() {
         $(this).unbind("ajaxStop");
         changeLoadingOverlay(false);
     });
+    changeLoadingOverlay(true);
 
-
-
+    reloadMessagesList();
+    reloadFoldersList();
 }
 
 function refreshForm(form) {
@@ -325,6 +329,12 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.message-change-status', function (e) {
+        $(document).ajaxStop(function() {
+            $(this).unbind("ajaxStop");
+            changeLoadingOverlay(false);
+        });
+
+        changeLoadingOverlay(true);
         e.preventDefault();
         $.ajax({
             contentType: "application/json; charset=utf-8",
@@ -341,6 +351,12 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.message-delete', function (e) {
+        $(document).ajaxStop(function() {
+            $(this).unbind("ajaxStop");
+            changeLoadingOverlay(false);
+        });
+
+        changeLoadingOverlay(true);
         e.preventDefault();
         $.ajax({
             contentType: "application/json; charset=utf-8",
