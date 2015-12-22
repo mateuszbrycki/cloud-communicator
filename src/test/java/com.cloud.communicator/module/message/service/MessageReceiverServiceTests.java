@@ -18,6 +18,7 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +48,6 @@ public class MessageReceiverServiceTests {
 
     Message testMessage, testMessage2;
     User testUser, testUser2;
-    MessageReceiver messageReceiver;
 
     private static final Logger logger = Logger.getLogger(MessageServiceTests.class);
 
@@ -58,7 +58,7 @@ public class MessageReceiverServiceTests {
         testUser.setUsername("testusername");
         testUser.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
         testUser.setPassword("testpassword");
-        userService.saveUser(testUser);
+        userService.registerUser(testUser);
 
         testMessage = new Message();
         testMessage.setAuthor(testUser);
@@ -72,20 +72,14 @@ public class MessageReceiverServiceTests {
         testUser2.setUsername("testusername2");
         testUser2.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
         testUser2.setPassword("testpassword2");
-        userService.saveUser(testUser2);
+        userService.registerUser(testUser2);
 
         testMessage2 = new Message();
         testMessage2.setAuthor(testUser2);
         testMessage2.setTopic("Test message2 topic.");
         testMessage2.setText("Test message2.");
         testMessage2.setSendDate(new Date());
-        messageService.saveMessage(testMessage2);
-
-        messageReceiver = new MessageReceiver();
-        messageReceiver.setIsRead(false);
-        messageReceiver.setMessageId(testMessage2.getId());
-        messageReceiver.setReceiverId(testUser.getId());
-        messageReceiverService.saveMessageReceiver(messageReceiver);
+        messageService.sendMessage(testMessage2, Arrays.asList(testUser));
     }
 
     @Test
@@ -98,9 +92,8 @@ public class MessageReceiverServiceTests {
 
     @Test
     public void updateMessageReceiver() {
-        messageReceiver.setIsRead(true);
 
-        messageReceiverService.updateMessageReceiver(messageReceiver);
+        messageReceiverService.setMessageAsRead(testMessage2.getId(), testUser.getId());
 
         MessageReceiver messageReceiverUpdated = messageReceiverService.findMessageReceiver(testMessage2.getId(), testUser.getId());
 
@@ -109,49 +102,43 @@ public class MessageReceiverServiceTests {
 
     @Test
     public void deleteMessageReceiver() {
-        messageReceiverService.deleteMessageReceiver(messageReceiver);
+
+        messageReceiverService.deleteMessageForUser(testMessage2.getId(), testUser.getId());
 
         MessageReceiver deletedMessageReceiver = messageReceiverService.findMessageReceiver(testMessage2.getId(), testUser.getId());
 
         assertNull(deletedMessageReceiver);
     }
 
-    public void findMessageReceiver()
-    {
+    @Test
+    public void findMessageReceiver() {
+
         User testUser3 = new User();
         testUser3.setMail("tes3t@test.gmail.com");
         testUser3.setUsername("testusername3");
         testUser3.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
         testUser3.setPassword("testpassword3");
-        userService.saveUser(testUser3);
+        userService.registerUser(testUser3);
 
         Message testMessage3 = new Message();
         testMessage3.setAuthor(testUser3);
         testMessage3.setTopic("Test message3 topic.");
         testMessage3.setText("Test message3.");
         testMessage3.setSendDate(new Date());
-        messageService.saveMessage(testMessage3);
+        messageService.sendMessage(testMessage3, Arrays.asList(testUser3));
 
-        MessageReceiver messageReceiver1 = new MessageReceiver();
-        messageReceiver1.setIsRead(false);
-        messageReceiver.setMessageId(testMessage3.getId());
-        messageReceiver.setReceiverId(testUser3.getId());
-        messageReceiverService.saveMessageReceiver(messageReceiver);
+        MessageReceiver foundReceiver = messageReceiverService.findMessageReceiver(testMessage3.getId(), testUser3.getId());
 
-        MessageReceiver findedReceiver = messageReceiverService.findMessageReceiver(testMessage3.getId(), testUser3.getId());
-
-        assertEquals( (Integer) testUser3.getId(), (Integer) findedReceiver.getReceiverId());
+        assertEquals((Integer) testUser3.getId(), (Integer) foundReceiver.getReceiverId());
 
         userService.deleteUserById(testUser3.getId());
         messageService.deleteMessage(testMessage3);
-        messageReceiverService.deleteMessageReceiver(messageReceiver1);
     }
 
     @After
     public void clearDatabase() {
         userService.deleteUserById(testUser.getId());
         messageService.deleteMessage(testMessage.getId());
-        messageReceiverService.deleteMessageForUser(testMessage2.getId(), testUser.getId());
         messageService.deleteMessage(testMessage2.getId());
         userService.deleteUserById(testUser2.getId());
     }

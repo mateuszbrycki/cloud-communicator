@@ -26,8 +26,21 @@ public class FolderServiceImpl implements FolderService {
     public void deleteFolder(Folder folder) { this.folderDao.deleteFolder(folder); }
 
     @Override
+    public void deleteFolder(Integer id) { this.folderDao.deleteFolder(id); }
+
+    @Override
+    public void deleteUserFoldersByUserId(Integer userId) {
+        this.folderDao.deleteUserFoldersByUserId(userId);
+    }
+
+    @Override
     public List<Folder> findUserFoldersByUserId(Integer userId){
         return this.folderDao.findUserFoldersByUserId(userId);
+    }
+
+    @Override
+    public Folder findFolderById(Integer folderId) {
+        return this.folderDao.findFolderById(folderId);
     }
 
     @Override

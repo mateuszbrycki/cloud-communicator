@@ -26,6 +26,25 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
     public void deleteFolder(Folder folder) { delete(folder); }
 
     @Override
+    public void deleteFolder(Integer id) {
+        Query query = getSession().createSQLQuery("DELETE FROM folder F WHERE f.folder_id = :id");
+        query.setInteger("id", id);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void deleteUserFoldersByUserId(Integer userId) {
+        Query query = getSession().createSQLQuery(
+                "DELETE FROM folder f " +
+                        "WHERE f.fk_owner_id = :userId"
+        );
+
+        query.setInteger("userId", userId);
+
+        query.executeUpdate();
+    }
+
+    @Override
     public List<Folder> findUserFoldersByUserId(Integer userId) {
         Query query = getSession().createSQLQuery(
                 "SELECT f.*, get_user_folder_unread_messages(f.fk_owner_id, f.folder_id) AS unread_message " +
@@ -54,6 +73,18 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
         return this.mapFolderObject((Object[]) query.uniqueResult());
     }
 
+    @Override
+    public Folder findFolderById(Integer folderId) {
+
+        Query query = getSession().createSQLQuery(
+                "SELECT f.*" +
+                        "FROM folder f " +
+                        "WHERE f.folder_id= :id");
+        query.setInteger("id", folderId);
+
+        return this.mapFolderObject((Object[]) query.uniqueResult());
+    }
+
     private Folder mapFolderObject(Object[] folderObject) {
 
         if(folderObject == null) {
@@ -67,7 +98,11 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
         folder.setLabelColor((Integer) folderObject[3]);
         folder.setOwner(this.userService.findUserById((Integer) folderObject[4]));
         folder.setIsUserDefaultFolder((Boolean) folderObject[5]);
-        folder.setUnreadMessages((Integer) folderObject[8]);
+
+        if(folderObject.length > 8) {
+            folder.setUnreadMessages((Integer) folderObject[8]);
+        }
+
 
         return folder;
     }

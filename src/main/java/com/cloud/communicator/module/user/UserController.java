@@ -50,7 +50,7 @@ public class UserController {
     @RequestMapping(value = UserUrls.USER_REGISTER, method = RequestMethod.GET)
     public String registerFormPage(HttpServletRequest request, HttpServletResponse response) {
 
-        if(UserUtils.isAutheniticated(request, response)) {
+        if (UserUtils.isAutheniticated(request, response)) {
             return "redirect:" + BaseUrls.APPLICATION;
         }
 
@@ -62,42 +62,30 @@ public class UserController {
                                ModelMap model, Locale locale) {
 
         Boolean passwordsAreEqual = userDTO.getPassword().equals(userDTO.getPasswordRepeat());
-        Boolean userMailExists = userService.checkIfUserWithMailExists(userDTO.getMail());
-        Boolean usernameExist = userService.checkIfUserWithUsernameExists(userDTO.getUsername());
 
         String[] args = {};
 
         logger.debug(userDTO);
 
-        if(!userMailExists && !usernameExist && passwordsAreEqual) {
+        if (passwordsAreEqual) {
 
-            //create user
+            //map UserDTO to User
             User user = new User();
             user.setUsername(userDTO.getUsername());
             user.setMail(userDTO.getMail());
             user.setPassword(userDTO.getPassword());
             user.setIsActive(User.DEFAULT_IS_ACTIVE);
             user.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
-            userService.saveUser(user);
 
-            //creating default folder
-            Folder folder = new Folder();
-            folder.setOwner(user);
-            folder.setName(Folder.DEFAULT_FOLDER_NAME);
-            folder.setDescription(Folder.DEFAULT_FOLDER_DESCRIPTION);
-            folder.setIsUserDefaultFolder(true);
-            folderService.saveFolder(folder);
+            if(this.userService.registerUser(user)) {
 
-            model.addAttribute("success", messageSource.getMessage("user.message.success.register", args, locale));
-
-        } else {
-            if (userMailExists) {
-                model.addAttribute("error", messageSource.getMessage("user.message.error.mail", args, locale));
-            } else if (usernameExist) {
-                model.addAttribute("error",  messageSource.getMessage("user.message.error.username", args, locale));
-            }  else {
-                model.addAttribute("error",  messageSource.getMessage("user.message.error.passwords", args, locale));
+                model.addAttribute("success", messageSource.getMessage("user.message.success.register", args, locale));
+            } else {
+                model.addAttribute("error", messageSource.getMessage("user.message.error", args, locale));
             }
+        } else {
+            model.addAttribute("error", messageSource.getMessage("user.message.error.passwords", args, locale));
+
         }
 
         return this.viewPath + "register";
