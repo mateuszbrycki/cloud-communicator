@@ -27,8 +27,19 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
 
     @Override
     public void deleteFolder(Integer id) {
-        Query query = getSession().createSQLQuery("DELETE FROM folder F WHERE f.folder_id = :id");
+        Query query = getSession().createSQLQuery("DELETE FROM folder f " +
+                "WHERE f.folder_id = :id AND f.is_default_user_folder != true");
         query.setInteger("id", id);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void deleteFolder(Integer folderId, Integer userId) {
+        Query query = getSession().createSQLQuery("DELETE FROM folder f " +
+                "WHERE f.folder_id = :folderId " +
+                "AND f.fk_owner_id = :userId AND f.is_default_user_folder != true");
+        query.setInteger("folderId", folderId);
+        query.setInteger("userId", userId);
         query.executeUpdate();
     }
 
@@ -36,7 +47,7 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
     public void deleteUserFoldersByUserId(Integer userId) {
         Query query = getSession().createSQLQuery(
                 "DELETE FROM folder f " +
-                        "WHERE f.fk_owner_id = :userId"
+                        "WHERE f.fk_owner_id = :userId "
         );
 
         query.setInteger("userId", userId);
@@ -67,7 +78,7 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
         Query query = getSession().createSQLQuery(
                 "SELECT f.*,  get_user_folder_unread_messages(f.fk_owner_id, f.folder_id) AS unread_message " +
                         "FROM folder f " +
-                        "WHERE f.fk_owner_id= :id AND is_default_user_folder = true LIMIT 1");
+                        "WHERE f.fk_owner_id= :id AND f.is_default_user_folder = true LIMIT 1");
         query.setInteger("id", userId);
 
         return this.mapFolderObject((Object[]) query.uniqueResult());

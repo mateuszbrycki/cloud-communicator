@@ -10,6 +10,10 @@ public class FolderUrls implements UrlSpace {
     public class Api {
         public static final String FOLDER = "/api"  + FolderUrls.FOLDER;
 
+        public static final String FOLDER_DELETE = "/delete";
+        public static final String FOLDER_DELETE_FULL = Api.FOLDER + Api.FOLDER_DELETE;
+        public static final String FOLDER_DELETE_ID = FOLDER_DELETE + "/{folderId}";
+
         public static final String FOLDERS = "/api" + FolderUrls.FOLDERS;
     }
 }

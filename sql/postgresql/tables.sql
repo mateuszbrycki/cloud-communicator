@@ -21,7 +21,7 @@ CREATE TABLE folder (
 	description TEXT NOT NULL,
 	label_color INTEGER,
 	fk_owner_id INTEGER NOT NULL,
-	is_default_user_folder boolean,
+	is_default_user_folder boolean DEFAULT FALSE,
 	audit_cd TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	audit_md TIMESTAMP
 );

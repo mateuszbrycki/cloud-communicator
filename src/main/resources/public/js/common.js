@@ -193,7 +193,7 @@ function changeLoadingOverlay(flag) {
 
 function reloadMessagesList() {
 
-    var folderUrl = ctx + url['api_messages'] + "/" ;
+    var folderUrl = ctx + url['api_messages'] + "/";
     if (currentFolder != null) {
         folderUrl = folderUrl + currentFolder;
     }
@@ -230,9 +230,9 @@ function reloadFoldersList() {
 }
 
 
-function renderFolderMessages(folderId){
+function renderFolderMessages(folderId) {
 
-    $(document).ajaxStop(function() {
+    $(document).ajaxStop(function () {
         $(this).unbind("ajaxStop");
         changeLoadingOverlay(false);
     });
@@ -257,7 +257,7 @@ function renderFolderMessages(folderId){
 
 //refreshing whole dashboard
 function refreshDashboard() {
-    $(document).ajaxStop(function() {
+    $(document).ajaxStop(function () {
         $(this).unbind("ajaxStop");
         changeLoadingOverlay(false);
     });
@@ -306,6 +306,64 @@ function hideMessageModal() {
     refreshDashboard();
 }
 
+function deleteFolder(folderId) {
+
+    console.log('deleteFolder');
+
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "DELETE",
+        url: ctx + url['api_folder_delete'] + '/' + folderId,
+        success: function (callback) {
+            renderFoldersList(callback);
+        },
+        error: function (callback) {
+            console.log(translations['request-failed']);
+        }
+    });
+}
+
+function contextMenu(e, settings) {
+    // Open context menu
+    // return native menu if pressing control
+    if (e.ctrlKey) return;
+
+    //open menu
+    var $menu = $(settings.menuSelector)
+        .data("invokedOn", $(e.target))
+        .show()
+        .css({
+            position: "absolute",
+            left: getMenuPosition(e.clientX, 'width', 'scrollLeft', settings.menuSelector),
+            top: getMenuPosition(e.clientY, 'height', 'scrollTop', settings.menuSelector)
+        })
+        .off('click')
+        .on('click', 'a', function (e) {
+            $menu.hide();
+
+            var $invokedOn = $menu.data("invokedOn");
+            var $selectedMenu = $(e.target);
+
+            settings.menuSelected.call(this, $invokedOn, $selectedMenu);
+        });
+
+    return false;
+}
+
+function getMenuPosition(mouse, direction, scrollDir) {
+    var win = $(window)[direction](),
+        scroll = $(window)[scrollDir](),
+        menu = $(menuSelector)[direction](),
+        position = mouse + scroll;
+
+    // opening menu would pass the side of the page
+    if (mouse + menu > win && menu < mouse)
+        position -= menu;
+
+    return position;
+}
+
 $(document).ready(function () {
     //language select
     if ($.cookie(languageCookieName)) {
@@ -329,7 +387,7 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.message-change-status', function (e) {
-        $(document).ajaxStop(function() {
+        $(document).ajaxStop(function () {
             $(this).unbind("ajaxStop");
             changeLoadingOverlay(false);
         });
@@ -351,7 +409,7 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.message-delete', function (e) {
-        $(document).ajaxStop(function() {
+        $(document).ajaxStop(function () {
             $(this).unbind("ajaxStop");
             changeLoadingOverlay(false);
         });
@@ -447,7 +505,7 @@ $(document).ready(function () {
         showMessageModal($(this).parent().attr('message-id'));
     });
 
-    $(document).on('click', '.received-message-form-close', function() {
+    $(document).on('click', '.received-message-form-close', function () {
         hideMessageModal();
     });
 
@@ -502,4 +560,30 @@ $(document).ready(function () {
             }
         }
     });
+
+    //make sure menu closes on any click
+    $(document).click(function () {
+        $(menuSelector).hide();
+    });
+
+    $(document).on('contextmenu', '.folder-element', function (e) {
+        e.preventDefault();
+        contextMenu(e, {
+            menuSelector: menuSelector,
+            menuSelected: function (invokedOn, selectedMenu) {
+                var actionId = selectedMenu.attr('action-id');
+                var folderId = invokedOn.attr('folder-id');
+
+                switch (actionId) {
+                    case '0': //open
+                        renderFolderMessages(folderId);
+                        break;
+                    case '1': //delete
+                        deleteFolder(folderId);
+                        break;
+                }
+            }
+        });
+    });
 });
+
