@@ -123,6 +123,7 @@ function renderFoldersList(data) {
         var liElement = document.createElement('li');
         liElement.className = 'list-group-item folder-element';
         liElement.setAttribute('folder-id', data[i].id);
+        liElement.setAttribute('style', 'border-left: 5px solid ' + data[i].labelColor);
         liElement.appendChild(document.createTextNode(data[i].name));
 
         if(data[i].unreadMessages > 0) {
@@ -307,8 +308,6 @@ function hideMessageModal() {
 }
 
 function deleteFolder(folderId) {
-
-    console.log('deleteFolder');
 
     $.ajax({
         contentType: "application/json; charset=utf-8",

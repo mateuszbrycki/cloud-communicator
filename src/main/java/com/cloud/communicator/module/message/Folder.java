@@ -22,7 +22,7 @@ public class Folder {
     private String description;
 
     @Column(name="label_color")
-    private Integer labelColor;
+    private String labelColor;
 
     @NotNull
     @OneToOne
@@ -63,11 +63,11 @@ public class Folder {
         this.description = description;
     }
 
-    public Integer getLabelColor() {
+    public String getLabelColor() {
         return labelColor;
     }
 
-    public void setLabelColor(Integer labelColor) {
+    public void setLabelColor(String labelColor) {
         this.labelColor = labelColor;
     }
 

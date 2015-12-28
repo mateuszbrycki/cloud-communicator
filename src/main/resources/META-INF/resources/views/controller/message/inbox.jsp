@@ -42,7 +42,9 @@
         <ul class="list-group" id="folders-list">
             <c:forEach items="${folders}" var="folder">
                 <li class="list-group-item folder-element"
-                    folder-id="${folder.id}">
+                    folder-id="${folder.id}"
+                    <c:if test="${not empty folder.labelColor}"> style="border-left: 5px solid ${folder.labelColor}"</c:if>
+                >
 
                         ${folder.name}
                     <c:if test="${folder.unreadMessages gt 0}">

@@ -10,7 +10,7 @@ public class FolderDTO {
     @Length(min = 3)
     private String name;
 
-    private Integer label;
+    private String label;
 
     private String description;
 
@@ -22,11 +22,11 @@ public class FolderDTO {
         this.name = name;
     }
 
-    public Integer getLabel() {
+    public String getLabel() {
         return label;
     }
 
-    public void setLabel(Integer label) {
+    public void setLabel(String label) {
         this.label = label;
     }
 
