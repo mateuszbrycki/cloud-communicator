@@ -52,6 +52,7 @@ public class FolderServiceTests {
         testFolder.setName("Test folder");
         testFolder.setDescription("Test folder");
         testFolder.setOwner(testUser);
+        testFolder.setIsUserDefaultFolder(false);
         folderService.saveFolder(testFolder);
     }
 
@@ -80,6 +81,15 @@ public class FolderServiceTests {
     public void deleteFolder() {
 
         folderService.deleteFolder(testFolder);
+
+        Folder deletedFolder = folderService.findFolderById(testFolder.getId());
+
+        assertNull(deletedFolder);
+    }
+
+    @Test
+    public void deleteFolderByFolderId() {
+        folderService.deleteFolder(testFolder.getId(), testUser.getId());
 
         Folder deletedFolder = folderService.findFolderById(testFolder.getId());
 

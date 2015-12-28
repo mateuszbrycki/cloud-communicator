@@ -13,6 +13,8 @@ public interface FolderDao {
 
     void deleteFolder(Integer id);
 
+    void deleteFolder(Integer folderId, Integer userId);
+
     void deleteUserFoldersByUserId(Integer userId);
 
     List<Folder> findUserFoldersByUserId(Integer userId);
