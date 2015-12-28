@@ -19,7 +19,7 @@ CREATE TABLE folder (
 	folder_id SERIAL PRIMARY KEY,
 	name VARCHAR(255) NOT NULL,
 	description TEXT NOT NULL,
-	label_color INTEGER,
+	label_color TEXT,
 	fk_owner_id INTEGER NOT NULL,
 	is_default_user_folder boolean DEFAULT FALSE,
 	audit_cd TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

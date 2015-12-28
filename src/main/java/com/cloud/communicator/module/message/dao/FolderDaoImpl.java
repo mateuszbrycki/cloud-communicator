@@ -106,15 +106,14 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
         folder.setId((Integer) folderObject[0]);
         folder.setName((String) folderObject[1]);
         folder.setDescription((String) folderObject[2]);
-        folder.setLabelColor((Integer) folderObject[3]);
+        folder.setLabelColor((String) folderObject[3]);
         folder.setOwner(this.userService.findUserById((Integer) folderObject[4]));
         folder.setIsUserDefaultFolder((Boolean) folderObject[5]);
 
         if(folderObject.length > 8) {
             folder.setUnreadMessages((Integer) folderObject[8]);
         }
-
-
+        
         return folder;
     }
 }

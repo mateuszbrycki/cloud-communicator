@@ -18,12 +18,14 @@
     <link rel="stylesheet" href="<c:url value="/css/styles.css" />">
     <link rel="stylesheet" href="<c:url value="/css/bootstrap-glyphicons.css" />">
     <link rel="stylesheet" href="<c:url value="/css/spinners.css" />">
+    <link rel="stylesheet" href="<c:url value="/css/bootstrap-colorpicker.min.css" />">
 
     <script src="<c:url value="/js/lib/jquery_1_11_1_min.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/bootstrap_3_2_0_min.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/jquery_msdropdown_dd.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/jquery_cookie_1_4_1.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/jquery_validate_1_12_0_min.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/js/lib/bootstrap-colorpicker.min.js" />" type="text/javascript"></script>
 
     <script src="<c:url value="/js/common.js" />" type="text/javascript"></script>
     <script>
