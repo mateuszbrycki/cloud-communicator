@@ -1,6 +1,8 @@
 package com.cloud.communicator.module.user;
 
 import com.cloud.communicator.module.base.BaseUrls;
+import com.cloud.communicator.module.message.Folder;
+import com.cloud.communicator.module.message.service.FolderService;
 import com.cloud.communicator.module.user.service.UserService;
 import com.cloud.communicator.module.userrole.service.UserRoleService;
 import com.cloud.communicator.util.UserUtils;
@@ -25,6 +27,10 @@ public class UserController {
     @Inject
     private UserService userService;
 
+
+    @Inject
+    private FolderService folderService;
+
     @Inject
     private UserRoleService userRoleService;
 
@@ -44,7 +50,7 @@ public class UserController {
     @RequestMapping(value = UserUrls.USER_REGISTER, method = RequestMethod.GET)
     public String registerFormPage(HttpServletRequest request, HttpServletResponse response) {
 
-        if(UserUtils.isAutheniticated(request, response)) {
+        if (UserUtils.isAutheniticated(request, response)) {
             return "redirect:" + BaseUrls.APPLICATION;
         }
 
@@ -56,14 +62,14 @@ public class UserController {
                                ModelMap model, Locale locale) {
 
         Boolean passwordsAreEqual = userDTO.getPassword().equals(userDTO.getPasswordRepeat());
-        Boolean userMailExists = userService.checkIfUserWithMailExists(userDTO.getMail());
-        Boolean usernameExist = userService.checkIfUserWithUsernameExists(userDTO.getUsername());
 
         String[] args = {};
 
         logger.debug(userDTO);
 
-        if(!userMailExists && !usernameExist && passwordsAreEqual) {
+        if (passwordsAreEqual) {
+
+            //map UserDTO to User
             User user = new User();
             user.setUsername(userDTO.getUsername());
             user.setMail(userDTO.getMail());
@@ -71,18 +77,15 @@ public class UserController {
             user.setIsActive(User.DEFAULT_IS_ACTIVE);
             user.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
 
-            userService.saveUser(user);
+            if(this.userService.registerUser(user)) {
 
-            model.addAttribute("success", messageSource.getMessage("user.message.success.register", args, locale));
-
-        } else {
-            if (userMailExists) {
-                model.addAttribute("error", messageSource.getMessage("user.message.error.mail", args, locale));
-            } else if (usernameExist) {
-                model.addAttribute("error",  messageSource.getMessage("user.message.error.username", args, locale));
-            }  else {
-                model.addAttribute("error",  messageSource.getMessage("user.message.error.passwords", args, locale));
+                model.addAttribute("success", messageSource.getMessage("user.message.success.register", args, locale));
+            } else {
+                model.addAttribute("error", messageSource.getMessage("user.message.error", args, locale));
             }
+        } else {
+            model.addAttribute("error", messageSource.getMessage("user.message.error.passwords", args, locale));
+
         }
 
         return this.viewPath + "register";

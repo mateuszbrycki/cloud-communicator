@@ -7,7 +7,7 @@ CREATE TABLE message (
 	audit_md TIMESTAMP
 );
 CREATE TABLE message_receiver (
-	fk_message_id INTEGER REFERENCES message (message_id) ON UPDATE CASCADE,
+	fk_message_id INTEGER REFERENCES message (message_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	fk_user_id INTEGER,
 	is_read boolean NOT NULL,
 	read_date TIMESTAMP,
@@ -20,14 +20,15 @@ CREATE TABLE folder (
 	name VARCHAR(255) NOT NULL,
 	description TEXT NOT NULL,
 	label_color INTEGER,
-	owner_id INTEGER NOT NULL,
+	fk_owner_id INTEGER NOT NULL,
+	is_default_user_folder boolean DEFAULT FALSE,
 	audit_cd TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	audit_md TIMESTAMP
 );
 CREATE TABLE user_message_folder (
-	fk_message_id INTEGER REFERENCES message (message_id) ON UPDATE CASCADE,
+	fk_message_id INTEGER REFERENCES message (message_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	fk_user_id INTEGER,
-	fk_folder_id INTEGER REFERENCES folder (folder_id) ON UPDATE CASCADE,
+	fk_folder_id INTEGER REFERENCES folder (folder_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	PRIMARY KEY(fk_message_id, fk_user_id, fk_folder_id)
 );
 
@@ -41,7 +42,7 @@ CREATE TABLE contact_book (
 
 CREATE TABLE user_contacts (
 	fk_user_id INTEGER,
-	fk_contact_book_id INTEGER REFERENCES contact_book (contact_book_id) ON UPDATE CASCADE,
+	fk_contact_book_id INTEGER REFERENCES contact_book (contact_book_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	fk_person_in_book_id INTEGER,
 	PRIMARY KEY(fk_user_id, fk_contact_book_id, fk_person_in_book_id)
 );
