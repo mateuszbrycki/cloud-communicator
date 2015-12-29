@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.util.List;
 
-/**
- * Created by Mateusz on 04.12.2015.
- */
+
 @Service("messageService")
 @Transactional(value = "transactionManagerPostgreSQL")
 public class MessageServiceImpl implements MessageService {

@@ -364,6 +364,30 @@ function getMenuPosition(mouse, direction, scrollDir) {
 }
 
 $(document).ready(function () {
+
+    $(".receivers-select").select2({
+        tags: true,
+        tokenSeparators: [" ", ","],
+        multiple: true,
+        ajax: {
+            url: ctx + url['api_user_username'] + "/",
+            dataType: 'json',
+            delay: 500,
+            data: function (params) {
+               return {
+                    username: params.term
+                }
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+
+                };
+            }
+        },
+        width: '100%',
+    });
+
     //language select
     if ($.cookie(languageCookieName)) {
         $('#language-select').val($.cookie(languageCookieName));
@@ -441,6 +465,8 @@ $(document).ready(function () {
             delete data["undefined"];
         });
 
+        data["receivers"] = data["receivers"].join(" ");
+
         console.log(JSON.stringify(data));
 
         if (frm.valid()) {
@@ -457,8 +483,8 @@ $(document).ready(function () {
                     console.log(callback);
                 }
             });
-
             refreshForm(frm);
+            $(".receivers-select").select2('val', 'All'); //reseting select with usernames
             $("#send-message-modal").modal('hide');
         }
     });
@@ -515,8 +541,7 @@ $(document).ready(function () {
     $('#send-message-form').validate({
         rules: {
             receivers: {
-                required: true,
-                minlength: 3
+                required: true
             },
             topic: {
                 required: true,

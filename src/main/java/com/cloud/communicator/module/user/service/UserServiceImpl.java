@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.List;
 
-/**
- * Created by Mateusz Brycki on 28/04/2015.
- */
 @Service("userService")
 @Transactional(value = "transactionManagerMySQL")
 public class UserServiceImpl implements UserService {
@@ -57,6 +55,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer getUserIdByUsername(String username){ return userDao.getUserIdByUsername(username);}
+
+    @Override
+    public List<User> findUsersByUsername(String username) {
+        return userDao.findUsersByUsername(username);
+    }
 
     @Override
     public Boolean registerUser(User user) {

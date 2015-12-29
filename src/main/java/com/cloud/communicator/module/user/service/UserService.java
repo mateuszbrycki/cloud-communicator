@@ -3,9 +3,8 @@ package com.cloud.communicator.module.user.service;
 
 import com.cloud.communicator.module.user.User;
 
-/**
- * Created by Mateusz Brycki on 28/04/2015.
- */
+import java.util.List;
+
 public interface UserService {
     void saveUser(User user);
 
@@ -20,6 +19,8 @@ public interface UserService {
     User findUserById(Integer userId);
 
     User findUserByUsername(String username);
+
+    List<User> findUsersByUsername(String username);
 
     Integer getUserIdByUsername(String username);
 

@@ -61,7 +61,7 @@ public class RestMessageController {
 
         List<User> receiversList = new ArrayList<User>();
         for(String receiver : receiversField.split(" ")) {
-            User receiverObject = userService.findUserByUsername(receiver);
+            User receiverObject = userService.findUserById(Integer.parseInt(receiver));
 
             if(receiverObject == null) {
                 return new ResponseEntity<String>(messageSource.getMessage("message.receiver.not.found", args, locale), HttpStatus.NOT_ACCEPTABLE);
