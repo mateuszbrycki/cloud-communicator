@@ -1,4 +1,4 @@
-function renderInboxList(data) {
+function renderMessagesList(data) {
     if (!$('#inbox-list').length) {
         return;
     }
@@ -6,7 +6,7 @@ function renderInboxList(data) {
     var oldPanelGroup = document.getElementById('inbox-list');
     var newPanelGroup = document.createElement('div');
     newPanelGroup.id = 'inbox-list';
-    newPanelGroup.className = 'table-responsive';
+    newPanelGroup.className = 'table-responsive col-xs-12 col-md-10';
 
     var tableElement = document.createElement('table');
     var tableBody = document.createElement("tbody");
@@ -113,6 +113,42 @@ function renderInboxList(data) {
     oldPanelGroup.parentElement.replaceChild(newPanelGroup, oldPanelGroup);
 }
 
+function renderFoldersList(data) {
+    var oldPanelGroup = document.getElementById('folders-list');
+    var newPanelGroup = document.createElement('ul');
+    newPanelGroup.id = 'folders-list';
+    newPanelGroup.className = 'list-group';
+
+    for (var i = 0; i < data.length; i++) {
+        var liElement = document.createElement('li');
+        liElement.className = 'list-group-item folder-element';
+        liElement.setAttribute('folder-id', data[i].id);
+        liElement.setAttribute('style', 'border-left: 5px solid ' + data[i].labelColor);
+        liElement.appendChild(document.createTextNode(data[i].name));
+
+        if(data[i].unreadMessages > 0) {
+            var spanElement = document.createElement('span');
+            spanElement.className = 'badge';
+            spanElement.appendChild(document.createTextNode(data[i].unreadMessages));
+            liElement.appendChild(spanElement)
+        }
+
+        newPanelGroup.appendChild(liElement);
+    }
+
+    var liElement = document.createElement('li');
+    liElement.className = 'list-group-item add-new-folder';
+    liElement.appendChild(document.createTextNode(translations['folder-add']));
+
+    var spanElement = document.createElement('span');
+    spanElement.className = 'glyphicon glyphicon-plus';
+
+    liElement.appendChild(spanElement);
+    newPanelGroup.appendChild(liElement);
+
+    oldPanelGroup.parentElement.replaceChild(newPanelGroup, oldPanelGroup);
+}
+
 function getEmptyAlert(element) {
     var alertDiv = document.createElement('div');
     alertDiv.className = 'alert alert-info';
@@ -143,6 +179,11 @@ function showSendMessageForm() {
     $("#send-message-modal").modal('show');
 }
 
+function showNewFolderForm() {
+    $('#add-folder-modal').modal({keyboard: true});
+    $("#add-folder-modal").modal('show');
+}
+
 function changeLoadingOverlay(flag) {
     if (flag) {
         document.getElementById('loading-overlay').style.display = 'block';
@@ -151,24 +192,80 @@ function changeLoadingOverlay(flag) {
     }
 }
 
-function reloadInboxList() {
+function reloadMessagesList() {
 
-    changeLoadingOverlay(true);
+    var folderUrl = ctx + url['api_messages'] + "/";
+    if (currentFolder != null) {
+        folderUrl = folderUrl + currentFolder;
+    }
+
     $.ajax({
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         type: "GET",
-        url: ctx + url['api_messages'] + "/",
+        url: folderUrl,
         success: function (callback) {
-            renderInboxList(callback);
-            changeLoadingOverlay(false);
+            renderMessagesList(callback);
         },
         error: function (callback) {
             console.log(translations['request-failed']);
             location.reload();
-            changeLoadingOverlay(false);
         }
     });
+}
+
+function reloadFoldersList() {
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "GET",
+        url: ctx + url['api_folders'] + "/",
+        success: function (callback) {
+            renderFoldersList(callback);
+        },
+        error: function (callback) {
+            console.log(translations['request-failed']);
+            location.reload();
+        }
+    });
+}
+
+
+function renderFolderMessages(folderId) {
+
+    $(document).ajaxStop(function () {
+        $(this).unbind("ajaxStop");
+        changeLoadingOverlay(false);
+    });
+
+    changeLoadingOverlay(true);
+
+    currentFolder = folderId;
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "GET",
+        url: ctx + url['api_messages_folder'] + "/" + folderId,
+        success: function (callback) {
+            renderMessagesList(callback);
+        },
+        error: function (callback) {
+            console.log(translations['request-failed']);
+            location.reload();
+        }
+    });
+}
+
+//refreshing whole dashboard
+function refreshDashboard() {
+    $(document).ajaxStop(function () {
+        $(this).unbind("ajaxStop");
+        changeLoadingOverlay(false);
+    });
+    changeLoadingOverlay(true);
+
+    reloadMessagesList();
+    reloadFoldersList();
 }
 
 function refreshForm(form) {
@@ -207,7 +304,63 @@ function showMessageModal(messageId) {
 
 function hideMessageModal() {
     $("#received-message-modal").modal('hide');
-    reloadInboxList();
+    refreshDashboard();
+}
+
+function deleteFolder(folderId) {
+
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "DELETE",
+        url: ctx + url['api_folder_delete'] + '/' + folderId,
+        success: function (callback) {
+            renderFoldersList(callback);
+        },
+        error: function (callback) {
+            console.log(translations['request-failed']);
+        }
+    });
+}
+
+function contextMenu(e, settings) {
+    // Open context menu
+    // return native menu if pressing control
+    if (e.ctrlKey) return;
+
+    //open menu
+    var $menu = $(settings.menuSelector)
+        .data("invokedOn", $(e.target))
+        .show()
+        .css({
+            position: "absolute",
+            left: getMenuPosition(e.clientX, 'width', 'scrollLeft', settings.menuSelector),
+            top: getMenuPosition(e.clientY, 'height', 'scrollTop', settings.menuSelector)
+        })
+        .off('click')
+        .on('click', 'a', function (e) {
+            $menu.hide();
+
+            var $invokedOn = $menu.data("invokedOn");
+            var $selectedMenu = $(e.target);
+
+            settings.menuSelected.call(this, $invokedOn, $selectedMenu);
+        });
+
+    return false;
+}
+
+function getMenuPosition(mouse, direction, scrollDir) {
+    var win = $(window)[direction](),
+        scroll = $(window)[scrollDir](),
+        menu = $(menuSelector)[direction](),
+        position = mouse + scroll;
+
+    // opening menu would pass the side of the page
+    if (mouse + menu > win && menu < mouse)
+        position -= menu;
+
+    return position;
 }
 
 $(document).ready(function () {
@@ -228,7 +381,17 @@ $(document).ready(function () {
         showSendMessageForm();
     });
 
+    $(document).on('click', '.add-new-folder', function () {
+        showNewFolderForm();
+    });
+
     $(document).on('click', '.message-change-status', function (e) {
+        $(document).ajaxStop(function () {
+            $(this).unbind("ajaxStop");
+            changeLoadingOverlay(false);
+        });
+
+        changeLoadingOverlay(true);
         e.preventDefault();
         $.ajax({
             contentType: "application/json; charset=utf-8",
@@ -236,7 +399,7 @@ $(document).ready(function () {
             type: "GET",
             url: ctx + $(this).attr('href'),
             success: function (callback) {
-                reloadInboxList();
+                refreshDashboard();
             },
             error: function (callback) {
                 console.log(translations['request-failed']);
@@ -245,6 +408,12 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.message-delete', function (e) {
+        $(document).ajaxStop(function () {
+            $(this).unbind("ajaxStop");
+            changeLoadingOverlay(false);
+        });
+
+        changeLoadingOverlay(true);
         e.preventDefault();
         $.ajax({
             contentType: "application/json; charset=utf-8",
@@ -252,7 +421,7 @@ $(document).ready(function () {
             type: "DELETE",
             url: ctx + $(this).attr('href'),
             success: function (callback) {
-                reloadInboxList();
+                refreshDashboard();
             },
             error: function (callback) {
                 console.log(translations['request-failed']);
@@ -290,21 +459,57 @@ $(document).ready(function () {
             });
 
             refreshForm(frm);
-            $("#send-message-form").modal('hide');
+            $("#send-message-modal").modal('hide');
+        }
+    });
+
+    $(document).on('submit', '#add-folder-form', function (e) {
+        var frm = $('#add-folder-form');
+        e.preventDefault();
+
+        var data = {};
+
+        $.each(this, function (i, v) {
+            var input = $(v);
+            data[input.attr("name")] = input.val();
+            delete data["undefined"];
+        });
+
+        if (frm.valid()) {
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                type: frm.attr('method'),
+                url: frm.attr('action'),
+                data: JSON.stringify(data),
+                success: function (callback) {
+                    refreshDashboard();
+                },
+                error: function (callback) {
+                    console.log(callback);
+                }
+            });
+
+            refreshForm(frm);
+            $("#add-folder-modal").modal('hide');
         }
     });
 
     $(document).on('click', '.reload-inbox', function (e) {
         e.preventDefault();
-        reloadInboxList();
+        refreshDashboard();
     });
 
     $(document).on('click', ".active-modal", function (e) {
         showMessageModal($(this).parent().attr('message-id'));
     });
 
-    $(document).on('click', '.received-message-form-close', function() {
+    $(document).on('click', '.received-message-form-close', function () {
         hideMessageModal();
+    });
+
+    $(document).on('click', '.folder-element', function (e) {
+        renderFolderMessages($(this).attr('folder-id'));
     });
 
     $('#send-message-form').validate({
@@ -318,6 +523,15 @@ $(document).ready(function () {
                 minlength: 3
             },
             text: {
+                required: true,
+                minlength: 3
+            }
+        }
+    });
+
+    $('#add-folder-form').validate({
+        rules: {
+            name: {
                 required: true,
                 minlength: 3
             }
@@ -345,4 +559,30 @@ $(document).ready(function () {
             }
         }
     });
+
+    //make sure menu closes on any click
+    $(document).click(function () {
+        $(menuSelector).hide();
+    });
+
+    $(document).on('contextmenu', '.folder-element', function (e) {
+        e.preventDefault();
+        contextMenu(e, {
+            menuSelector: menuSelector,
+            menuSelected: function (invokedOn, selectedMenu) {
+                var actionId = selectedMenu.attr('action-id');
+                var folderId = invokedOn.attr('folder-id');
+
+                switch (actionId) {
+                    case '0': //open
+                        renderFolderMessages(folderId);
+                        break;
+                    case '1': //delete
+                        deleteFolder(folderId);
+                        break;
+                }
+            }
+        });
+    });
 });
+

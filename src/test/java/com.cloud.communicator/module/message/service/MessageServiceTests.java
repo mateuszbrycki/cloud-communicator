@@ -21,6 +21,8 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -57,8 +59,7 @@ public class MessageServiceTests {
         testUser.setUsername("testusername");
         testUser.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
         testUser.setPassword("testpassword");
-        userService.saveUser(testUser);
-
+        userService.registerUser(testUser);
 
         testMessage = new Message();
         testMessage.setAuthor(testUser);
@@ -66,7 +67,6 @@ public class MessageServiceTests {
         testMessage.setText("Test message.");
         testMessage.setSendDate(new Date());
         messageService.saveMessage(testMessage);
-
     }
 
     @Test
@@ -119,27 +119,20 @@ public class MessageServiceTests {
         testUser2.setUsername("testusername2");
         testUser2.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
         testUser2.setPassword("testpassword2");
-        userService.saveUser(testUser2);
+        userService.registerUser(testUser2);
 
         Message testMessage2 = new Message();
         testMessage2.setAuthor(testUser2);
         testMessage2.setTopic("Test message2 topic.");
         testMessage2.setText("Test message2.");
         testMessage2.setSendDate(new Date());
-        messageService.saveMessage(testMessage2);
-
-        MessageReceiver messageReceiver = new MessageReceiver();
-        messageReceiver.setIsRead(false);
-        messageReceiver.setMessageId(testMessage2.getId());
-        messageReceiver.setReceiverId(testUser.getId());
-        messageReceiverService.saveMessageReceiver(messageReceiver);
+        messageService.sendMessage(testMessage2, Arrays.asList(testUser));
 
         List<Message> inboxMessages = messageService.findUserInboxMessages(testUser.getId());
 
         assertEquals(testMessage2.getId(), inboxMessages.get(0).getId());
         assertEquals(testMessage2.getAuthor().getUsername(), testUser2.getUsername());
 
-        messageReceiverService.deleteMessageForUser(testMessage2.getId(), testUser.getId());
         messageService.deleteMessage(testMessage2.getId());
         userService.deleteUserById(testUser2.getId());
 
@@ -156,27 +149,20 @@ public class MessageServiceTests {
         testUser2.setUsername("testusername2");
         testUser2.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
         testUser2.setPassword("testpassword2");
-        userService.saveUser(testUser2);
+        userService.registerUser(testUser2);
 
         Message testMessage2 = new Message();
         testMessage2.setAuthor(testUser2);
         testMessage2.setTopic("Test message2 topic.");
         testMessage2.setText("Test message2.");
         testMessage2.setSendDate(new Date());
-        messageService.saveMessage(testMessage2);
-
-        MessageReceiver messageReceiver = new MessageReceiver();
-        messageReceiver.setIsRead(false);
-        messageReceiver.setMessageId(testMessage2.getId());
-        messageReceiver.setReceiverId(testUser.getId());
-        messageReceiverService.saveMessageReceiver(messageReceiver);
+        messageService.sendMessage(testMessage2, Arrays.asList(testUser));
 
         Message messageWithReceivers = messageService.findMessageById(testMessage2.getId());
 
         assertTrue(messageService.isAllowedToSeeMessage(messageWithReceivers, testUser.getId()));
         assertFalse(messageService.isAllowedToSeeMessage(messageWithReceivers, testUser2.getId()));
 
-        messageReceiverService.deleteMessageForUser(testMessage2.getId(), testUser.getId());
         messageService.deleteMessage(testMessage2.getId());
         userService.deleteUserById(testUser2.getId());
     }

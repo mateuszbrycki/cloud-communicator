@@ -6,72 +6,114 @@
 
 <html>
 <body>
-<jsp:include page="form/received_message.jsp" />
+<jsp:include page="form/received_message.jsp"/>
+<jsp:include page="form/add_folder.jsp"/>
 <script type="text/javascript">
     //refreshing inbox, 2 minutes interval
-    setInterval(reloadInboxList, 120000);
+    setInterval(refreshDashboard, 120000);
 </script>
 
-<nav id="inbox-toolbar">
-    <button type="button" class="send-message-button btn btn-default">
-        <span class="glyphicon glyphicon-plus"></span>
-    </button>
+<!-- Folder context menu -->
+<ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none">
+    <li><a tabindex="-1" action-id="0"><spring:message code="folder.open"/></a></li>
+    <li class="divider"></li>
+    <li><a tabindex="-1" action-id="1"><spring:message code="folder.delete"/></a></li>
+</ul>
 
-    <button type="button" class="reload-inbox btn btn-default">
-        <span class="glyphicon glyphicon-refresh"></span>
-    </button>
-</nav>
-<div class="table-responsive" id="inbox-list">
-    <c:choose>
-    <c:when test="${fn:length(messages) gt 0}">
+<!-- Toolbar -->
+<div class="row">
+    <div class="col-xs-6 col-md-2"></div>
+    <div class="table-responsive col-xs-12 col-md-10">
+        <nav id="inbox-toolbar">
+            <button type="button" class="send-message-button btn btn-default">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
 
-    <table class="table table-hover table-striped" id="inbox-table">
-        <tr>
-            <th></th>
-            <th><spring:message code="message.author"/></th>
-            <th><spring:message code="message.topic"/></th>
-            <th><spring:message code="message.text"/></th>
-            <th></th>
-        </tr>
+            <button type="button" class="reload-inbox btn btn-default">
+                <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+        </nav>
+    </div>
+</div>
 
-        <c:forEach items="${messages}" var="message">
-        <tr class="inbox-element" <c:if test="${message.isRead != true}"> style="font-weight: bold; "</c:if> message-id="${message.id}">
-            <td class="active-modal"><fmt:formatDate value="${message.sendDate}" pattern="d.MM"/></td>
-            <td class="active-modal">${message.author.username}</td>
-            <td class="active-modal">${message.topic}</td>
-            <td class="active-modal">${message.text}</td>
-            <td>
-                <button type="button" class="message-change-status btn btn-primary"
-                        href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>/${message.id}">
+<div class="row">
 
-                    <c:choose>
-                        <c:when test="${message.isRead != true}">
-                            <span class="glyphicon  glyphicon-eye-open"></span>
-                        </c:when>
-                        <c:otherwise>
-                            <span class="glyphicon  glyphicon-eye-close"></span>
-                        </c:otherwise>
-                    </c:choose>
+    <div class="col-xs-6 col-md-2">
+        <ul class="list-group" id="folders-list">
+            <c:forEach items="${folders}" var="folder">
+                <li class="list-group-item folder-element"
+                    folder-id="${folder.id}"
+                    <c:if test="${not empty folder.labelColor}"> style="border-left: 5px solid ${folder.labelColor}"</c:if>
+                >
 
-                </button>
+                        ${folder.name}
+                    <c:if test="${folder.unreadMessages gt 0}">
+                        <span class="badge">${folder.unreadMessages}</span>
+                    </c:if>
+                </li>
+            </c:forEach>
+            <li class="list-group-item add-new-folder">
+                <spring:message code="folder.add"/>
+                <span class="glyphicon glyphicon-plus"></span>
+            </li>
+        </ul>
+    </div>
 
-                <button type="button" class="message-delete btn btn-warning"
-                        href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_DELETE_FULL%>/${message.id}">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </button>
+    <div class="table-responsive col-xs-12 col-md-10" id="inbox-list">
+        <c:choose>
+        <c:when test="${fn:length(messages) gt 0}">
 
-            </td>
-        </tr>
-        </c:forEach>
+        <table class="table table-hover table-striped" id="inbox-table">
+            <tr>
+                <th></th>
+                <th><spring:message code="message.author"/></th>
+                <th><spring:message code="message.topic"/></th>
+                <th><spring:message code="message.text"/></th>
+                <th></th>
+            </tr>
+
+            <c:forEach items="${messages}" var="message">
+                <tr class="inbox-element" <c:if test="${message.isRead != true}"> style="font-weight: bold; "</c:if>
+                    message-id="${message.id}">
+                    <td class="active-modal"><fmt:formatDate value="${message.sendDate}" pattern="d.MM"/></td>
+                    <td class="active-modal">${message.author.username}</td>
+                    <td class="active-modal">${message.topic}</td>
+                    <td class="active-modal">${message.text}</td>
+                    <td>
+                        <button type="button" class="message-change-status btn btn-primary"
+                                href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>/${message.id}">
+
+                            <c:choose>
+                                <c:when test="${message.isRead != true}">
+                                    <span class="glyphicon  glyphicon-eye-open"></span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="glyphicon  glyphicon-eye-close"></span>
+                                </c:otherwise>
+                            </c:choose>
+
+                        </button>
+
+                        <button type="button" class="message-delete btn btn-warning"
+                                href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_DELETE_FULL%>/${message.id}">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
+
+    </c:when>
+    <c:otherwise>
+        <div class="inbox-empty-alert alert alert-info" role="alert">
+            <spring:message code="message.inbox.empty"/>
+        </div>
+    </c:otherwise>
+    </c:choose>
+
 
 </div>
-</c:when>
-<c:otherwise>
-    <div class="inbox-empty-alert alert alert-info" role="alert">
-        <spring:message code="message.inbox.empty"/>
-    </div>
-</c:otherwise>
-</c:choose>
-</table>
 </body>
 </html>

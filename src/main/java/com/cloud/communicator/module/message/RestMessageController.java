@@ -3,6 +3,7 @@ package com.cloud.communicator.module.message;
 
 import com.cloud.communicator.module.message.service.MessageReceiverService;
 import com.cloud.communicator.module.message.service.MessageService;
+import com.cloud.communicator.module.user.User;
 import com.cloud.communicator.module.user.service.UserService;
 import com.cloud.communicator.util.UserUtils;
 import org.apache.log4j.Logger;
@@ -18,8 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 @RestController
 @RequestMapping(MessageUrls.Api.MESSAGE)
@@ -51,29 +51,26 @@ public class RestMessageController {
         String[] args = {};
 
         String receiversField = messageDTO.getReceivers();
-        String[] receivers;
-        receivers = receiversField.split(" ");
 
+        //map DTO to message object
         Message message = new Message();
         message.setAuthor(userService.findUserById(UserUtils.getUserId(request, response)));
         message.setTopic(messageDTO.getTopic());
         message.setText(messageDTO.getText());
         message.setSendDate(new Date());
 
-        messageService.saveMessage(message);
+        List<User> receiversList = new ArrayList<User>();
+        for(String receiver : receiversField.split(" ")) {
+            User receiverObject = userService.findUserByUsername(receiver);
 
-        for (String r : receivers) {
-            MessageReceiver messageReceiver = new MessageReceiver();
-            Integer userId = userService.getUserIdByUsername(r);
-            if(userId == null) {
+            if(receiverObject == null) {
                 return new ResponseEntity<String>(messageSource.getMessage("message.receiver.not.found", args, locale), HttpStatus.NOT_ACCEPTABLE);
             }
-            messageReceiver.setReceiverId(userId);
-            messageReceiver.setMessageId(message.getId());
-            messageReceiver.setIsRead(false);
 
-            messageReceiverService.saveMessageReceiver(messageReceiver);
+            receiversList.add(receiverObject);
         }
+
+        messageService.sendMessage(message, receiversList);
 
         return new ResponseEntity<String>(messageSource.getMessage("message.success.send", args, locale), HttpStatus.OK);
     }

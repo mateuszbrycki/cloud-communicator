@@ -16,5 +16,7 @@ public interface MessageDao {
 
     List<Message> findUserInboxMessages(Integer userId);
 
+    List<Message> findUserFolderMessages(Integer userId, Integer folderId);
+
     Message findMessageById(Integer messageId);
 }

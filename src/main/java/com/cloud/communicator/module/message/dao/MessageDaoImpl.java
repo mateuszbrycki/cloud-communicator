@@ -16,19 +16,25 @@ import java.util.List;
 public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao {
 
     @Inject
-    UserService userService;
+    private UserService userService;
 
     @Inject
-    MessageReceiverService messageReceiverService;
+    private MessageReceiverService messageReceiverService;
 
     @Override
-    public void saveMessage(Message message) { persist(message);}
+    public void saveMessage(Message message) {
+        persist(message);
+    }
 
     @Override
-    public void updateMessage(Message message) { update(message);}
+    public void updateMessage(Message message) {
+        update(message);
+    }
 
     @Override
-    public void deleteMessage(Message message) { delete(message);}
+    public void deleteMessage(Message message) {
+        delete(message);
+    }
 
     @Override
     public void deleteMessage(Integer id) {
@@ -43,14 +49,39 @@ public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao 
                 "SELECT m.message_id, m.fk_author_id, m.topic, m.text, m.audit_cd, mr.is_read " +
                         "FROM message m " +
                         "JOIN message_receiver mr ON m.message_id = mr.fk_message_id " +
-                        "WHERE mr.fk_user_id = :userId " +
-                        " ORDER BY m.audit_cd DESC");
+                        "JOIN user_message_folder umf ON umf.fk_message_id = m.message_id " +
+                        "JOIN folder f ON umf.fk_folder_id = f.folder_id " +
+                        "WHERE mr.fk_user_id = :userId AND f.is_default_user_folder = true " +
+                        "ORDER BY m.audit_cd DESC");
         query.setInteger("userId", userId);
 
         List<Message> messages = new ArrayList<>();
 
         List<Object[]> rows = query.list();
-        for(Object[] row : rows) {
+        for (Object[] row : rows) {
+            messages.add(this.mapMessageObject(row));
+        }
+
+        return messages;
+    }
+
+    @Override
+    public List<Message> findUserFolderMessages(Integer userId, Integer folderId) {
+        Query query = getSession().createSQLQuery(
+                "SELECT m.message_id, m.fk_author_id, m.topic, m.text, m.audit_cd, mr.is_read " +
+                        "FROM message m " +
+                        "JOIN message_receiver mr ON m.message_id = mr.fk_message_id " +
+                        "JOIN user_message_folder umf ON umf.fk_message_id = m.message_id " +
+                        "JOIN folder f ON umf.fk_folder_id = f.folder_id " +
+                        "WHERE mr.fk_user_id = :userId AND f.folder_id = :folderId " +
+                        "ORDER BY m.audit_cd DESC");
+        query.setInteger("userId", userId);
+        query.setInteger("folderId", folderId);
+
+        List<Message> messages = new ArrayList<>();
+
+        List<Object[]> rows = query.list();
+        for (Object[] row : rows) {
             messages.add(this.mapMessageObject(row));
         }
 
@@ -72,7 +103,7 @@ public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao 
 
         Message message = new Message();
 
-        if(messageObject == null) {
+        if (messageObject == null) {
             return null;
         }
 
