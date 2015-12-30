@@ -62,6 +62,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findUsersByUsername(String username, Integer userId) {
+        return userDao.findUsersByUsername(username, userId);
+    }
+
+    @Override
     public Boolean registerUser(User user) {
 
         Boolean userMailExists = this.checkIfUserWithMailExists(user.getMail());

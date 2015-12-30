@@ -22,6 +22,8 @@ public interface UserDao {
 
     List<User> findUsersByUsername(String username);
 
+    List<User> findUsersByUsername(String username, Integer userId);
+
     Integer getUserIdByUsername(String username);
 }
 

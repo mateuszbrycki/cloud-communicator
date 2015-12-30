@@ -135,7 +135,7 @@ public class UserServiceTests {
         testUser2.setPassword("testpassword2");
         userService.registerUser(testUser2);
 
-        assertEquals( (Integer) testUser2.getId(), (Integer) userService.getUserIdByUsername("testusername2"));
+        assertEquals((Integer) testUser2.getId(), (Integer) userService.getUserIdByUsername("testusername2"));
 
         userService.deleteUserById(testUser2.getId());
     }
@@ -172,6 +172,26 @@ public class UserServiceTests {
         users = userService.findUsersByUsername("testusername");
 
         assertEquals(1, users.size());
+    }
+
+    @Test
+    public void findUsersByUsernameWithoutTypingUser() {
+        User testUser2 = new User();
+        testUser2.setMail("test2@test.gmail.com");
+        testUser2.setUsername("testusername2");
+        testUser2.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
+        testUser2.setPassword("testpassword2");
+        userService.registerUser(testUser2);
+
+        List<User> users = userService.findUsersByUsername("testusername", testUser.getId());
+
+        assertEquals(1, users.size());
+
+        userService.deleteUserById(testUser2.getId());
+
+        users = userService.findUsersByUsername("testusername", testUser.getId());
+
+        assertEquals(0, users.size());
     }
 
     @After
