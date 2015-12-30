@@ -46,7 +46,7 @@
                         <button type="button" class="btn btn-default send-message-form-close" data-dismiss="modal">
                             <spring:message code="button.close"/></button>
                         <input type="submit" id="send-message-submit"
-                               value="<spring:message code="message.button.send" />" class="btn btn-primary"/>
+                               value="<spring:message code="button.send" />" class="btn btn-primary"/>
                     </div>
                 </form>
             </div>

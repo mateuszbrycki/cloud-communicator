@@ -8,6 +8,7 @@
 <body>
 <jsp:include page="form/received_message.jsp"/>
 <jsp:include page="form/add_folder.jsp"/>
+<jsp:include page="form/edit_folder.jsp"/>
 <script type="text/javascript">
     //refreshing inbox, 2 minutes interval
     setInterval(refreshDashboard, 120000);
@@ -15,9 +16,10 @@
 
 <!-- Folder context menu -->
 <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none">
-    <li><a tabindex="-1" action-id="0"><spring:message code="folder.open"/></a></li>
+    <li><a tabindex="-1" action-id="0"><spring:message code="button.open"/></a></li>
+    <li><a tabindex="-1" action-id="1"><spring:message code="button.edit"/></a></li>
     <li class="divider"></li>
-    <li><a tabindex="-1" action-id="1"><spring:message code="folder.delete"/></a></li>
+    <li><a tabindex="-1" action-id="2"><spring:message code="button.delete"/></a></li>
 </ul>
 
 <!-- Toolbar -->

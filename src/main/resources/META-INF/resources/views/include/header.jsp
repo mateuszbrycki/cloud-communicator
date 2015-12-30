@@ -49,6 +49,7 @@
             'api_messages': "<%=MessageUrls.Api.MESSAGES%>",
             'api_folders': "<%=FolderUrls.Api.FOLDERS%>",
             'api_folder_delete': "<%=FolderUrls.Api.FOLDER_DELETE_FULL%>",
+            'api_folder': "<%=FolderUrls.Api.FOLDER_FULL%>",
             'api_messages_folder': "<%=MessageUrls.Api.MESSAGES_FOLDER_FULL%>",
             'api_user_username':  "<%=UserUrls.Api.USER%>"
         };

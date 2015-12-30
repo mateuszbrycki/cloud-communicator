@@ -104,6 +104,16 @@ public class FolderServiceTests {
     }
 
     @Test
+    public void findUserFolderByUserId() {
+        Folder folder = folderService.findFolderById(testFolder.getId(), testUser.getId());
+
+        assertNotNull(folder);
+
+        assertEquals("Test folder", folder.getName());
+        assertEquals("Test folder", folder.getDescription());
+    }
+
+    @Test
     public void deleteUserFoldersByUserId() {
         folderService.deleteUserFoldersByUserId(testUser.getId());
 

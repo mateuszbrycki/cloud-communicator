@@ -38,7 +38,7 @@ public class RestFolderController {
     private static final Logger logger = Logger.getLogger(RestMessageController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<Folder> sendMessage(HttpServletRequest request,
+    public ResponseEntity<Folder> addFolder(HttpServletRequest request,
                                               HttpServletResponse response,
                                               @RequestBody @Valid FolderDTO folderDTO,
                                               ModelMap model,
@@ -59,8 +59,43 @@ public class RestFolderController {
         return new ResponseEntity<Folder>(folder, HttpStatus.OK);
     }
 
+    @RequestMapping(value = FolderUrls.Api.FOLDER_ID, method = RequestMethod.GET)
+    public ResponseEntity<Folder> getFolder(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            @PathVariable("folderId") Integer folderId) {
+        Integer userId = UserUtils.getUserId(request, response);
+
+        Folder folder = folderService.findFolderById(folderId, userId);
+
+        if(folder == null) {
+            return new ResponseEntity<>(new Folder(), HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<Folder>(folder, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public ResponseEntity<Folder> addFolder(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            @RequestBody @Valid FolderDTO folderDTO) {
+
+        Integer userId = UserUtils.getUserId(request, response);
+
+        Folder folder = folderService.findFolderById(folderDTO.getId(), userId);
+
+        if(folder == null) {
+            return new ResponseEntity<Folder>(folder, HttpStatus.FORBIDDEN);
+        }
+        folder.setName(folderDTO.getName());
+        folder.setDescription(folderDTO.getDescription());
+        folder.setLabelColor(folderDTO.getLabel());
+        folderService.updateFolder(folder);
+
+        return new ResponseEntity<Folder>(folder, HttpStatus.OK);
+    }
+
     @RequestMapping(value = FolderUrls.Api.FOLDER_DELETE_ID, method = RequestMethod.DELETE)
-    public ResponseEntity<List<Folder>> deleteMessage(@PathVariable("folderId") Integer folderId,
+    public ResponseEntity<List<Folder>> deleteFolder(@PathVariable("folderId") Integer folderId,
                                                  HttpServletRequest request,
                                                  HttpServletResponse response) {
 
