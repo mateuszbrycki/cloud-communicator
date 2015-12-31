@@ -21,5 +21,7 @@ public interface FolderDao {
 
     Folder findFolderById(Integer folderId);
 
+    Folder findFolderById(Integer folderId, Integer userId);
+
     Folder findUserDefaultFolder(Integer userId);
 }
