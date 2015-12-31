@@ -1,5 +1,6 @@
 <%@ page import="com.cloud.communicator.module.message.MessageUrls" %>
 <%@ page import="com.cloud.communicator.module.message.FolderUrls" %>
+<%@ page import="com.cloud.communicator.module.user.UserUrls" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
@@ -19,15 +20,18 @@
     <link rel="stylesheet" href="<c:url value="/css/bootstrap-glyphicons.css" />">
     <link rel="stylesheet" href="<c:url value="/css/spinners.css" />">
     <link rel="stylesheet" href="<c:url value="/css/bootstrap-colorpicker.min.css" />">
+    <link rel="stylesheet" href="<c:url value="/css/select2.min.css" />">
 
-    <script src="<c:url value="/js/lib/jquery_1_11_1_min.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/js/lib/jquery-2.1.0.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/bootstrap_3_2_0_min.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/jquery_msdropdown_dd.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/jquery_cookie_1_4_1.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/jquery_validate_1_12_0_min.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/bootstrap-colorpicker.min.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/js/lib/select2.full.min.js" />" type="text/javascript"></script>
 
     <script src="<c:url value="/js/common.js" />" type="text/javascript"></script>
+
     <script>
         var translations = {
             'request-failed': "<spring:message code="request.failed" />",
@@ -45,7 +49,9 @@
             'api_messages': "<%=MessageUrls.Api.MESSAGES%>",
             'api_folders': "<%=FolderUrls.Api.FOLDERS%>",
             'api_folder_delete': "<%=FolderUrls.Api.FOLDER_DELETE_FULL%>",
-            'api_messages_folder': "<%=MessageUrls.Api.MESSAGES_FOLDER_FULL%>"
+            'api_folder': "<%=FolderUrls.Api.FOLDER_FULL%>",
+            'api_messages_folder': "<%=MessageUrls.Api.MESSAGES_FOLDER_FULL%>",
+            'api_user_username':  "<%=UserUrls.Api.USER%>"
         };
 
         var ctx = "${pageContext.request.contextPath}";

@@ -363,7 +363,64 @@ function getMenuPosition(mouse, direction, scrollDir) {
     return position;
 }
 
+function populateEditFolderForm(data) {
+    var form = document.forms['edit-folder-form'];
+    form.elements['id'].value = data['id'];
+    form.elements['name'].value = data['name'];
+    if(data['labelColor'] != null) {
+        form.elements['label'].value = data['labelColor'];
+    }
+    form.elements['description'].value = data['description'];
+}
+
+function getFolderData(folderId) {
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "GET",
+        url: ctx + url['api_folder'] + '/' + folderId,
+        success: function (callback) {
+            populateEditFolderForm(callback);
+        },
+        error: function () {
+            console.log(translations['request-failed']);
+        }
+    });
+}
+
+function editFolder(folderId) {
+    getFolderData(folderId);
+
+    $('#edit-folder-modal').modal({keyboard: true});
+    $("#edit-folder-modal").modal('show');
+}
+
+
 $(document).ready(function () {
+
+    $(".receivers-select").select2({
+        tags: true,
+        tokenSeparators: [" ", ","],
+        multiple: true,
+        ajax: {
+            url: ctx + url['api_user_username'] + "/",
+            dataType: 'json',
+            delay: 500,
+            data: function (params) {
+               return {
+                    username: params.term
+                }
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+
+                };
+            }
+        },
+        width: '100%',
+    });
+
     //language select
     if ($.cookie(languageCookieName)) {
         $('#language-select').val($.cookie(languageCookieName));
@@ -441,6 +498,8 @@ $(document).ready(function () {
             delete data["undefined"];
         });
 
+        data["receivers"] = data["receivers"].join(" ");
+
         console.log(JSON.stringify(data));
 
         if (frm.valid()) {
@@ -457,8 +516,8 @@ $(document).ready(function () {
                     console.log(callback);
                 }
             });
-
             refreshForm(frm);
+            $(".receivers-select").select2('val', 'All'); //reseting select with usernames
             $("#send-message-modal").modal('hide');
         }
     });
@@ -495,6 +554,38 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('submit', '#edit-folder-form', function (e) {
+        var frm = $('#edit-folder-form');
+        e.preventDefault();
+
+        var data = {};
+
+        $.each(this, function (i, v) {
+            var input = $(v);
+            data[input.attr("name")] = input.val();
+            delete data["undefined"];
+        });
+
+        if (frm.valid()) {
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                type: frm.attr('method'),
+                url: frm.attr('action'),
+                data: JSON.stringify(data),
+                success: function (callback) {
+                    refreshDashboard();
+                },
+                error: function (callback) {
+                    console.log(callback);
+                }
+            });
+
+            refreshForm(frm);
+            $("#edit-folder-modal").modal('hide');
+        }
+    });
+
     $(document).on('click', '.reload-inbox', function (e) {
         e.preventDefault();
         refreshDashboard();
@@ -515,8 +606,7 @@ $(document).ready(function () {
     $('#send-message-form').validate({
         rules: {
             receivers: {
-                required: true,
-                minlength: 3
+                required: true
             },
             topic: {
                 required: true,
@@ -577,7 +667,10 @@ $(document).ready(function () {
                     case '0': //open
                         renderFolderMessages(folderId);
                         break;
-                    case '1': //delete
+                    case '1': //edit
+                        editFolder(folderId);
+                        break;
+                    case '2': //delete
                         deleteFolder(folderId);
                         break;
                 }

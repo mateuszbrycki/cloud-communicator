@@ -6,7 +6,6 @@ import javax.validation.constraints.NotNull;
 public class MessageDTO {
 
     @NotNull
-    @Length(min = 3)
     private String receivers;
 
     @NotNull
@@ -45,6 +44,6 @@ public class MessageDTO {
 
     @Override
     public String toString() {
-        return "MessageDTO: {Mail: " + this.receivers + ", topic: " + this.topic + ", text: " + this.text + "}";
+        return "MessageDTO: {Receivers: " + this.receivers + ", topic: " + this.topic + ", text: " + this.text + "}";
     }
 }

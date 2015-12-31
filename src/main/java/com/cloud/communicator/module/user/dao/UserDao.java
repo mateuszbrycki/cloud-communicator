@@ -3,9 +3,8 @@ package com.cloud.communicator.module.user.dao;
 
 import com.cloud.communicator.module.user.User;
 
-/**
- * Created by Mateusz Brycki on 02/05/2015.
- */
+import java.util.List;
+
 public interface UserDao {
     void saveUser(User user);
 
@@ -20,6 +19,10 @@ public interface UserDao {
     User findUserById(Integer userId);
 
     User findUserByUsername(String username);
+
+    List<User> findUsersByUsername(String username);
+
+    List<User> findUsersByUsername(String username, Integer userId);
 
     Integer getUserIdByUsername(String username);
 }

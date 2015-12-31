@@ -21,17 +21,19 @@
         });
     });
 </script>
-<div id="add-folder-modal" class="modal fade" tabindex="-1">
+<div id="edit-folder-modal" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close add-folder-form-close" data-dismiss="modal"
+                <button type="button" class="close edit-folder-form-close" data-dismiss="modal"
                         aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="add-folder-modal-title"><spring:message code="folder.add"/></h4>
+                <h4 class="modal-title" id="edit-folder-modal-title"><spring:message code="folder.edit"/></h4>
             </div>
             <div class="modal-body">
-                <form method="PUT" id="add-folder-form"
+                <form method="POST" id="edit-folder-form"
                       action="${pageContext.request.contextPath}<%=FolderUrls.Api.FOLDER%>/" class="form-horizontal">
+
+                    <input type="hidden" name="id" value=""/>
 
                     <div class="form-group">
                         <label class="control-label col-sm-3" for="name"><spring:message code="folder.name"/>:</label>
@@ -58,9 +60,9 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default add-folder-form-close" data-dismiss="modal">
+                        <button type="button" class="btn btn-default edit-folder-form-close" data-dismiss="modal">
                             <spring:message code="button.close"/></button>
-                        <input type="submit" id="add-folder-submit" value="<spring:message code="button.add" />"
+                        <input type="submit" id="edit-folder-submit" value="<spring:message code="button.edit" />"
                                class="btn btn-primary"/>
                     </div>
                 </form>
