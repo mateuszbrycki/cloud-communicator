@@ -643,7 +643,47 @@ $(document).ready(function () {
                 required: true,
                 minlength: 3
             },
+            passwordRepeat: {
+                required: true,
+                minlength: 3,
+                equalTo: "#password"
+            }
+        }
+    });
+
+    //form validation
+    $('#user-change-password-form').validate({
+        rules: {
+            password_old: {
+                required: true,
+                minlength: 3
+            },
+            password: {
+                required: true,
+                minlength: 3
+            },
             password_repeat: {
+                required: true,
+                minlength: 3,
+                equalTo: "#password"
+            }
+        }
+    });
+
+    //form validation
+    $('#user-username-password-form').validate({
+        rules: {
+            username: {
+                required: true,
+                minlength: 3
+            }
+        }
+    });
+
+    //form validation
+    $('#user-delete-form').validate({
+        rules: {
+            password: {
                 required: true,
                 minlength: 3
             }

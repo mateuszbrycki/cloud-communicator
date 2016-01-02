@@ -5,24 +5,6 @@
   <title>Register</title>
 </head>
 <body>
-
-  <c:if test="${not empty error}">
-     <div class="alert alert-danger" role="alert">
-      <span class="sr-only"><spring:message code="error" />:</span>
-      ${error}
-    </div>
-  </c:if>
-
-  <c:if test="${not empty success}">
-    <div class="alert alert-success" role="alert">
-      <span class="sr-only"><spring:message code="success" />:</span>
-      ${success}
-    </div>
-  </c:if>
-
     <jsp:include page="form/register.jsp" />
-  </div>
-
-
 </body>
 </html>
