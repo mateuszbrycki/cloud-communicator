@@ -10,7 +10,7 @@
                 <h4 class="modal-title" id="send-message-modal-title"><spring:message code="message.title.send"/></h4>
             </div>
             <div class="modal-body">
-                <form method="PUT" id="send-message-form"
+                <form method="PUT" id="send-message-form" name="message_form"
                       action="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE%>/" class="form-horizontal">
 
                     <div class="form-group">
@@ -18,7 +18,7 @@
                                 code="message.modal.receivers"/>:</label>
 
                         <div class="col-sm-5">
-                            <input type="text" name="receivers" class="form-control"/>
+                            <input type="text" id="receivers-field" name="receivers" class="form-control"/>
                         </div>
                     </div>
 

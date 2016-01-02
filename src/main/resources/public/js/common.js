@@ -278,6 +278,7 @@ function refreshForm(form) {
 
 function renderMessageModal(data) {
 
+    $(".receiver-message-modal-date").html("<p style='display: none'>" + data.sendDate + "</p>");
     $(".receiver-message-modal-author").html("<p>" + data.author.username + "</p>");
     $(".receiver-message-modal-topic").html("<p>" + data.topic + "</p>");
     $(".receiver-message-modal-text").html("<p>" + data.text + "</p>");
@@ -363,6 +364,16 @@ function getMenuPosition(mouse, direction, scrollDir) {
     return position;
 }
 
+function showResponseMessageModal(date, username, topic, text){
+
+    document.message_form.receivers.value = username;
+    document.message_form.topic.value = "Re:" + topic;
+    document.message_form.text.value = translations['response-message'] + "\n" + username + " " + date + "\n\"" + text + "\"";
+
+    $('#send-message-modal').modal({keyboard: true});
+    $("#send-message-modal").modal('show');
+}
+
 $(document).ready(function () {
     //language select
     if ($.cookie(languageCookieName)) {
@@ -376,6 +387,17 @@ $(document).ready(function () {
     } catch (e) {
         console.log(e.message);
     }
+
+
+    $(document).on('click', '#response-message-button', function(e) {
+
+        var date = document.getElementById('received-message-date').textContent;
+        var username = document.getElementById('received-message-author').textContent;
+        var topic = document.getElementById('received-message-topic').textContent;
+        var text = document.getElementById('received-message-text').textContent;
+
+        showResponseMessageModal(date, username, topic, text);
+    });
 
     $(document).on('click', '.send-message-button', function () {
         showSendMessageForm();

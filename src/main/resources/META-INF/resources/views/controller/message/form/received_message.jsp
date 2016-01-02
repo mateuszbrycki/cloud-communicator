@@ -11,11 +11,14 @@
                         code="message.title.received"/></h4>
             </div>
             <div class="modal-body">
+                    <div id="received-message-date" class="receiver-message-modal-date">
+
+                    </div>
                 <div class="row">
                     <div class="col-md-2">
                         <p><strong><spring:message code="message.author"/></strong></p>
                     </div>
-                    <div class="col-md-8 receiver-message-modal-author">
+                    <div id="received-message-author" class="col-md-8 receiver-message-modal-author">
 
                     </div>
                 </div>
@@ -23,7 +26,7 @@
                     <div class="col-md-2">
                         <p><strong><spring:message code="message.topic"/></strong></p>
                     </div>
-                    <div class="col-md-8 receiver-message-modal-topic">
+                    <div id="received-message-topic" class="col-md-8 receiver-message-modal-topic">
 
                     </div>
                 </div>
@@ -31,7 +34,7 @@
                     <div class="col-md-2">
                         <p><strong><spring:message code="message.text"/></strong></p>
                     </div>
-                    <div class="col-md-8 receiver-message-modal-text">
+                    <div id="received-message-text" class="col-md-8 receiver-message-modal-text">
 
                     </div>
                 </div>
@@ -39,8 +42,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default  received-message-form-close">
                     <spring:message code="button.close"/></button>
-                <input type="submit" id="response-message-submit"
-                       value="<spring:message code="message.button.response" />" class="btn btn-primary"/>
+                <button type="button" id="response-message-button" class="btn btn-primary received-message-form-close">
+                    <spring:message code="message.button.response" /></button>
             </div>
         </div>
     </div>
