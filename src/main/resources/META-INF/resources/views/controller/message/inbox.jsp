@@ -79,26 +79,27 @@
                     <td class="active-modal">${message.author.username}</td>
                     <td class="active-modal">${message.topic}</td>
                     <td class="active-modal">${message.text}</td>
-                    <td>
-                        <button type="button" class="message-change-status btn btn-primary"
-                                href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>/${message.id}">
+                    <td class="col-md-2">
+                        <div class="btn-group text-center" role="group">
+                            <button type="button" class="message-change-status btn btn-primary"
+                                    href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>/${message.id}">
 
-                            <c:choose>
-                                <c:when test="${message.isRead != true}">
-                                    <span class="glyphicon  glyphicon-eye-open"></span>
-                                </c:when>
-                                <c:otherwise>
-                                    <span class="glyphicon  glyphicon-eye-close"></span>
-                                </c:otherwise>
-                            </c:choose>
+                                <c:choose>
+                                    <c:when test="${message.isRead != true}">
+                                        <span class="glyphicon  glyphicon-eye-open"></span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="glyphicon  glyphicon-eye-close"></span>
+                                    </c:otherwise>
+                                </c:choose>
 
-                        </button>
+                            </button>
 
-                        <button type="button" class="message-delete btn btn-warning"
-                                href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_DELETE_FULL%>/${message.id}">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button>
-
+                            <button type="button" class="message-delete btn btn-warning"
+                                    href="${pageContext.request.contextPath}<%=MessageUrls.Api.MESSAGE_DELETE_FULL%>/${message.id}">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             </c:forEach>
@@ -108,7 +109,7 @@
     </c:when>
     <c:otherwise>
         <div class="inbox-empty-alert alert alert-info" role="alert">
-            <spring:message code="message.inbox.empty"/>
+            <spring:message code="message.folder.empty"/>
         </div>
     </c:otherwise>
     </c:choose>

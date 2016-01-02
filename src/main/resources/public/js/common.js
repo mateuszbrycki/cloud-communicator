@@ -12,7 +12,7 @@ function renderMessagesList(data) {
     var tableBody = document.createElement("tbody");
 
     if (data.length == 0) {
-        var alertDiv = getEmptyAlert(translations['message-inbox-empty']);
+        var alertDiv = getEmptyAlert(translations['message-folder-empty']);
         newPanelGroup.appendChild(alertDiv);
     } else {
 
@@ -75,6 +75,11 @@ function renderMessagesList(data) {
         fourthColumn.appendChild(document.createTextNode(data[i].text));
 
         var fifthColumn = document.createElement('td');
+        fifthColumn.className = "col-md-2";
+
+        var buttonGroup = document.createElement('div');
+        buttonGroup.className = 'btn-group text-center';
+        buttonGroup.setAttribute('role', 'group');
 
         var changeStatusButton = document.createElement('button');
         changeStatusButton.className = 'message-change-status btn btn-primary';
@@ -95,8 +100,10 @@ function renderMessagesList(data) {
         changeStatusButton.appendChild(changeStatusGlyphicon);
         deleteButton.appendChild(deleteGlyphicon);
 
-        fifthColumn.appendChild(changeStatusButton);
-        fifthColumn.appendChild(deleteButton);
+        buttonGroup.appendChild(changeStatusButton);
+        buttonGroup.appendChild(deleteButton);
+
+        fifthColumn.appendChild(buttonGroup);
 
         tableRow.appendChild(firstColumn);
         tableRow.appendChild(secondColumn);
