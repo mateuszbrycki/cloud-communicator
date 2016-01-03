@@ -1,18 +1,16 @@
 package com.cloud.communicator.module.user;
 
 import com.cloud.communicator.module.base.BaseUrls;
-import com.cloud.communicator.module.message.Folder;
-import com.cloud.communicator.module.message.service.FolderService;
 import com.cloud.communicator.module.user.service.UserService;
 import com.cloud.communicator.module.userrole.service.UserRoleService;
 import com.cloud.communicator.util.UserUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -27,15 +25,14 @@ public class UserController {
     @Inject
     private UserService userService;
 
-
-    @Inject
-    private FolderService folderService;
-
     @Inject
     private UserRoleService userRoleService;
 
     @Inject
     private MessageSource messageSource;
+
+    @Inject
+    private Environment environment;
 
     private static final Logger logger = Logger.getLogger(UserController.class);
 
@@ -43,8 +40,8 @@ public class UserController {
 
     @RequestMapping(value = UserUrls.USER_LOGOUT, method = RequestMethod.GET)
     public String logoutPage() {
-        //TODO mbrycki redirect to cas logout URL
-        return "redirect:/";
+
+        return "redirect:" + environment.getProperty("pac4j.application.logout");
     }
 
     @RequestMapping(value = UserUrls.USER_REGISTER, method = RequestMethod.GET)
@@ -89,5 +86,93 @@ public class UserController {
         }
 
         return this.viewPath + "register";
+    }
+
+    @RequestMapping(value = UserUrls.USER_MANAGEMENT, method = RequestMethod.GET)
+    public String managementPage(HttpServletRequest request, HttpServletResponse response) {
+
+        return this.viewPath + "management";
+    }
+
+    @RequestMapping(value = UserUrls.USER_PASSWORD_CHANGE, method = RequestMethod.POST)
+    public String changePasswordPage(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     @RequestParam("password_old") String oldPassword,
+                                     @RequestParam("password") String password,
+                                     @RequestParam("password_repeat") String passwordRepeat,
+                                     RedirectAttributes attributes, Locale locale) {
+
+        Integer userId = UserUtils.getUserId(request, response);
+
+        String[] args = {};
+
+
+        User user = userService.findUserById(userId);
+
+        //check if passwords are equals
+        Boolean passwordsAreEqual = password.equals(passwordRepeat);
+        Boolean oldPasswordIsGood = user.getPassword().equals(oldPassword);
+
+        if (passwordsAreEqual && oldPasswordIsGood) {
+            //update user
+            user.setPassword(password);
+            userService.updateUser(user);
+
+            attributes.addFlashAttribute("success", messageSource.getMessage("user.message.success.passwords", args, locale));
+        } else {
+            attributes.addFlashAttribute("error", messageSource.getMessage("user.message.error.passwords", args, locale));
+        }
+
+        return "redirect:" + UserUrls.USER_MANAGEMENT_FULL;
+    }
+
+    @RequestMapping(value = UserUrls.USER_USERNAME_CHANGE, method = RequestMethod.POST)
+    public String changeUsernamePage(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     @RequestParam("username") String username,
+                                     RedirectAttributes attributes, Locale locale) {
+
+        Integer userId = UserUtils.getUserId(request, response);
+
+        String[] args = {};
+
+        //check if username doesn't exist in database
+        Boolean usernameExists = userService.checkIfUserWithUsernameExists(username);
+
+        if(!usernameExists) {
+            //update user
+            User user = userService.findUserById(userId);
+            user.setUsername(username);
+            userService.updateUser(user);
+
+            attributes.addFlashAttribute("success", messageSource.getMessage("user.message.success.username", args, locale));
+        } else {
+            attributes.addFlashAttribute("error", messageSource.getMessage("user.message.error.username", args, locale));
+        }
+
+        return "redirect:" + UserUrls.USER_MANAGEMENT_FULL;
+    }
+
+    @RequestMapping(value = UserUrls.USER_DELETE, method = RequestMethod.POST)
+    public String deleteAccountAction(HttpServletRequest request,
+                                      HttpServletResponse response,
+                                      @RequestParam("password") String password,
+                                      RedirectAttributes attributes, Locale locale) {
+        Integer userId = UserUtils.getUserId(request, response);
+
+        User user = userService.findUserById(userId);
+
+        String[] args = {};
+
+        //delete user
+        if(user.getPassword().equals(password)) {
+            userService.deleteUserById(userId);
+
+            attributes.addFlashAttribute("success", messageSource.getMessage("user.message.success.delete", args, locale));
+            return "redirect:" + UserUrls.USER_LOGOUT_FULL;
+        }
+
+        attributes.addFlashAttribute("error",messageSource.getMessage("user.message.error.delete", args, locale));
+        return "redirect:" + UserUrls.USER_MANAGEMENT_FULL;
     }
 }

@@ -47,6 +47,11 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
+    public Folder findFolderById(Integer folderId, Integer userId) {
+        return this.folderDao.findFolderById(folderId, userId);
+    }
+
+    @Override
     public Folder findUserDefaultFolder(Integer userId) {
         return this.folderDao.findUserDefaultFolder(userId);
     }

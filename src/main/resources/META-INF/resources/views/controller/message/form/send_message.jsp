@@ -1,7 +1,8 @@
 <%@ page import="com.cloud.communicator.module.message.MessageUrls" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<div id="send-message-modal" class="modal fade" tabindex="-1">
+
+<div id="send-message-modal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -19,6 +20,10 @@
 
                         <div class="col-sm-5">
                             <input type="text" id="receivers-field" name="receivers" class="form-control"/>
+
+                            <select name="receivers" class="form-control receivers-select">
+                            </select>
+
                         </div>
                     </div>
 
@@ -44,7 +49,7 @@
                         <button type="button" class="btn btn-default send-message-form-close" data-dismiss="modal">
                             <spring:message code="button.close"/></button>
                         <input type="submit" id="send-message-submit"
-                               value="<spring:message code="message.button.send" />" class="btn btn-primary"/>
+                               value="<spring:message code="button.send" />" class="btn btn-primary"/>
                     </div>
                 </form>
             </div>

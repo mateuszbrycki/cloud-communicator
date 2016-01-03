@@ -142,6 +142,48 @@ public class MessageServiceTests {
     }
 
     @Test
+    public void findUserInboxMessagesManyReceivers() {
+        User testUser2 = new User();
+        testUser2.setMail("tes2t@test.gmail.com");
+        testUser2.setUsername("testusername2");
+        testUser2.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
+        testUser2.setPassword("testpassword2");
+        userService.registerUser(testUser2);
+
+        User testUser3 = new User();
+        testUser3.setMail("test3@test.gmail.com");
+        testUser3.setUsername("testusername3");
+        testUser3.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
+        testUser3.setPassword("testpassword3");
+        userService.registerUser(testUser3);
+
+        Message testMessage2 = new Message();
+        testMessage2.setAuthor(testUser2);
+        testMessage2.setTopic("Test message2 topic.");
+        testMessage2.setText("Test message2.");
+        testMessage2.setSendDate(new Date());
+        messageService.sendMessage(testMessage2, Arrays.asList(testUser,testUser3));
+
+        List<Message> inboxMessagesTestUser = messageService.findUserInboxMessages(testUser.getId());
+        List<Message> inboxMessagesTestUser3 = messageService.findUserInboxMessages(testUser3.getId());
+
+        assertEquals(1, inboxMessagesTestUser.size());
+        assertEquals(1, inboxMessagesTestUser3.size());
+
+        messageService.deleteMessage(testMessage2.getId());
+
+        inboxMessagesTestUser = messageService.findUserInboxMessages(testUser.getId());
+        inboxMessagesTestUser3 = messageService.findUserInboxMessages(testUser3.getId());
+
+        assertEquals(0, inboxMessagesTestUser.size());
+        assertEquals(0, inboxMessagesTestUser3.size());
+
+        userService.deleteUserById(testUser2.getId());
+        userService.deleteUserById(testUser3.getId());
+
+    }
+
+    @Test
     public void checkIfUserIsAllowedToSeeMessage() {
 
         User testUser2 = new User();

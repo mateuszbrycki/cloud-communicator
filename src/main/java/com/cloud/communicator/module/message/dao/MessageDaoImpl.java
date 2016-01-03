@@ -49,7 +49,7 @@ public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao 
                 "SELECT m.message_id, m.fk_author_id, m.topic, m.text, m.audit_cd, mr.is_read " +
                         "FROM message m " +
                         "JOIN message_receiver mr ON m.message_id = mr.fk_message_id " +
-                        "JOIN user_message_folder umf ON umf.fk_message_id = m.message_id " +
+                        "JOIN user_message_folder umf ON umf.fk_message_id = m.message_id AND umf.fk_user_id = mr.fk_user_id " +
                         "JOIN folder f ON umf.fk_folder_id = f.folder_id " +
                         "WHERE mr.fk_user_id = :userId AND f.is_default_user_folder = true " +
                         "ORDER BY m.audit_cd DESC");

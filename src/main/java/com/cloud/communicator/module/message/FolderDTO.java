@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 
 public class FolderDTO {
 
+    private Integer id;
+
     @NotNull
     @Length(min = 3)
     private String name;
@@ -13,6 +15,14 @@ public class FolderDTO {
     private String label;
 
     private String description;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

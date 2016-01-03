@@ -96,6 +96,20 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
         return this.mapFolderObject((Object[]) query.uniqueResult());
     }
 
+    @Override
+    public Folder findFolderById(Integer folderId, Integer userId) {
+
+        Query query = getSession().createSQLQuery(
+                "SELECT f.*" +
+                        "FROM folder f " +
+                        "WHERE f.folder_id= :id AND " +
+                        "f.fk_owner_id = :userId");
+        query.setInteger("id", folderId);
+        query.setInteger("userId", userId);
+
+        return this.mapFolderObject((Object[]) query.uniqueResult());
+    }
+
     private Folder mapFolderObject(Object[] folderObject) {
 
         if(folderObject == null) {

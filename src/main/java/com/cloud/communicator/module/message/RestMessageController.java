@@ -61,7 +61,13 @@ public class RestMessageController {
 
         List<User> receiversList = new ArrayList<User>();
         for(String receiver : receiversField.split(" ")) {
-            User receiverObject = userService.findUserByUsername(receiver);
+
+            User receiverObject;
+            try {
+                receiverObject = userService.findUserById(Integer.parseInt(receiver));
+            } catch(NumberFormatException e) {
+                receiverObject = userService.findUserByUsername(receiver);
+            }
 
             if(receiverObject == null) {
                 return new ResponseEntity<String>(messageSource.getMessage("message.receiver.not.found", args, locale), HttpStatus.NOT_ACCEPTABLE);
@@ -121,6 +127,7 @@ public class RestMessageController {
             return new ResponseEntity<Object>(message, HttpStatus.OK);
         }
 
+        messageReceiverService.setMessageAsRead(message.getId(), userId);
         return new ResponseEntity<Object>(messageSource.getMessage("message.user.notallowed", args, locale), HttpStatus.FORBIDDEN);
     }
 }
