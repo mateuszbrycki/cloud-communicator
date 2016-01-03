@@ -127,6 +127,7 @@ public class RestMessageController {
             return new ResponseEntity<Object>(message, HttpStatus.OK);
         }
 
+        messageReceiverService.setMessageAsRead(message.getId(), userId);
         return new ResponseEntity<Object>(messageSource.getMessage("message.user.notallowed", args, locale), HttpStatus.FORBIDDEN);
     }
 }

@@ -51,7 +51,8 @@
             'api_folder_delete': "<%=FolderUrls.Api.FOLDER_DELETE_FULL%>",
             'api_folder': "<%=FolderUrls.Api.FOLDER_FULL%>",
             'api_messages_folder': "<%=MessageUrls.Api.MESSAGES_FOLDER_FULL%>",
-            'api_user_username':  "<%=UserUrls.Api.USER%>"
+            'api_user_username':  "<%=UserUrls.Api.USER%>",
+            'user_logout': "<%=UserUrls.USER_LOGOUT_FULL%>",
         };
 
         var ctx = "${pageContext.request.contextPath}";
