@@ -14,6 +14,25 @@
     setInterval(refreshDashboard, 120000);
 </script>
 
+<!-- Left Sidebar -->
+<div class="sidebars">
+    <div class="sidebar left">
+        <ul class="list-group" id="contact-book-list">
+            <li class="list-group-item contact-element" user-id="${folder.id}" >
+                Marek
+            </li>
+            <li class="list-group-item contact-element" user-id="${folder.id}" >
+                Mateusz
+            </li>
+
+            <li class="list-group-item add-new-contact">
+                <spring:message code="addressbook.add"/>
+                <span class="glyphicon glyphicon-plus"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+
 <!-- Folder context menu -->
 <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none">
     <li><a tabindex="-1" action-id="0"><spring:message code="button.open"/></a></li>
@@ -34,12 +53,16 @@
             <button type="button" class="reload-inbox btn btn-default">
                 <span class="glyphicon glyphicon-refresh"></span>
             </button>
+
+            <button type="button" class=" sidebar-button btn btn-default">
+                <span class="glyphicon glyphicon-book"></span>
+                <spring:message code="addressbook"/>
+            </button>
         </nav>
     </div>
 </div>
 
 <div class="row">
-
     <div class="col-xs-6 col-md-2">
         <ul class="list-group" id="folders-list">
             <c:forEach items="${folders}" var="folder">

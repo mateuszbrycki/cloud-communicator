@@ -415,8 +415,15 @@ function editFolder(folderId) {
     $("#edit-folder-modal").modal('show');
 }
 
+function triggerSidebar(sidebar, action) {
+    sidebar.trigger('sidebar:'+ action);
+}
+
 
 $(document).ready(function () {
+
+    //sidebar element
+    var sidebar =  $(".sidebar.left").sidebar({side: "left"});
 
     $(".receivers-select").select2({
         tags: true,
@@ -466,7 +473,12 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.send-message-button', function () {
+        triggerSidebar(sidebar, 'open');
         showSendMessageForm();
+    });
+
+    $(document).on('click', '.send-message-form-close', function() {
+        triggerSidebar(sidebar, 'close');
     });
 
     $(document).on('click', '.add-new-folder', function () {
@@ -550,6 +562,7 @@ $(document).ready(function () {
             refreshForm(frm);
             $(".receivers-select").select2('val', 'All'); //reseting select with usernames
             $("#send-message-modal").modal('hide');
+            triggerSidebar(sidebar, 'close');
         }
     });
 
@@ -632,6 +645,10 @@ $(document).ready(function () {
 
     $(document).on('click', '.folder-element', function (e) {
         renderFolderMessages($(this).attr('folder-id'));
+    });
+
+    $(document).on('click', '.sidebar-button', function (e) {
+        triggerSidebar(sidebar, 'toggle');
     });
 
     $('#send-message-form').validate({

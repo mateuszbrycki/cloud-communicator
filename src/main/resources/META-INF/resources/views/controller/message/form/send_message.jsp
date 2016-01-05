@@ -19,9 +19,7 @@
                                 code="message.modal.receivers"/>:</label>
 
                         <div class="col-sm-5">
-                            <input type="text" id="receivers-field" name="receivers" class="form-control"/>
-
-                            <select name="receivers" class="form-control receivers-select">
+                            <select name="receivers" id="receivers-field" class="form-control receivers-select">
                             </select>
 
                         </div>

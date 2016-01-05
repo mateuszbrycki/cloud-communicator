@@ -29,6 +29,7 @@
     <script src="<c:url value="/js/lib/jquery_validate_1_12_0_min.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/bootstrap-colorpicker.min.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/select2.full.min.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/js/lib/sidebar.min.js" />" type="text/javascript"></script>
 
     <script src="<c:url value="/js/common.js" />" type="text/javascript"></script>
 
