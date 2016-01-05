@@ -364,10 +364,13 @@ function getMenuPosition(mouse, direction, scrollDir) {
     return position;
 }
 
-
+//wypełniony modal z odpowiedzią na wiadomości
 function showResponseMessageModal(date, username, topic, text){
 
-    document.message_form.receivers.value = username;
+    var select = $('#receivers-field');
+    var option = $('<option></option>').attr('selected', true).text(username).val(username);
+    option.appendTo(select);
+    select.trigger('change');
     document.message_form.topic.value = "Re:" + topic;
     document.message_form.text.value = translations['response-message'] + "\n" + username + " " + date + "\n\"" + text + "\"";
 
