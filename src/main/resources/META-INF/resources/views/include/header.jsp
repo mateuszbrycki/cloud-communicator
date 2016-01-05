@@ -38,7 +38,7 @@
             'author': "<spring:message code="message.author" />",
             'topic': "<spring:message code="message.topic" />",
             'text': "<spring:message code="message.text" />",
-            'message-inbox-empty': "<spring:message code="message.inbox.empty" />",
+            'message-folder-empty': "<spring:message code="message.folder.empty" />",
             'folder-add': "<spring:message code="folder.add" />",
             'response-message': "<spring:message code="message.in.response.to" />"
         };
