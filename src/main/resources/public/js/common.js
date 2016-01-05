@@ -156,6 +156,42 @@ function renderFoldersList(data) {
     oldPanelGroup.parentElement.replaceChild(newPanelGroup, oldPanelGroup);
 }
 
+function renderContacts(data) {
+
+    var oldUlElement = document.getElementById('contact-book-list');
+
+    var ulElement = document.createElement('ul');
+    ulElement.className='list-group';
+    ulElement.id='contact-book-list';
+
+    for (var i = 0; i < data.length; i++) {
+
+        var liElement = document.createElement('li');
+        liElement.className='list-group-item contact-element';
+        liElement.setAttribute('user-id', data[i].personInBook.id);
+
+        var divElement = document.createElement('div');
+        divElement.className ='contact-username';
+        divElement.appendChild(document.createTextNode( data[i].personInBook.username));
+
+        var buttonElement = document.createElement('button');
+        buttonElement.type='button';
+        buttonElement.className='close hover-btn';
+
+        var spanElement = document.createElement('span');
+        spanElement.className='glyphicon glyphicon-remove';
+
+        buttonElement.appendChild(spanElement);
+
+        liElement.appendChild(divElement);
+        liElement.appendChild(buttonElement);
+
+        ulElement.appendChild(liElement);
+    }
+
+    oldUlElement.parentElement.replaceChild(ulElement, oldUlElement);
+}
+
 function getEmptyAlert(element) {
     var alertDiv = document.createElement('div');
     alertDiv.className = 'alert alert-info';
@@ -182,8 +218,13 @@ function changeLanguage(data) {
 }
 
 function showSendMessageForm() {
-    $('#send-message-modal').modal({keyboard: true});
-    $("#send-message-modal").modal('show');
+
+    var modalElement = $('#send-message-modal');
+
+    if(!modalElement.isShown) {
+        modalElement.modal({keyboard: true});
+        modalElement.modal('show');
+    }
 }
 
 function showNewFolderForm() {
@@ -374,17 +415,24 @@ function getMenuPosition(mouse, direction, scrollDir) {
 //wypełniony modal z odpowiedzią na wiadomości
 function showResponseMessageModal(date, username, topic, text){
 
-    var select = $('#receivers-field');
-    var option = $('<option></option>').attr('selected', true).text(username).val(username);
-    option.appendTo(select);
-    select.trigger('change');
+    addReceiverToSelect(username);
     document.message_form.topic.value = "Re:" + topic;
     document.message_form.text.value = translations['response-message'] + "\n" + username + " " + date + "\n\"" + text + "\"";
 
-    $('#send-message-modal').modal({keyboard: true});
-    $("#send-message-modal").modal('show');
+    showSendMessageForm();
 }
 
+function addReceiverToSelect(username) {
+
+    var select = $('#receivers-field');
+    var option = $('<option></option>').attr('selected', true).text(username).val(username);
+
+    if(!checkIfValueInSelectExists('#receivers-field', username)) {
+        option.appendTo(select);
+    }
+
+    select.trigger('change');
+}
 
 function populateEditFolderForm(data) {
     var form = document.forms['edit-folder-form'];
@@ -422,6 +470,36 @@ function triggerSidebar(sidebar, action) {
     sidebar.trigger('sidebar:'+ action);
 }
 
+function checkIfValueInSelectExists(selectId, value) {
+    var exists = false;
+    $(selectId + ' option').each(function(){
+        if (this.value == value) {
+            exists = true;
+        }
+    });
+
+    return exists;
+}
+
+function refreshSelect(selectName) {
+    $(selectName).select2('val', 'All'); //reseting select with usernames
+    $(selectName).find('option').remove();
+}
+
+function deleteFromAddressBook(userId) {
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "DELETE",
+        url: ctx + url['api_usercontact_delete'] + '/' + userId,
+        success: function (callback) {
+            renderContacts(callback);
+        },
+        error: function (callback) {
+            console.log(translations['request-failed']);
+        }
+    });
+}
 
 $(document).ready(function () {
 
@@ -449,6 +527,29 @@ $(document).ready(function () {
             }
         },
         width: '100%',
+    });
+
+    $(".contacts-select").select2({
+        tags: true,
+        tokenSeparators: [" ", ","],
+        multiple: true,
+        ajax: {
+            url: ctx + url['api_user_username'] + "/",
+            dataType: 'json',
+            delay: 500,
+            data: function (params) {
+                return {
+                    username: params.term
+                }
+            },
+            processResults: function (data) {
+                return {
+                    results: data
+
+                };
+            }
+        },
+        width: '70%',
     });
 
     //language select
@@ -481,6 +582,8 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.send-message-form-close', function() {
+        refreshForm($('#send-message-form'));
+        refreshSelect('.receivers-select');
         triggerSidebar(sidebar, 'close');
     });
 
@@ -563,8 +666,9 @@ $(document).ready(function () {
                 }
             });
             refreshForm(frm);
-            $(".receivers-select").select2('val', 'All'); //reseting select with usernames
+            refreshSelect(".receivers-select");
             $("#send-message-modal").modal('hide');
+            hideMessageModal()
             triggerSidebar(sidebar, 'close');
         }
     });
@@ -633,6 +737,40 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('submit', '#add-contact-form', function (e) {
+        var frm = $('#add-contact-form');
+        e.preventDefault();
+
+        var data = {};
+
+        $.each(this, function (i, v) {
+            var input = $(v);
+            data[input.attr("name")] = input.val();
+            delete data["undefined"];
+        });
+
+        var contactsObject = {contacts: data["contact-username"].join(" ")};
+
+        if (frm.valid()) {
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                type: frm.attr('method'),
+                url: frm.attr('action'),
+                data: JSON.stringify(contactsObject),
+                success: function (callback) {
+                    renderContacts(callback);
+                },
+                error: function (callback) {
+                    console.log(callback);
+                    console.log(translations['request-failed']);
+                }
+            });
+            refreshSelect(".contacts-select");
+            refreshForm(frm);
+        }
+    });
+
     $(document).on('click', '.reload-inbox', function (e) {
         e.preventDefault();
         refreshDashboard();
@@ -652,6 +790,17 @@ $(document).ready(function () {
 
     $(document).on('click', '.sidebar-button', function (e) {
         triggerSidebar(sidebar, 'toggle');
+    });
+
+    $(document).on('click', '.contact-username', function(e) {
+        //open message modal
+        showSendMessageForm();
+        addReceiverToSelect($(this).text());
+
+    });
+
+    $(document).on('click', '.contact-element .hover-btn',function() {
+        deleteFromAddressBook($(this).parent().attr("user-id"));
     });
 
     $('#send-message-form').validate({

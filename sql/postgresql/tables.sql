@@ -32,19 +32,10 @@ CREATE TABLE user_message_folder (
 	PRIMARY KEY(fk_message_id, fk_user_id, fk_folder_id)
 );
 
-CREATE TABLE contact_book (
-	contact_book_id SERIAL PRIMARY KEY,
-	fk_owner_id INTEGER,
-	description VARCHAR,
-	audit_cd TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	audit_md TIMESTAMP
-);
-
 CREATE TABLE user_contacts (
 	fk_user_id INTEGER,
-	fk_contact_book_id INTEGER REFERENCES contact_book (contact_book_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	fk_person_in_book_id INTEGER,
-	PRIMARY KEY(fk_user_id, fk_contact_book_id, fk_person_in_book_id)
+	PRIMARY KEY(fk_user_id, fk_person_in_book_id)
 );
 
 INSERT INTO message (fk_author_id, topic, text, audit_cd, audit_md) VALUES

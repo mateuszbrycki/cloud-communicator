@@ -11,5 +11,9 @@ public class UserContactUrls implements UrlSpace {
         public static final String CONTACT = "/api"  + UserContactUrls.CONTACT;
         public static final String CONTACTS = "/api"  + UserContactUrls.CONTACTS;
 
+        public static final String USER_CONTACT_DELETE = "/delete";
+        public static final String USER_CONTACT_DELETE_FULL = Api.CONTACT + Api.USER_CONTACT_DELETE;
+        public static final String USER_CONTACT_DELETE_ID = USER_CONTACT_DELETE + "/{personInBook}";
+
     }
 }

@@ -1,4 +1,5 @@
 <%@ page import="com.cloud.communicator.module.message.MessageUrls" %>
+<%@ page import="com.cloud.communicator.module.contact.UserContactUrls" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -18,18 +19,26 @@
 <div class="sidebars">
     <div class="sidebar left">
         <ul class="list-group" id="contact-book-list">
-            <li class="list-group-item contact-element" user-id="${folder.id}" >
-                Marek
-            </li>
-            <li class="list-group-item contact-element" user-id="${folder.id}" >
-                Mateusz
-            </li>
 
-            <li class="list-group-item add-new-contact">
-                <spring:message code="addressbook.add"/>
-                <span class="glyphicon glyphicon-plus"></span>
-            </li>
+            <c:forEach items="${contacts}" var="contact">
+                <li class="list-group-item contact-element" user-id="${contact.personInBook.id}" >
+                    <div class="contact-username">
+                    ${contact.personInBook.username}
+                    </div>
+                    <button type="button" class="close hover-btn">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </li>
+
+            </c:forEach>
         </ul>
+
+        <form id="add-contact-form" method="PUT" action="${pageContext.request.contextPath}<%=UserContactUrls.Api.CONTACT%>/">
+            <select id="contact-username-field" name="contact-username" class="form-control contacts-select">
+            </select>
+
+            <input type="submit" id="add-contact-submit" class="btn btn-primary" value = "Add"/>
+        </form>
     </div>
 </div>
 

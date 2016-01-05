@@ -1,6 +1,8 @@
 <%@ page import="com.cloud.communicator.module.message.MessageUrls" %>
 <%@ page import="com.cloud.communicator.module.message.FolderUrls" %>
 <%@ page import="com.cloud.communicator.module.user.UserUrls" %>
+<%@ page import="com.cloud.communicator.module.contact.UserContact" %>
+<%@ page import="com.cloud.communicator.module.contact.UserContactUrls" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
@@ -55,6 +57,7 @@
             'api_messages_folder': "<%=MessageUrls.Api.MESSAGES_FOLDER_FULL%>",
             'api_user_username':  "<%=UserUrls.Api.USER%>",
             'user_logout': "<%=UserUrls.USER_LOGOUT_FULL%>",
+            'api_usercontact_delete': "<%=UserContactUrls.Api.USER_CONTACT_DELETE_FULL%>"
         };
 
         var ctx = "${pageContext.request.contextPath}";

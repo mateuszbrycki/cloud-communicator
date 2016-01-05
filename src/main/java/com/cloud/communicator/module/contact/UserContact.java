@@ -2,10 +2,7 @@ package com.cloud.communicator.module.contact;
 
 import com.cloud.communicator.module.user.User;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -15,12 +12,14 @@ public class UserContact implements Serializable {
 
     @Id
     @NotNull
-    @Column(name="fk_user_id")
+    @OneToOne
+    @JoinColumn(name="fk_user_id")
     private User user;
 
     @Id
     @NotNull
-    @Column(name="fk_person_in_book_id")
+    @OneToOne
+    @JoinColumn(name="fk_person_in_book_id")
     private User personInBook;
 
 
