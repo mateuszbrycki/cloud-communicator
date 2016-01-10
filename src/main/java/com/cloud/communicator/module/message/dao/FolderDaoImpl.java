@@ -60,7 +60,8 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
         Query query = getSession().createSQLQuery(
                 "SELECT f.* " +
                         "FROM folder_view f " +
-                        "WHERE f.fk_owner_id = :id");
+                        "WHERE f.fk_owner_id = :id " +
+                        "ORDER BY f.folder_id");
         query.setInteger("id", userId);
 
         List<Folder> folders = new ArrayList<>();
