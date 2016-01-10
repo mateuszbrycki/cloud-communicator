@@ -61,3 +61,42 @@
 .error-template {padding: 40px 15px;text-align: center;}
 .error-actions {margin-top:15px;margin-bottom:15px;}
 .error-actions .btn { margin-right:10px; }
+
+.sidebar.left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 270px;
+    background: #F9F9F9;
+    z-index: 1050;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.64);
+    position: fixed;
+}
+
+.sidebar.left .add-new-contact{
+    color: #959595;
+}
+
+#add-contact-form {
+    margin-left: 17px;
+}
+
+.element-new {
+    padding: 20px;
+}
+
+.contact-element .hover-btn {
+    position: relative;
+    display: none;
+    float: right;
+    font-size: 15px;
+}
+
+.contact-element:hover .hover-btn {
+    display: block;
+}
+
+.contact-username {
+    display: inline;
+}

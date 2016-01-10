@@ -1,4 +1,5 @@
 <%@ page import="com.cloud.communicator.module.message.MessageUrls" %>
+<%@ page import="com.cloud.communicator.module.contact.UserContactUrls" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -13,6 +14,33 @@
     //refreshing inbox, 2 minutes interval
     setInterval(refreshDashboard, 120000);
 </script>
+
+<!-- Left Sidebar -->
+<div class="sidebars">
+    <div class="sidebar left">
+        <ul class="list-group" id="contact-book-list">
+
+            <c:forEach items="${contacts}" var="contact">
+                <li class="list-group-item contact-element" user-id="${contact.personInBook.id}" >
+                    <div class="contact-username">
+                    ${contact.personInBook.username}
+                    </div>
+                    <button type="button" class="close hover-btn">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </li>
+
+            </c:forEach>
+        </ul>
+
+        <form id="add-contact-form" method="PUT" action="${pageContext.request.contextPath}<%=UserContactUrls.Api.CONTACT%>/">
+            <select id="contact-username-field" name="contact-username" class="form-control contacts-select">
+            </select>
+
+            <input type="submit" id="add-contact-submit" class="btn btn-primary" value = "Add"/>
+        </form>
+    </div>
+</div>
 
 <!-- Folder context menu -->
 <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none">
@@ -34,12 +62,16 @@
             <button type="button" class="reload-inbox btn btn-default">
                 <span class="glyphicon glyphicon-refresh"></span>
             </button>
+
+            <button type="button" class=" sidebar-button btn btn-default">
+                <span class="glyphicon glyphicon-book"></span>
+                <spring:message code="addressbook"/>
+            </button>
         </nav>
     </div>
 </div>
 
 <div class="row">
-
     <div class="col-xs-6 col-md-2">
         <ul class="list-group" id="folders-list">
             <c:forEach items="${folders}" var="folder">
