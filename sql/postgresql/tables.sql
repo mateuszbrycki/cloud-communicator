@@ -38,14 +38,12 @@ CREATE TABLE user_contacts (
 	PRIMARY KEY(fk_user_id, fk_person_in_book_id)
 );
 
-INSERT INTO message (fk_author_id, topic, text, audit_cd, audit_md) VALUES
-	(2, 'New message.', 'First new message.', '2015-12-04 20:25:25', NULL),
-	(2, 'Next one new message.', 'This is second message. Lets check if dump will be saved.', '2015-12-08 03:29:45', NULL);
-
-INSERT INTO message_receiver (fk_message_id, fk_user_id, is_read, read_date, audit_cd, autid_md) VALUES
-	(1, 1, true, NULL, '2015-12-10 04:56:35', NULL),
-	(2, 1, true, NULL, '2015-12-08 05:31:35', NULL),
-	(2, 3, true, NULL, '2015-12-04 16:54:46', NULL);
+--archive tables
+CREATE TABLE folder_archive AS SELECT *, NOW() as action_time FROM folder;
+CREATE TABLE message_receiver_archive AS SELECT *, NOW() as action_time  FROM message_receiver;
+CREATE TABLE user_contacts_archive AS SELECT *, NOW() as action_time  FROM user_contacts;
+CREATE TABLE user_message_folder_archive AS SELECT *, NOW() as action_time  FROM user_message_folder;
+CREATE TABLE message_archive AS SELECT *, NOW() as action_time  FROM message;
 
 --DROP TABLE user_contacts;
 --DROP TABLE contact_book;
@@ -53,3 +51,8 @@ INSERT INTO message_receiver (fk_message_id, fk_user_id, is_read, read_date, aud
 --DROP TABLE folder;
 --DROP TABLE message_receiver;
 --DROP TABLE message;
+--DROP TABLE folder_archive;
+--DROP TABLE message_receiver_archive;
+--DROP TABLE user_contacts_archive;
+--DROP TABLE user_message_folder_archive;
+--DROP TABLE message_archive;
