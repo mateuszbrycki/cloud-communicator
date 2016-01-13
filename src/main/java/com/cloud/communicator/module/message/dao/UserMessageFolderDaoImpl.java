@@ -28,7 +28,7 @@ public class UserMessageFolderDaoImpl extends AbstractDaoPostgreSQL implements U
         Query query = getSession().createSQLQuery(
                 "SELECT umf.* FROM user_message_folder umf " +
                         "WHERE umf.fk_message_id = :messageId " +
-                        "AND umf.fk_user_id =: userId");
+                        "AND umf.fk_user_id = :userId");
         query.setInteger("messageId", messageId);
         query.setInteger("userId", userId);
 

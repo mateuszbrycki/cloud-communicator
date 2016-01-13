@@ -32,6 +32,6 @@ public class UserMessageFolderServiceImpl implements UserMessageFolderService{
     @Override
     public UserMessageFolder getUserMessageFolder(Integer messageId, Integer userId){
 
-       return this.getUserMessageFolder(messageId, userId);
+       return this.userMessageFolderDao.getUserMessageFolder(messageId, userId);
     }
 }

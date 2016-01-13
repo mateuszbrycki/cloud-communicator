@@ -135,7 +135,7 @@ public class RestMessageController {
         return new ResponseEntity<Object>(messageSource.getMessage("message.user.notallowed", args, locale), HttpStatus.FORBIDDEN);
     }
 
-    @RequestMapping(value = MessageUrls.Api.MESSAGE_FOLDER_ID, method = RequestMethod.POST)
+    @RequestMapping(value = MessageUrls.Api.MESSAGE_FOLDER_ID, method = RequestMethod.GET)
     public ResponseEntity<Object> updateMessageFolder(@PathVariable("messageId") Integer messageId,
                                                       @PathVariable("folderId") Integer folderId,
                                                       HttpServletRequest request,

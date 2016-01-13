@@ -439,7 +439,7 @@ function changeMessageFolder(messageId, folderId) {
     $.ajax({
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        type: "POST",
+        type: "GET",
         url: ctx + url['api_message_folder'] + '/' + messageId + '/' + folderId,
         success: function (callback) {
             renderFoldersList(callback);
