@@ -49,7 +49,7 @@ function renderMessagesList(data) {
 
     for (var i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
-        tableRow.className = "inbox-element";
+        tableRow.className = "message-element";
         tableRow.setAttribute('message-id', data[i].id);
 
         var statusIcon = "glyphicon glyphicon-eye-close";
@@ -331,6 +331,22 @@ function deleteFolder(folderId) {
     });
 }
 
+function deleteMessage(messageId){
+
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "DELETE",
+        url: ctx + url['api_message_delete'] + '/' + messageId,
+        success: function (callback) {
+            refreshDashboard();
+        },
+        error: function (callback) {
+            console.log(translations['request-failed']);
+        }
+    });
+}
+
 function contextMenu(e, settings) {
     // Open context menu
     // return native menu if pressing control
@@ -373,6 +389,7 @@ function getMenuPosition(mouse, direction, scrollDir) {
 
 //wypełniony modal z odpowiedzią na wiadomości
 function showResponseMessageModal(date, username, topic, text){
+
 
     var select = $('#receivers-field');
     var option = $('<option></option>').attr('selected', true).text(username).val(username);
@@ -418,8 +435,27 @@ function editFolder(folderId) {
     $("#edit-folder-modal").modal('show');
 }
 
+function changeMessageFolder(messageId, folderId) {
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "POST",
+        url: ctx + url['api_message_folder'] + '/' + messageId + '/' + folderId,
+        success: function (callback) {
+            renderFoldersList(callback);
+        },
+        error: function () {
+            console.log(translations['request-failed']);
+        }
+    });
+}
+
 
 $(document).ready(function () {
+
+    context.init({preventDoubleContext: false});
+    context.settings({compress: true});
+
 
     $(".receivers-select").select2({
         tags: true,
@@ -727,6 +763,7 @@ $(document).ready(function () {
     //make sure menu closes on any click
     $(document).click(function () {
         $(menuSelector).hide();
+        $(messageMenuSelector).hide();
     });
 
     $(document).on('contextmenu', '.folder-element', function (e) {
@@ -751,5 +788,35 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(document).on('contextmenu', '.message-element', function (e) {
+        e.preventDefault();
+
+        var messageId = $(this).attr('message-id');
+
+        contextMenu(e, {
+            menuSelector: messageMenuSelector,
+            menuSelected: function (invokedOn, selectedMenu) {
+                var actionId = selectedMenu.attr('action-id');
+
+                var folderId = $(this).parent().children("ul li a").attr('folder-id');
+
+                console.log(folderId);
+
+                switch (actionId) {
+                    case '0': //open
+                        showMessageModal(messageId);
+                        break;
+                    case '1': //edit
+                        changeMessageFolder(messageId, folderId);
+                        break;
+                    case '2': //delete
+                        deleteMessage(messageId);
+                        break;
+                }
+            }
+        });
+    });
 });
+
 

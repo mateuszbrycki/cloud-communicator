@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="<c:url value="/css/spinners.css" />">
     <link rel="stylesheet" href="<c:url value="/css/bootstrap-colorpicker.min.css" />">
     <link rel="stylesheet" href="<c:url value="/css/select2.min.css" />">
+    <link rel="stylesheet" href="<c:url value="/css/context.bootstrap.css" />">
 
     <script src="<c:url value="/js/lib/jquery-2.1.0.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/bootstrap_3_2_0_min.js" />" type="text/javascript"></script>
@@ -29,6 +30,7 @@
     <script src="<c:url value="/js/lib/jquery_validate_1_12_0_min.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/bootstrap-colorpicker.min.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/select2.full.min.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/js/lib/context.js" />" type="text/javascript"></script>
 
     <script src="<c:url value="/js/common.js" />" type="text/javascript"></script>
 
@@ -47,6 +49,7 @@
             'api_message_change_status': "<%=MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_FULL%>",
             'api_message_delete': "<%=MessageUrls.Api.MESSAGE_DELETE_FULL%>",
             'api_message': "<%=MessageUrls.Api.MESSAGE_FULL%>",
+            'api_message_folder': "<%=MessageUrls.Api.MESSAGE_FOLDER_FULL%>",
             'api_messages': "<%=MessageUrls.Api.MESSAGES%>",
             'api_folders': "<%=FolderUrls.Api.FOLDERS%>",
             'api_folder_delete': "<%=FolderUrls.Api.FOLDER_DELETE_FULL%>",
@@ -62,6 +65,7 @@
         var currentFolder = null;
 
         var menuSelector = "#contextMenu";
+        var messageMenuSelector = "#messageContextMenu"
     </script>
 
 </head>

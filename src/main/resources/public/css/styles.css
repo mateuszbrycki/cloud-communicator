@@ -9,6 +9,30 @@
     background: #FFFFFF;
     opacity: 0.7;
 }
+
+#user-folder-list
+{
+    left: 75%;
+    position: absolute;
+    top: 0;
+    display: none;
+    margin-top: -1px;
+}
+
+#user-folder-list-element{
+    text-decoration: none;
+    color: black;
+}
+
+#user-folder-list-dropdown
+{
+    position: relative;
+}
+#user-folder-list-dropdown:hover #user-folder-list
+{
+    display: block;
+}
+
 #loading-overlay .spinner-loader {
     position: absolute;
     top: 20%;

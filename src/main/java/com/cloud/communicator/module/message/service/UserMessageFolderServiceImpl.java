@@ -28,4 +28,10 @@ public class UserMessageFolderServiceImpl implements UserMessageFolderService{
     public void deleteUserMessageFolder(UserMessageFolder userMessageFolder) {
         this.userMessageFolderDao.deleteUserMessageFolder(userMessageFolder);
     }
+
+    @Override
+    public UserMessageFolder getUserMessageFolder(Integer messageId, Integer userId){
+
+       return this.getUserMessageFolder(messageId, userId);
+    }
 }
