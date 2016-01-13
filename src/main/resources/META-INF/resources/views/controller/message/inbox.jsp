@@ -1,5 +1,6 @@
 <%@ page import="com.cloud.communicator.module.message.MessageUrls" %>
 <%@ page import="com.cloud.communicator.module.contact.UserContactUrls" %>
+<%@ page import="com.cloud.communicator.module.search.SearchUrls" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -14,6 +15,25 @@
     //refreshing inbox, 2 minutes interval
     setInterval(refreshDashboard, 120000);
 </script>
+
+<!--search-->
+<div class="row">
+    <div class="col-lg-8 col-md-offset-2">
+            <form method="POST" id="search-form" name="message_form"
+                  action="${pageContext.request.contextPath}<%=SearchUrls.Api.SEARCH%>/" class="form-horizontal">
+                <div class="input-group">
+                <input type="text" name="phrase" class="form-control" placeholder="<spring:message code="search.placeholder"/>">
+
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit" style="font-size: 20px">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                  </span>
+                </div>
+            </form>
+
+    </div>
+</div>
 
 <!-- Left Sidebar -->
 <div class="sidebars">
@@ -72,7 +92,7 @@
 </div>
 
 <div class="row">
-    <div class="col-xs-6 col-md-2">
+    <div class="col-xs-6 col-md-2" style="margin-top: -45px;">
         <ul class="list-group" id="folders-list">
             <c:forEach items="${folders}" var="folder">
                 <li class="list-group-item folder-element"

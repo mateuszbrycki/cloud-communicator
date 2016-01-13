@@ -481,6 +481,11 @@ function checkIfValueInSelectExists(selectId, value) {
     return exists;
 }
 
+function renderSearchInfo(phrase) {
+    var info = getEmptyAlert(translations['search-result'] + " " + phrase);
+    $('#inbox-list').prepend(info);
+}
+
 function refreshSelect(selectName) {
     $(selectName).select2('val', 'All'); //reseting select with usernames
     $(selectName).find('option').remove();
@@ -729,6 +734,7 @@ $(document).ready(function () {
                 },
                 error: function (callback) {
                     console.log(callback);
+                    console.log(translations['request-failed']);
                 }
             });
 
@@ -768,6 +774,38 @@ $(document).ready(function () {
             });
             refreshSelect(".contacts-select");
             refreshForm(frm);
+        }
+    });
+
+    $(document).on('submit', '#search-form', function (e) {
+        var frm = $('#search-form');
+        e.preventDefault();
+
+        var data = {};
+
+        $.each(this, function (i, v) {
+            var input = $(v);
+            data[input.attr("name")] = input.val();
+            delete data["undefined"];
+        });
+
+        if (frm.valid()) {
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                type: frm.attr('method'),
+                url: frm.attr('action'),
+                data: JSON.stringify(data),
+                success: function (callback) {
+                   renderMessagesList(callback);
+                   renderSearchInfo(data['phrase']);
+                },
+                error: function (callback) {
+                    console.log(callback);
+
+                    console.log(translations['request-failed']);
+                }
+            });
         }
     });
 

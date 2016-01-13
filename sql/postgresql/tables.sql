@@ -35,7 +35,10 @@ CREATE TABLE user_message_folder (
 CREATE TABLE user_contacts (
 	fk_user_id INTEGER,
 	fk_person_in_book_id INTEGER,
-	PRIMARY KEY(fk_user_id, fk_person_in_book_id)
+	audit_cd TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	audit_md TIMESTAMP
+	PRIMARY KEY(fk_user_id, fk_person_in_book_id),
+
 );
 
 --archive tables
