@@ -57,19 +57,19 @@ END;$BODY$
 
 
 CREATE OR REPLACE FUNCTION has_privileges_to_see_message(
-    messageId integer, userId integer)
+    messageid integer, userid integer)
   RETURNS BOOLEAN AS
 $BODY$
 DECLARE
   author_id integer;
   counter integer;
 BEGIN
-  SELECT m.fk_author_id INTO author_id FROM message m WHERE m.message_id = messageId;
-  IF author_id = userId THEN
+  SELECT m.fk_author_id INTO author_id FROM message m WHERE m.message_id = messageid;
+  IF author_id = userid THEN
     return TRUE;
   END IF;
 
-  SELECT COUNT(*) INTO counter FROM message_receiver mr WHERE mr.fk_message_id = messageId AND mr.fk_user_id = userId;
+  SELECT COUNT(*) INTO counter FROM message_receiver mr WHERE mr.fk_message_id = messageid AND mr.fk_user_id = userid;
   IF counter > 0 THEN
     return TRUE;
   END IF;

@@ -219,11 +219,11 @@ public class MessageServiceTests {
         testMessage3.setTopic("Test message3 topic.");
         testMessage3.setText("Test message3.");
         testMessage3.setSendDate(new Date());
-        messageService.sendMessage(testMessage2, Arrays.asList(testUser2, testUser3));
+        messageService.sendMessage(testMessage3, Arrays.asList(testUser2, testUser3));
 
         //testuser as author
         messages = messageService.findUserMessagesByPhrase(testUser.getId(), "a");
-        assertEquals(2, messages.size()); //message2 + message3
+        assertEquals(2, messages.size()); //message2 + message3 + message
 
         //testuser2 as receiver
         messages = messageService.findUserMessagesByPhrase(testUser2.getId(), "a");
