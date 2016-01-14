@@ -223,13 +223,15 @@ public class MessageServiceTests {
 
         //testuser as author
         messages = messageService.findUserMessagesByPhrase(testUser.getId(), "a");
-        assertEquals(2, messages.size()); //message2 + message3 + message
+        //query in MessageDaoImpl joins message_receiver, first message (@Before method)
+        //only saves it - do not send so message won't be returned in this query
+        assertEquals(2, messages.size());
 
-        //testuser2 as receiver
+        //testuser2 as receiver of message2 and message3
         messages = messageService.findUserMessagesByPhrase(testUser2.getId(), "a");
-        assertEquals(2, messages.size()); //message2 + message3
+        assertEquals(2, messages.size());
 
-        //testuser3 is author nor receiver
+        //testuser3 is receiver of message3
         messages = messageService.findUserMessagesByPhrase(testUser3.getId(), "a");
         assertEquals(1, messages.size());
 
