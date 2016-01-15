@@ -24,6 +24,63 @@ END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
 
+CREATE OR REPLACE FUNCTION get_search_message_ids(
+    userId integer, phrase varchar)
+  RETURNS integer[] AS
+$BODY$
+DECLARE
+  id integer;
+  array_counter integer;
+  message_ids integer[];
+BEGIN
+array_counter:=0;
+
+	FOR id IN (
+	SELECT m.message_id
+		FROM message m
+		WHERE
+		  (
+		    m.text ILIKE '%' || phrase || '%' OR m.topic ILIKE  '%' || phrase || '%'
+		  )
+		  AND has_privileges_to_see_message(m.message_id, userId)
+		 )
+	LOOP
+		message_ids[array_counter] := id;
+		array_counter:=array_counter+1;
+	END LOOP;
+
+	RETURN message_ids;
+
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+
+
+CREATE OR REPLACE FUNCTION has_privileges_to_see_message(
+    messageid integer, userid integer)
+  RETURNS BOOLEAN AS
+$BODY$
+DECLARE
+  author_id integer;
+  counter integer;
+BEGIN
+  SELECT m.fk_author_id INTO author_id FROM message m WHERE m.message_id = messageid;
+  IF author_id = userid THEN
+    return TRUE;
+  END IF;
+
+  SELECT COUNT(*) INTO counter FROM message_receiver mr WHERE mr.fk_message_id = messageid AND mr.fk_user_id = userid;
+  IF counter > 0 THEN
+    return TRUE;
+  END IF;
+
+  RETURN FALSE;
+
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+
+
 --audit_cd trigger
 CREATE OR REPLACE FUNCTION audit_cd_function() RETURNS TRIGGER AS $BODY$
 BEGIN

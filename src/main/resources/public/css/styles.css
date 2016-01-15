@@ -100,3 +100,7 @@
 .contact-username {
     display: inline;
 }
+
+.folder-element, .inbox-element {
+    cursor: pointer;
+}

@@ -22,6 +22,8 @@ public interface MessageService {
 
     List<Message> findUserFolderMessages(Integer userId, Integer folderId);
 
+    List<Message> findUserMessagesByPhrase(Integer userId, String phrase);
+
     Message findMessageById(Integer messageId);
 
     Boolean isAllowedToSeeMessage(Message message, Integer userID);

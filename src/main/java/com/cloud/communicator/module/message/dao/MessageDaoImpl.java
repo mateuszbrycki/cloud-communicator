@@ -89,9 +89,31 @@ public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao 
     }
 
     @Override
+    public List<Message> findUserMessagesByPhrase(Integer userId, String phrase) {
+        Query query = getSession().createSQLQuery(
+                "SELECT DISTINCT m.message_id, m.fk_author_id, m.topic, m.text, m.audit_cd, mr.is_read " +
+                        "FROM message m " +
+                        "JOIN message_receiver mr ON m.message_id = mr.fk_message_id " +
+                        "WHERE m.message_id = ANY(get_search_message_ids(:userId, :phrase)) " +
+                        "ORDER BY m.audit_cd DESC");
+
+        query.setInteger("userId", userId);
+        query.setString("phrase", phrase);
+
+        List<Message> messages = new ArrayList<>();
+
+        List<Object[]> rows = query.list();
+        for (Object[] row : rows) {
+            messages.add(this.mapMessageObject(row));
+        }
+
+        return messages;
+    }
+
+    @Override
     public Message findMessageById(Integer messageId) {
         Query query = getSession().createSQLQuery(
-                "SELECT m.* " +
+                "SELECT  m.message_id, m.fk_author_id, m.topic, m.text, m.audit_cd " +
                         "FROM message m " +
                         "WHERE m.message_id = :id LIMIT 1");
         query.setInteger("id", messageId);
@@ -112,7 +134,11 @@ public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao 
         message.setTopic((String) messageObject[2]);
         message.setText((String) messageObject[3]);
         message.setSendDate((Date) messageObject[4]);
-        message.setIsRead((Boolean) messageObject[5]);
+
+        if(messageObject.length > 5) {
+            message.setIsRead((Boolean) messageObject[5]);
+        }
+
         message.setReceivers(
                 this.messageReceiverService.findMessageReceivers(message.getId())
         );

@@ -69,15 +69,6 @@ CREATE TRIGGER deleted_trigger_user_message_folder
 AFTER DELETE ON user_message_folder
     FOR EACH ROW EXECUTE PROCEDURE move_deleted_user_message_folder();
 
---DROP TRIGGER audit_cd_trigger_user_message_folder ON user_message_folder;
-CREATE TRIGGER audit_cd_trigger_user_message_folder
-BEFORE INSERT ON user_message_folder
-    FOR EACH ROW EXECUTE PROCEDURE audit_cd_function();
-
---DROP TRIGGER audit_md_trigger_user_message_folder ON user_message_folder;
-CREATE TRIGGER audit_md_trigger_user_message_folder
-BEFORE UPDATE ON user_message_folder
-    FOR EACH ROW EXECUTE PROCEDURE audit_md_function();
 
 -- DROP TRIGGER deleted_trigger_folder ON folder;
 -- DROP TRIGGER audit_cd_trigger_folder ON folder;
