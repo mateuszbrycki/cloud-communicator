@@ -53,6 +53,11 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public List<Message> findUserMessagesByPhrase(Integer userId, String phrase) {
+        return messageDao.findUserMessagesByPhrase(userId, phrase);
+    }
+
+    @Override
     public Message findMessageById(Integer messageId) {
         return this.messageDao.findMessageById(messageId);
     }

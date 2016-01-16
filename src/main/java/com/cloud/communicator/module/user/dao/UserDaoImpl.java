@@ -2,6 +2,7 @@ package com.cloud.communicator.module.user.dao;
 
 import com.cloud.communicator.AbstractDaoMySQL;
 import com.cloud.communicator.module.user.User;
+import com.cloud.communicator.module.userrole.UserRole;
 import com.cloud.communicator.module.userrole.service.UserRoleService;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
@@ -59,7 +60,7 @@ public class UserDaoImpl extends AbstractDaoMySQL implements UserDao {
 
     @Override
     public User findUserById(Integer userId) {
-        Query query = getSession().createSQLQuery("SELECT * FROM user_account u WHERE u.user_id = :id");
+        Query query = getSession().createSQLQuery("SELECT * FROM user_account_view u WHERE u.user_id = :id");
         query.setInteger("id", userId);
 
         return this.mapUserObject((Object[])query.uniqueResult());
@@ -68,7 +69,7 @@ public class UserDaoImpl extends AbstractDaoMySQL implements UserDao {
 
     @Override
     public User findUserByUsername(String username) {
-        Query query = getSession().createSQLQuery("SELECT * FROM user_account u WHERE u.username = :username");
+        Query query = getSession().createSQLQuery("SELECT * FROM user_account_view u WHERE u.username = :username");
         query.setString("username", username);
 
         return this.mapUserObject((Object[])query.uniqueResult());
@@ -78,7 +79,7 @@ public class UserDaoImpl extends AbstractDaoMySQL implements UserDao {
     public List<User> findUsersByUsername(String username) {
 
         Query query = getSession().createSQLQuery(
-                "SELECT u.* FROM user_account u " +
+                "SELECT u.* FROM user_account_view u " +
                         "WHERE u.username LIKE \'%" + username + "%\' ");
         List<User> users = new ArrayList<>();
 
@@ -95,7 +96,7 @@ public class UserDaoImpl extends AbstractDaoMySQL implements UserDao {
     public List<User> findUsersByUsername(String username, Integer userId) {
 
         Query query = getSession().createSQLQuery(
-                "SELECT u.* FROM user_account u " +
+                "SELECT u.* FROM user_account_view u " +
                         "WHERE u.username LIKE \'%" + username + "%\' " +
                         "AND u.user_id != :userId");
         query.setInteger("userId", userId);
@@ -125,12 +126,22 @@ public class UserDaoImpl extends AbstractDaoMySQL implements UserDao {
         }
 
         User user = new User();
-        user.setId((Integer)userObject[0]);
+        user.setId((Integer) userObject[0]);
         user.setUsername((String) userObject[1]);
-        user.setRole(this.userRoleService.findById((Integer) userObject[2]));
-        user.setMail((String)userObject[3]);
-        user.setPassword((String)userObject[4]);
+        user.setMail((String) userObject[3]);
+        user.setPassword((String) userObject[4]);
         user.setIsActive((Boolean)userObject[5]);
+
+        if(userObject.length > 8) {
+            UserRole userRole = new UserRole();
+            userRole.setId((Integer) userObject[2]);
+            userRole.setRole((String) userObject[8]);
+
+            user.setRole(userRole);
+        } else {
+            user.setRole(this.userRoleService.findById((Integer) userObject[2]));
+        }
+
         return user;
     }
 

@@ -26,6 +26,8 @@ INSERT INTO `user_role` (`id`, `role_id`) VALUES
 (2, 'ROLE_MODERATOR'),
 (3, 'ROLE_USER');
 
+CREATE TABLE user_account_archive AS SELECT *, NOW() as action_time FROM user_account;
+
 --DROP TABLE user_account;
 --DROP TABLE user_role;
 

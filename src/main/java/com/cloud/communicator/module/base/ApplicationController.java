@@ -1,5 +1,7 @@
 package com.cloud.communicator.module.base;
 
+import com.cloud.communicator.module.contact.UserContact;
+import com.cloud.communicator.module.contact.service.UserContactService;
 import com.cloud.communicator.module.message.Folder;
 import com.cloud.communicator.module.message.Message;
 import com.cloud.communicator.module.message.service.FolderService;
@@ -30,6 +32,9 @@ public class ApplicationController {
     @Inject
     private FolderService folderService;
 
+    @Inject
+    private UserContactService userContactService;
+
     private static final Logger logger = Logger.getLogger(ApplicationController.class);
 
     @RequestMapping(method = RequestMethod.GET)
@@ -45,6 +50,10 @@ public class ApplicationController {
         List<Message> messages = messageService.findUserInboxMessages(userId);
         model.addAttribute("messages", messages);
         logger.debug(messages);
+
+        List<UserContact> contacts = userContactService.findContactsByUserId(userId);
+        model.addAttribute("contacts", contacts);
+        logger.debug(contacts);
 
         return "controller/message/inbox";
     }

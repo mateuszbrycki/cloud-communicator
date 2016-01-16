@@ -58,9 +58,10 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
     @Override
     public List<Folder> findUserFoldersByUserId(Integer userId) {
         Query query = getSession().createSQLQuery(
-                "SELECT f.*, get_user_folder_unread_messages(f.fk_owner_id, f.folder_id) AS unread_message " +
-                        "FROM folder f " +
-                        "WHERE f.fk_owner_id = :id");
+                "SELECT f.* " +
+                        "FROM folder_view f " +
+                        "WHERE f.fk_owner_id = :id " +
+                        "ORDER BY f.folder_id");
         query.setInteger("id", userId);
 
         List<Folder> folders = new ArrayList<>();
@@ -76,8 +77,8 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
     @Override
     public Folder findUserDefaultFolder(Integer userId) {
         Query query = getSession().createSQLQuery(
-                "SELECT f.*,  get_user_folder_unread_messages(f.fk_owner_id, f.folder_id) AS unread_message " +
-                        "FROM folder f " +
+                "SELECT f.* " +
+                        "FROM folder_view f " +
                         "WHERE f.fk_owner_id= :id AND f.is_default_user_folder = true LIMIT 1");
         query.setInteger("id", userId);
 
@@ -88,8 +89,8 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
     public Folder findFolderById(Integer folderId) {
 
         Query query = getSession().createSQLQuery(
-                "SELECT f.*" +
-                        "FROM folder f " +
+                "SELECT f.* " +
+                        "FROM folder_view f " +
                         "WHERE f.folder_id= :id");
         query.setInteger("id", folderId);
 
@@ -100,8 +101,8 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
     public Folder findFolderById(Integer folderId, Integer userId) {
 
         Query query = getSession().createSQLQuery(
-                "SELECT f.*" +
-                        "FROM folder f " +
+                "SELECT f.* " +
+                        "FROM folder_view f " +
                         "WHERE f.folder_id= :id AND " +
                         "f.fk_owner_id = :userId");
         query.setInteger("id", folderId);

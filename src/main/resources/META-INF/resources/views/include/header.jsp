@@ -1,6 +1,9 @@
 <%@ page import="com.cloud.communicator.module.message.MessageUrls" %>
 <%@ page import="com.cloud.communicator.module.message.FolderUrls" %>
 <%@ page import="com.cloud.communicator.module.user.UserUrls" %>
+<%@ page import="com.cloud.communicator.module.contact.UserContact" %>
+<%@ page import="com.cloud.communicator.module.contact.UserContactUrls" %>
+<%@ page import="com.cloud.communicator.module.search.SearchUrls" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
@@ -31,6 +34,7 @@
     <script src="<c:url value="/js/lib/bootstrap-colorpicker.min.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/select2.full.min.js" />" type="text/javascript"></script>
     <script src="<c:url value="/js/lib/context.js" />" type="text/javascript"></script>
+    <script src="<c:url value="/js/lib/sidebar.min.js" />" type="text/javascript"></script>
 
     <script src="<c:url value="/js/common.js" />" type="text/javascript"></script>
 
@@ -42,7 +46,8 @@
             'text': "<spring:message code="message.text" />",
             'message-folder-empty': "<spring:message code="message.folder.empty" />",
             'folder-add': "<spring:message code="folder.add" />",
-            'response-message': "<spring:message code="message.in.response.to" />"
+            'response-message': "<spring:message code="message.in.response.to" />",
+            'search-result': "<spring:message code="search.result" />"
         };
 
         var url = {
@@ -57,6 +62,8 @@
             'api_messages_folder': "<%=MessageUrls.Api.MESSAGES_FOLDER_FULL%>",
             'api_user_username':  "<%=UserUrls.Api.USER%>",
             'user_logout': "<%=UserUrls.USER_LOGOUT_FULL%>",
+            'api_usercontact_delete': "<%=UserContactUrls.Api.USER_CONTACT_DELETE_FULL%>",
+            'api_search': "<%=SearchUrls.Api.SEARCH%>"
         };
 
         var ctx = "${pageContext.request.contextPath}";

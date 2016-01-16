@@ -184,6 +184,64 @@ public class MessageServiceTests {
     }
 
     @Test
+    public void checkSearchingMessage() {
+        User testUser2 = new User();
+        testUser2.setMail("tes2t@test.gmail.com");
+        testUser2.setUsername("testusername2");
+        testUser2.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
+        testUser2.setPassword("testpassword2");
+        userService.registerUser(testUser2);
+
+        Message testMessage2 = new Message();
+        testMessage2.setAuthor(testUser);
+        testMessage2.setTopic("Test message2 topic.");
+        testMessage2.setText("Test message2.");
+        testMessage2.setSendDate(new Date());
+        messageService.sendMessage(testMessage2, Arrays.asList(testUser2));
+
+        User testUser3 = new User();
+        testUser3.setMail("test3@test.gmail.com");
+        testUser3.setUsername("testusername3");
+        testUser3.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
+        testUser3.setPassword("testpassword3");
+        userService.registerUser(testUser3);
+
+        //test user as receiver
+        List<Message> messages = messageService.findUserMessagesByPhrase(testUser2.getId(), "a");
+        assertEquals(1, messages.size());
+
+        //testuser3 is author nor receiver
+        messages = messageService.findUserMessagesByPhrase(testUser3.getId(), "a");
+        assertEquals(0, messages.size());
+
+        Message testMessage3 = new Message();
+        testMessage3.setAuthor(testUser);
+        testMessage3.setTopic("Test message3 topic.");
+        testMessage3.setText("Test message3.");
+        testMessage3.setSendDate(new Date());
+        messageService.sendMessage(testMessage3, Arrays.asList(testUser2, testUser3));
+
+        //testuser as author
+        messages = messageService.findUserMessagesByPhrase(testUser.getId(), "a");
+        //query in MessageDaoImpl joins message_receiver, first message (@Before method)
+        //only saves it - do not send so message won't be returned in this query
+        assertEquals(2, messages.size());
+
+        //testuser2 as receiver of message2 and message3
+        messages = messageService.findUserMessagesByPhrase(testUser2.getId(), "a");
+        assertEquals(2, messages.size());
+
+        //testuser3 is receiver of message3
+        messages = messageService.findUserMessagesByPhrase(testUser3.getId(), "a");
+        assertEquals(1, messages.size());
+
+        userService.deleteUserById(testUser2.getId());
+        userService.deleteUserById(testUser3.getId());
+        messageService.deleteMessage(testMessage2);
+        messageService.deleteMessage(testMessage3);
+    }
+
+    @Test
     public void checkIfUserIsAllowedToSeeMessage() {
 
         User testUser2 = new User();

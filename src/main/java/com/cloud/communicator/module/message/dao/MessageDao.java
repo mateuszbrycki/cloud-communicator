@@ -18,5 +18,7 @@ public interface MessageDao {
 
     List<Message> findUserFolderMessages(Integer userId, Integer folderId);
 
+    List<Message> findUserMessagesByPhrase(Integer userId, String phrase);
+
     Message findMessageById(Integer messageId);
 }
