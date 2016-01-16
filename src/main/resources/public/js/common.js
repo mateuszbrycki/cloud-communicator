@@ -156,6 +156,30 @@ function renderFoldersList(data) {
     oldPanelGroup.parentElement.replaceChild(newPanelGroup, oldPanelGroup);
 }
 
+function renderUserFoldersList(data){
+    var oldPanelGroup = document.getElementById('user-folder-list');
+    var panelGroup = document.createElement('ul');
+    panelGroup.id = 'user-folder-list';
+    panelGroup.className = 'dropdown-menu';
+    panelGroup.role = 'menu';
+
+    for (var i = 0; i < data.length; i++) {
+        var liElement = document.createElement('li');
+        var aElement = document.createElement('a');
+
+        aElement.setAttribute('id', 'user-folder-list-element');
+        aElement.setAttribute('tabindex', '-1');
+        aElement.setAttribute('action-id', '1');
+        aElement.setAttribute('folder-id', data[i].id);
+        aElement.appendChild(document.createTextNode(data[i].name));
+
+        liElement.appendChild(aElement);
+        panelGroup.appendChild(liElement);
+    }
+
+    oldPanelGroup.parentElement.replaceChild(panelGroup, oldPanelGroup);
+}
+
 function getEmptyAlert(element) {
     var alertDiv = document.createElement('div');
     alertDiv.className = 'alert alert-info';
@@ -229,6 +253,7 @@ function reloadFoldersList() {
         url: ctx + url['api_folders'] + "/",
         success: function (callback) {
             renderFoldersList(callback);
+            renderUserFoldersList(callback);
         },
         error: function (callback) {
             console.log(translations['request-failed']);
@@ -324,6 +349,7 @@ function deleteFolder(folderId) {
         url: ctx + url['api_folder_delete'] + '/' + folderId,
         success: function (callback) {
             renderFoldersList(callback);
+            renderUserFoldersList(callback);
         },
         error: function (callback) {
             console.log(translations['request-failed']);
@@ -433,16 +459,17 @@ function editFolder(folderId) {
 
     $('#edit-folder-modal').modal({keyboard: true});
     $("#edit-folder-modal").modal('show');
+
 }
 
 function changeMessageFolder(messageId, folderId) {
     $.ajax({
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        type: "POST",
+        type: "GET",
         url: ctx + url['api_message_folder'] + '/' + messageId + '/' + folderId,
         success: function (callback) {
-            renderFoldersList(callback);
+            refreshDashboard();
         },
         error: function () {
             console.log(translations['request-failed']);

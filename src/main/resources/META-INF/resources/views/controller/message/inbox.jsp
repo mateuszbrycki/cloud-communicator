@@ -22,23 +22,19 @@
     <li><a tabindex="-1" action-id="2"><spring:message code="button.delete"/></a></li>
 </ul>
 
-<!-- Message context menu -->
-<!--<ul id="messageContextMenu" class="dropdown-menu" role="menu" style="display:none">
-    <li>Przenieś do:</li>
-    <li class="divider"></li>
-    <c:forEach items="${folders}" var="folder">
-        <li class="list-group-item" folder-id="${folder.id}">
-            <a tabindex="-1" action-id="1">${folder.name}</a>
-        </li>
-    </c:forEach>
-</ul>-->
+<!--            <c:forEach items="${folders}" var="folder">
+    <li>
+        <a id="user-folder-list-element" tabindex="-1" action-id="1" folder-id="${folder.id}">${folder.name}</a>
+    </li>
+</c:forEach>-->
+
 
 <ul id="messageContextMenu" class="dropdown-menu" role="menu" style="display:none">
     <li><a tabindex="-1" action-id="0"><spring:message code="button.open"/></a></li>
-    <li id="user-folder-list-dropdown"><a tabindex="-1"><spring:message code="button.edit"/></a>
-        <ul id="user-folder-list" role="menu">
+    <li id="user-folder-list-dropdown"><a tabindex="-1"><spring:message code="button.move.to"/></a>
+        <ul id="user-folder-list" class="dropdown-menu" role="menu">
             <c:forEach items="${folders}" var="folder">
-                <li class="list-group-item">
+                <li>
                     <a id="user-folder-list-element" tabindex="-1" action-id="1" folder-id="${folder.id}">${folder.name}</a>
                 </li>
             </c:forEach>
@@ -47,6 +43,7 @@
     <li class="divider"></li>
     <li><a tabindex="-1" action-id="2"><spring:message code="button.delete"/></a></li>
 </ul>
+
 <!-- Toolbar -->
 <div class="row">
     <div class="col-xs-6 col-md-2"></div>

@@ -135,13 +135,15 @@ public class RestMessageController {
         return new ResponseEntity<Object>(messageSource.getMessage("message.user.notallowed", args, locale), HttpStatus.FORBIDDEN);
     }
 
-    @RequestMapping(value = MessageUrls.Api.MESSAGE_FOLDER_ID, method = RequestMethod.POST)
+    @RequestMapping(value = MessageUrls.Api.MESSAGE_FOLDER_ID, method = RequestMethod.GET)
     public ResponseEntity<Object> updateMessageFolder(@PathVariable("messageId") Integer messageId,
                                                       @PathVariable("folderId") Integer folderId,
                                                       HttpServletRequest request,
                                                       HttpServletResponse response){
+        Integer userId =  UserUtils.getUserId(request,response);
+
             UserMessageFolder userMessageFolder =
-                    userMessageFolderService.getUserMessageFolder(messageId,UserUtils.getUserId(request,response));
+                    userMessageFolderService.getUserMessageFolder(messageId, userId);
 
         if(userMessageFolder == null) {
             return new ResponseEntity<Object>(userMessageFolder, HttpStatus.FORBIDDEN);
@@ -149,7 +151,7 @@ public class RestMessageController {
 
         userMessageFolder.setFolderId(folderId);
 
-        userMessageFolderService.updateUserMessageFolder(userMessageFolder);
+        userMessageFolderService.updateUserMessageFolder(messageId, userId, folderId);
 
         return new ResponseEntity<Object>(userMessageFolder, HttpStatus.OK);
     }

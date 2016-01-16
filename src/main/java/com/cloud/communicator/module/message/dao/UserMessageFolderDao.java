@@ -7,6 +7,8 @@ public interface UserMessageFolderDao {
 
     void updateUserMessageFolder(UserMessageFolder userMessageFolder);
 
+    void updateUserMessageFolder(Integer messageId, Integer userId, Integer folderId);
+
     void deleteUserMessageFolder(UserMessageFolder userMessageFolder);
 
     UserMessageFolder getUserMessageFolder(Integer messageId, Integer userId);

@@ -25,6 +25,11 @@ public class UserMessageFolderServiceImpl implements UserMessageFolderService{
     }
 
     @Override
+    public void updateUserMessageFolder(Integer messageId, Integer userId, Integer folderId) {
+        this.userMessageFolderDao.updateUserMessageFolder(messageId, userId, folderId);
+    }
+
+    @Override
     public void deleteUserMessageFolder(UserMessageFolder userMessageFolder) {
         this.userMessageFolderDao.deleteUserMessageFolder(userMessageFolder);
     }
@@ -32,6 +37,6 @@ public class UserMessageFolderServiceImpl implements UserMessageFolderService{
     @Override
     public UserMessageFolder getUserMessageFolder(Integer messageId, Integer userId){
 
-       return this.getUserMessageFolder(messageId, userId);
+       return this.userMessageFolderDao.getUserMessageFolder(messageId, userId);
     }
 }

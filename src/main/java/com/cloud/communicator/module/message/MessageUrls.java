@@ -13,8 +13,8 @@ public class MessageUrls implements UrlSpace {
 
         public static final String MESSAGES = "/api" + MessageUrls.MESSAGES;
 
-        public static final String MESSAGE_FOLDER_FULL = MessageUrls.MESSAGE + "/folder";
-        public static final String MESSAGE_FOLDER_ID = MESSAGE_FOLDER_FULL + "/{messageId}" + "/" + "{folderId}";
+        public static final String MESSAGE_FOLDER_FULL = Api.MESSAGE + "/folder";
+        public static final String MESSAGE_FOLDER_ID = "/folder" + "/{messageId}" + "/" + "{folderId}";
         public static final String MESSAGES_FOLDER_ID = "/{folderId}";
         public static final String MESSAGES_FOLDER_FULL = Api.MESSAGES;
 
