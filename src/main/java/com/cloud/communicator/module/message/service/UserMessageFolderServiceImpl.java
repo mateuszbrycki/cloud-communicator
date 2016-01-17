@@ -25,7 +25,18 @@ public class UserMessageFolderServiceImpl implements UserMessageFolderService{
     }
 
     @Override
+    public void updateUserMessageFolder(Integer messageId, Integer userId, Integer folderId) {
+        this.userMessageFolderDao.updateUserMessageFolder(messageId, userId, folderId);
+    }
+
+    @Override
     public void deleteUserMessageFolder(UserMessageFolder userMessageFolder) {
         this.userMessageFolderDao.deleteUserMessageFolder(userMessageFolder);
+    }
+
+    @Override
+    public UserMessageFolder getUserMessageFolder(Integer messageId, Integer userId){
+
+       return this.userMessageFolderDao.getUserMessageFolder(messageId, userId);
     }
 }

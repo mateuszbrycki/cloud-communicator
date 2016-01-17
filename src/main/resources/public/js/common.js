@@ -49,7 +49,7 @@ function renderMessagesList(data) {
 
     for (var i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
-        tableRow.className = "inbox-element";
+        tableRow.className = "message-element";
         tableRow.setAttribute('message-id', data[i].id);
 
         var statusIcon = "glyphicon glyphicon-eye-close";
@@ -130,7 +130,9 @@ function renderFoldersList(data) {
         var liElement = document.createElement('li');
         liElement.className = 'list-group-item folder-element';
         liElement.setAttribute('folder-id', data[i].id);
-        liElement.setAttribute('style', 'border-left: 5px solid ' + data[i].labelColor);
+        if(data[i].labelColor != 0) {
+            liElement.setAttribute('style', 'border-left: 5px solid ' + data[i].labelColor);
+        }
         liElement.appendChild(document.createTextNode(data[i].name));
 
         if(data[i].unreadMessages > 0) {
@@ -154,6 +156,30 @@ function renderFoldersList(data) {
     newPanelGroup.appendChild(liElement);
 
     oldPanelGroup.parentElement.replaceChild(newPanelGroup, oldPanelGroup);
+}
+
+function renderUserFoldersList(data){
+    var oldPanelGroup = document.getElementById('user-folder-list');
+    var panelGroup = document.createElement('ul');
+    panelGroup.id = 'user-folder-list';
+    panelGroup.className = 'dropdown-menu';
+    panelGroup.role = 'menu';
+
+    for (var i = 0; i < data.length; i++) {
+        var liElement = document.createElement('li');
+        var aElement = document.createElement('a');
+
+        aElement.setAttribute('id', 'user-folder-list-element');
+        aElement.setAttribute('tabindex', '-1');
+        aElement.setAttribute('action-id', '1');
+        aElement.setAttribute('folder-id', data[i].id);
+        aElement.appendChild(document.createTextNode(data[i].name));
+
+        liElement.appendChild(aElement);
+        panelGroup.appendChild(liElement);
+    }
+
+    oldPanelGroup.parentElement.replaceChild(panelGroup, oldPanelGroup);
 }
 
 function renderContacts(data) {
@@ -270,6 +296,7 @@ function reloadFoldersList() {
         url: ctx + url['api_folders'] + "/",
         success: function (callback) {
             renderFoldersList(callback);
+            renderUserFoldersList(callback);
         },
         error: function (callback) {
             console.log(translations['request-failed']);
@@ -314,6 +341,7 @@ function refreshDashboard() {
 
     reloadMessagesList();
     reloadFoldersList();
+    
 }
 
 function refreshForm(form) {
@@ -365,6 +393,23 @@ function deleteFolder(folderId) {
         url: ctx + url['api_folder_delete'] + '/' + folderId,
         success: function (callback) {
             renderFoldersList(callback);
+            renderUserFoldersList(callback);
+        },
+        error: function (callback) {
+            console.log(translations['request-failed']);
+        }
+    });
+}
+
+function deleteMessage(messageId){
+
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "DELETE",
+        url: ctx + url['api_message_delete'] + '/' + messageId,
+        success: function (callback) {
+            refreshDashboard();
         },
         error: function (callback) {
             console.log(translations['request-failed']);
@@ -415,9 +460,11 @@ function getMenuPosition(mouse, direction, scrollDir) {
 //wypełniony modal z odpowiedzią na wiadomości
 function showResponseMessageModal(date, username, topic, text){
 
+    var message_form = document.getElementById('send-message-form');
     addReceiverToSelect(username);
-    document.message_form.topic.value = "Re:" + topic;
-    document.message_form.text.value = translations['response-message'] + "\n" + username + " " + date + "\n\"" + text + "\"";
+
+    message_form.topic.value = "Re:" + topic;
+    message_form.text.value = translations['response-message'] + "\n" + username + " " + date + "\n\"" + text + "\"";
 
     showSendMessageForm();
 }
@@ -464,6 +511,22 @@ function editFolder(folderId) {
 
     $('#edit-folder-modal').modal({keyboard: true});
     $("#edit-folder-modal").modal('show');
+
+}
+
+function changeMessageFolder(messageId, folderId) {
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        type: "GET",
+        url: ctx + url['api_message_folder'] + '/' + messageId + '/' + folderId,
+        success: function (callback) {
+            refreshDashboard();
+        },
+        error: function () {
+            console.log(translations['request-failed']);
+        }
+    });
 }
 
 function triggerSidebar(sidebar, action) {
@@ -507,6 +570,10 @@ function deleteFromAddressBook(userId) {
 }
 
 $(document).ready(function () {
+
+    context.init({preventDoubleContext: false});
+    context.settings({compress: true});
+
 
     //sidebar element
     var sidebar =  $(".sidebar.left").sidebar({side: "left"});
@@ -931,6 +998,7 @@ $(document).ready(function () {
     //make sure menu closes on any click
     $(document).click(function () {
         $(menuSelector).hide();
+        $(messageMenuSelector).hide();
     });
 
     $(document).on('contextmenu', '.folder-element', function (e) {
@@ -950,6 +1018,35 @@ $(document).ready(function () {
                         break;
                     case '2': //delete
                         deleteFolder(folderId);
+                        break;
+                }
+            }
+        });
+    });
+
+    $(document).on('contextmenu', '.message-element', function (e) {
+        e.preventDefault();
+
+        var messageId = $(this).attr('message-id');
+
+        contextMenu(e, {
+            menuSelector: messageMenuSelector,
+            menuSelected: function (invokedOn, selectedMenu) {
+                var actionId = selectedMenu.attr('action-id');
+
+                var folderId = $(this).parent().children("ul li a").attr('folder-id');
+
+                console.log(folderId);
+
+                switch (actionId) {
+                    case '0': //open
+                        showMessageModal(messageId);
+                        break;
+                    case '1': //edit
+                        changeMessageFolder(messageId, folderId);
+                        break;
+                    case '2': //delete
+                        deleteMessage(messageId);
                         break;
                 }
             }

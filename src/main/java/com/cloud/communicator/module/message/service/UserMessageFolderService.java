@@ -7,5 +7,9 @@ public interface UserMessageFolderService {
 
     void updateUserMessageFolder(UserMessageFolder userMessageFolder);
 
+    void updateUserMessageFolder(Integer messageId, Integer userId, Integer folderId);
+
     void deleteUserMessageFolder(UserMessageFolder userMessageFolder);
+
+    public UserMessageFolder getUserMessageFolder(Integer messageId, Integer userId);
 }

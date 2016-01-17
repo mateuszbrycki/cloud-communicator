@@ -3,6 +3,7 @@ package com.cloud.communicator.module.message;
 
 import com.cloud.communicator.module.message.service.MessageReceiverService;
 import com.cloud.communicator.module.message.service.MessageService;
+import com.cloud.communicator.module.message.service.UserMessageFolderService;
 import com.cloud.communicator.module.user.User;
 import com.cloud.communicator.module.user.service.UserService;
 import com.cloud.communicator.util.UserUtils;
@@ -36,6 +37,9 @@ public class RestMessageController {
 
     @Inject
     MessageReceiverService messageReceiverService;
+
+    @Inject
+    UserMessageFolderService userMessageFolderService;
 
     private static final Logger logger = Logger.getLogger(RestMessageController.class);
 
@@ -129,5 +133,26 @@ public class RestMessageController {
 
         messageReceiverService.setMessageAsRead(message.getId(), userId);
         return new ResponseEntity<Object>(messageSource.getMessage("message.user.notallowed", args, locale), HttpStatus.FORBIDDEN);
+    }
+
+    @RequestMapping(value = MessageUrls.Api.MESSAGE_FOLDER_ID, method = RequestMethod.GET)
+    public ResponseEntity<Object> updateMessageFolder(@PathVariable("messageId") Integer messageId,
+                                                      @PathVariable("folderId") Integer folderId,
+                                                      HttpServletRequest request,
+                                                      HttpServletResponse response){
+        Integer userId =  UserUtils.getUserId(request,response);
+
+            UserMessageFolder userMessageFolder =
+                    userMessageFolderService.getUserMessageFolder(messageId, userId);
+
+        if(userMessageFolder == null) {
+            return new ResponseEntity<Object>(userMessageFolder, HttpStatus.FORBIDDEN);
+        }
+
+        userMessageFolder.setFolderId(folderId);
+
+        userMessageFolderService.updateUserMessageFolder(messageId, userId, folderId);
+
+        return new ResponseEntity<Object>(userMessageFolder, HttpStatus.OK);
     }
 }

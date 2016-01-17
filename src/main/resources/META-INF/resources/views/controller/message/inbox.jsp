@@ -70,6 +70,31 @@
     <li><a tabindex="-1" action-id="2"><spring:message code="button.delete"/></a></li>
 </ul>
 
+<!--            <c:forEach items="${folders}" var="folder">
+    <li>
+        <a id="user-folder-list-element" tabindex="-1" action-id="1" folder-id="${folder.id}">${folder.name}</a>
+    </li>
+</c:forEach>-->
+
+
+<ul id="messageContextMenu" class="dropdown-menu" role="menu" style="display:none">
+    <li><a tabindex="-1" action-id="0"><spring:message code="button.open"/></a></li>
+    <li id="user-folder-list-dropdown">
+        <a tabindex="-1"><spring:message code="button.move.to"/>
+            <span style="position: absolute; right: 5px; top: 5px;"  class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+        <ul id="user-folder-list" class="dropdown-menu" role="menu">
+            <c:forEach items="${folders}" var="folder">
+                <li>
+                    <a id="user-folder-list-element" tabindex="-1" action-id="1" folder-id="${folder.id}">${folder.name}</a>
+                </li>
+            </c:forEach>
+        </ul>
+    </li>
+    <li class="divider"></li>
+    <li><a tabindex="-1" action-id="2"><spring:message code="button.delete"/></a></li>
+</ul>
+
 <!-- Toolbar -->
 <div class="row">
     <div class="col-xs-6 col-md-2"></div>
@@ -127,7 +152,7 @@
             </tr>
 
             <c:forEach items="${messages}" var="message">
-                <tr class="inbox-element" <c:if test="${message.isRead != true}"> style="font-weight: bold; "</c:if>
+                <tr class="message-element" <c:if test="${message.isRead != true}"> style="font-weight: bold; "</c:if>
                     message-id="${message.id}">
                     <td class="active-modal"><fmt:formatDate value="${message.sendDate}" pattern="d.MM"/></td>
                     <td class="active-modal">${message.author.username}</td>
