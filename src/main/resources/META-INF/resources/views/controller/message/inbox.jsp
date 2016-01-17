@@ -79,7 +79,10 @@
 
 <ul id="messageContextMenu" class="dropdown-menu" role="menu" style="display:none">
     <li><a tabindex="-1" action-id="0"><spring:message code="button.open"/></a></li>
-    <li id="user-folder-list-dropdown"><a tabindex="-1"><spring:message code="button.move.to"/></a>
+    <li id="user-folder-list-dropdown">
+        <a tabindex="-1"><spring:message code="button.move.to"/>
+            <span style="position: absolute; right: 5px; top: 5px;"  class="glyphicon glyphicon-chevron-right"></span>
+        </a>
         <ul id="user-folder-list" class="dropdown-menu" role="menu">
             <c:forEach items="${folders}" var="folder">
                 <li>

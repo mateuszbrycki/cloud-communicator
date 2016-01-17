@@ -65,6 +65,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Boolean isAllowedToSeeMessage(Message message, Integer userID){
 
+        if(message.getAuthor().getId() == userID) {
+            return true;
+        }
+
         for(MessageReceiver messageReceiver: message.getReceivers())
         {
             if(messageReceiver.getReceiverId().equals(userID))

@@ -49,7 +49,7 @@ function renderMessagesList(data) {
 
     for (var i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
-        tableRow.className = "inbox-element";
+        tableRow.className = "message-element";
         tableRow.setAttribute('message-id', data[i].id);
 
         var statusIcon = "glyphicon glyphicon-eye-close";
@@ -130,7 +130,9 @@ function renderFoldersList(data) {
         var liElement = document.createElement('li');
         liElement.className = 'list-group-item folder-element';
         liElement.setAttribute('folder-id', data[i].id);
-        liElement.setAttribute('style', 'border-left: 5px solid ' + data[i].labelColor);
+        if(data[i].labelColor != 0) {
+            liElement.setAttribute('style', 'border-left: 5px solid ' + data[i].labelColor);
+        }
         liElement.appendChild(document.createTextNode(data[i].name));
 
         if(data[i].unreadMessages > 0) {
@@ -458,9 +460,11 @@ function getMenuPosition(mouse, direction, scrollDir) {
 //wypełniony modal z odpowiedzią na wiadomości
 function showResponseMessageModal(date, username, topic, text){
 
+    var message_form = document.getElementById('send-message-form');
     addReceiverToSelect(username);
-    document.message_form.topic.value = "Re:" + topic;
-    document.message_form.text.value = translations['response-message'] + "\n" + username + " " + date + "\n\"" + text + "\"";
+
+    message_form.topic.value = "Re:" + topic;
+    message_form.text.value = translations['response-message'] + "\n" + username + " " + date + "\n\"" + text + "\"";
 
     showSendMessageForm();
 }

@@ -91,7 +91,7 @@ public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao 
     @Override
     public List<Message> findUserMessagesByPhrase(Integer userId, String phrase) {
         Query query = getSession().createSQLQuery(
-                "SELECT DISTINCT m.message_id, m.fk_author_id, m.topic, m.text, m.audit_cd, mr.is_read " +
+                "SELECT DISTINCT ON(m.message_id, m.audit_cd) m.message_id, m.fk_author_id, m.topic, m.text, m.audit_cd, mr.is_read " +
                         "FROM message m " +
                         "JOIN message_receiver mr ON m.message_id = mr.fk_message_id " +
                         "WHERE m.message_id = ANY(get_search_message_ids(:userId, :phrase)) " +
