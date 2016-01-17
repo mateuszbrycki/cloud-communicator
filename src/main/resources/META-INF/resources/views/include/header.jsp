@@ -72,7 +72,7 @@
         var currentFolder = null;
 
         var menuSelector = "#contextMenu";
-        var messageMenuSelector = "#messageContextMenu"
+        var messageMenuSelector = "#messageContextMenu";
     </script>
 
 </head>
