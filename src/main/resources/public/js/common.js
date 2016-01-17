@@ -339,6 +339,7 @@ function refreshDashboard() {
 
     reloadMessagesList();
     reloadFoldersList();
+    
 }
 
 function refreshForm(form) {
