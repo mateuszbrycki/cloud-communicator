@@ -149,7 +149,7 @@ BEGIN
       OLD.is_read,
       OLD.read_date,
       OLD.audit_cd,
-      OLD.autid_md,
+      OLD.audit_md,
       NOW()
    );
 

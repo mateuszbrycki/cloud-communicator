@@ -36,8 +36,8 @@ CREATE TABLE user_contacts (
 	fk_user_id INTEGER,
 	fk_person_in_book_id INTEGER,
 	audit_cd TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	audit_md TIMESTAMP
-	PRIMARY KEY(fk_user_id, fk_person_in_book_id),
+	audit_md TIMESTAMP,
+	PRIMARY KEY(fk_user_id, fk_person_in_book_id)
 
 );
 
@@ -48,14 +48,14 @@ CREATE TABLE user_contacts_archive AS SELECT *, NOW() as action_time  FROM user_
 CREATE TABLE user_message_folder_archive AS SELECT *, NOW() as action_time  FROM user_message_folder;
 CREATE TABLE message_archive AS SELECT *, NOW() as action_time  FROM message;
 
---DROP TABLE user_contacts;
---DROP TABLE contact_book;
---DROP TABLE user_message_folder;
---DROP TABLE folder;
---DROP TABLE message_receiver;
---DROP TABLE message;
---DROP TABLE folder_archive;
---DROP TABLE message_receiver_archive;
---DROP TABLE user_contacts_archive;
---DROP TABLE user_message_folder_archive;
---DROP TABLE message_archive;
+-- DROP VIEW folder_view;
+-- DROP TABLE user_message_folder;
+-- DROP TABLE message_receiver;
+-- DROP TABLE message;
+-- DROP TABLE user_contacts;
+-- DROP TABLE folder;
+-- DROP TABLE folder_archive;
+-- DROP TABLE message_receiver_archive;
+-- DROP TABLE user_contacts_archive;
+-- DROP TABLE user_message_folder_archive;
+-- DROP TABLE message_archive;
