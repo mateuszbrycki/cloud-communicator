@@ -2,6 +2,7 @@ package com.cloud.communicator.module.user.dao;
 
 import com.cloud.communicator.AbstractDaoMySQL;
 import com.cloud.communicator.module.user.User;
+import com.cloud.communicator.module.user.UserAbstractFactory;
 import com.cloud.communicator.module.userrole.UserRole;
 import com.cloud.communicator.module.userrole.service.UserRoleService;
 import org.hibernate.Query;
@@ -16,6 +17,9 @@ public class UserDaoImpl extends AbstractDaoMySQL implements UserDao {
 
     @Inject
     private UserRoleService userRoleService;
+
+    @Inject
+    private UserAbstractFactory userFactory;
 
     @Override
     public void saveUser(User user) {
@@ -125,25 +129,7 @@ public class UserDaoImpl extends AbstractDaoMySQL implements UserDao {
             return null;
         }
 
-        User user = new User();
-        user.setId((Integer) userObject[0]);
-        user.setUsername((String) userObject[1]);
-        user.setMail((String) userObject[3]);
-        user.setPassword((String) userObject[4]);
-        user.setIsActive((Boolean)userObject[5]);
-
-        if(userObject.length > 8) {
-            UserRole userRole = new UserRole();
-            userRole.setId((Integer) userObject[2]);
-            userRole.setRole((String) userObject[8]);
-
-            user.setRole(userRole);
-        } else {
-            user.setRole(this.userRoleService.findById((Integer) userObject[2]));
-        }
-
+        User user = userFactory.createFromObject(userObject);
         return user;
     }
-
-
 }

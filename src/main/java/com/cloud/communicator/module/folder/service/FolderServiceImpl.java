@@ -1,8 +1,7 @@
-package com.cloud.communicator.module.message.service;
+package com.cloud.communicator.module.folder.service;
 
-import com.cloud.communicator.module.message.Folder;
-import com.cloud.communicator.module.message.dao.FolderDao;
-import com.cloud.communicator.module.user.User;
+import com.cloud.communicator.module.folder.Folder;
+import com.cloud.communicator.module.folder.dao.FolderDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

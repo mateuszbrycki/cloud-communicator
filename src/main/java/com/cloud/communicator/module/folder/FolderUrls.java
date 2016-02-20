@@ -1,4 +1,4 @@
-package com.cloud.communicator.module.message;
+package com.cloud.communicator.module.folder;
 
 import com.cloud.communicator.api.UrlSpace;
 

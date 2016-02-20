@@ -1,4 +1,4 @@
-package com.cloud.communicator.module.message;
+package com.cloud.communicator.module.folder.dto;
 
 import org.hibernate.validator.constraints.Length;
 

@@ -1,8 +1,8 @@
 package com.cloud.communicator.module.user;
 
 import com.cloud.communicator.module.base.BaseUrls;
+import com.cloud.communicator.module.user.dto.UserDTO;
 import com.cloud.communicator.module.user.service.UserService;
-import com.cloud.communicator.module.userrole.service.UserRoleService;
 import com.cloud.communicator.util.UserUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
@@ -21,12 +21,11 @@ import java.util.Locale;
 @Controller
 @RequestMapping(UserUrls.USER)
 public class UserController {
+    @Inject
+    private UserAbstractFactory userFactory;
 
     @Inject
     private UserService userService;
-
-    @Inject
-    private UserRoleService userRoleService;
 
     @Inject
     private MessageSource messageSource;
@@ -58,22 +57,15 @@ public class UserController {
     public String registerPage(@ModelAttribute @Valid UserDTO userDTO,
                                ModelMap model, Locale locale) {
 
-        Boolean passwordsAreEqual = userDTO.getPassword().equals(userDTO.getPasswordRepeat());
-
         String[] args = {};
-
         logger.debug(userDTO);
 
+        Boolean passwordsAreEqual = userDTO.getPassword().equals(userDTO.getPasswordRepeat());
         if (passwordsAreEqual) {
 
-            //map UserDTO to User
-            User user = new User();
-            user.setUsername(userDTO.getUsername());
-            user.setMail(userDTO.getMail());
-            user.setPassword(userDTO.getPassword());
-            user.setIsActive(User.DEFAULT_IS_ACTIVE);
-            user.setRole(userRoleService.findByName(User.DEFAULT_ROLE));
+            User user = userFactory.createFromDTO(userDTO);
 
+            //TODO mbrycki command object
             if(this.userService.registerUser(user)) {
 
                 model.addAttribute("success", messageSource.getMessage("user.message.success.register", args, locale));
@@ -103,9 +95,7 @@ public class UserController {
                                      RedirectAttributes attributes, Locale locale) {
 
         Integer userId = UserUtils.getUserId(request, response);
-
         String[] args = {};
-
 
         User user = userService.findUserById(userId);
 

@@ -1,8 +1,9 @@
-package com.cloud.communicator.module.message.dao;
+package com.cloud.communicator.module.folder.dao;
 
 import com.cloud.communicator.AbstractDaoPostgreSQL;
-import com.cloud.communicator.module.message.Folder;
-import com.cloud.communicator.module.user.service.UserService;
+import com.cloud.communicator.module.folder.Folder;
+import com.cloud.communicator.module.folder.FolderAbstractFactory;
+import com.cloud.communicator.module.folder.factory.FolderFactory;
 import org.springframework.stereotype.Repository;
 import org.hibernate.Query;
 
@@ -14,7 +15,7 @@ import java.util.List;
 public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
 
     @Inject
-    private UserService userService;
+    private FolderAbstractFactory folderFactory;
 
     @Override
     public void saveFolder(Folder folder) { persist(folder); }
@@ -117,17 +118,7 @@ public class FolderDaoImpl  extends AbstractDaoPostgreSQL implements FolderDao {
             return null;
         }
 
-        Folder folder = new Folder();
-        folder.setId((Integer) folderObject[0]);
-        folder.setName((String) folderObject[1]);
-        folder.setDescription((String) folderObject[2]);
-        folder.setLabelColor((String) folderObject[3]);
-        folder.setOwner(this.userService.findUserById((Integer) folderObject[4]));
-        folder.setIsUserDefaultFolder((Boolean) folderObject[5]);
-
-        if(folderObject.length > 8) {
-            folder.setUnreadMessages((Integer) folderObject[8]);
-        }
+        Folder folder = folderFactory.createFromObject(folderObject);
         
         return folder;
     }

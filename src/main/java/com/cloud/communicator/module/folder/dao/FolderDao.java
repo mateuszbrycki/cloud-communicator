@@ -1,6 +1,6 @@
-package com.cloud.communicator.module.message.dao;
+package com.cloud.communicator.module.folder.dao;
 
-import com.cloud.communicator.module.message.Folder;
+import com.cloud.communicator.module.folder.Folder;
 
 import java.util.List;
 

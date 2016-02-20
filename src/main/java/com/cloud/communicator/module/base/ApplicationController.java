@@ -2,14 +2,13 @@ package com.cloud.communicator.module.base;
 
 import com.cloud.communicator.module.contact.UserContact;
 import com.cloud.communicator.module.contact.service.UserContactService;
-import com.cloud.communicator.module.message.Folder;
+import com.cloud.communicator.module.folder.Folder;
 import com.cloud.communicator.module.message.Message;
-import com.cloud.communicator.module.message.service.FolderService;
+import com.cloud.communicator.module.folder.service.FolderService;
 import com.cloud.communicator.module.message.service.MessageService;
 import com.cloud.communicator.util.UserUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,6 +39,7 @@ public class ApplicationController {
     @RequestMapping(method = RequestMethod.GET)
     public String listAction(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 
+        
         Integer userId = UserUtils.getUserId(request, response);
         logger.debug(userId);
 

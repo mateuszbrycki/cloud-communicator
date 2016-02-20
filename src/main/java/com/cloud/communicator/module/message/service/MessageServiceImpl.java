@@ -1,6 +1,7 @@
 package com.cloud.communicator.module.message.service;
 
-import com.cloud.communicator.module.message.Folder;
+import com.cloud.communicator.module.folder.service.FolderService;
+import com.cloud.communicator.module.folder.Folder;
 import com.cloud.communicator.module.message.Message;
 import com.cloud.communicator.module.message.MessageReceiver;
 import com.cloud.communicator.module.message.UserMessageFolder;

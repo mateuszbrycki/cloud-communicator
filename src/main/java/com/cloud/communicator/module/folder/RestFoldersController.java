@@ -1,6 +1,6 @@
-package com.cloud.communicator.module.message;
+package com.cloud.communicator.module.folder;
 
-import com.cloud.communicator.module.message.service.FolderService;
+import com.cloud.communicator.module.folder.service.FolderService;
 import com.cloud.communicator.util.UserUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

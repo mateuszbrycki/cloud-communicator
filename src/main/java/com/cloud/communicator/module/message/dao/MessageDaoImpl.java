@@ -2,6 +2,7 @@ package com.cloud.communicator.module.message.dao;
 
 import com.cloud.communicator.AbstractDaoPostgreSQL;
 import com.cloud.communicator.module.message.Message;
+import com.cloud.communicator.module.message.MessageAbstractFactory;
 import com.cloud.communicator.module.message.service.MessageReceiverService;
 import com.cloud.communicator.module.user.service.UserService;
 import org.hibernate.Query;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Repository("messageDao")
@@ -20,6 +20,9 @@ public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao 
 
     @Inject
     private MessageReceiverService messageReceiverService;
+
+    @Inject
+    private MessageAbstractFactory messageFactory;
 
     @Override
     public void saveMessage(Message message) {
@@ -123,25 +126,12 @@ public class MessageDaoImpl extends AbstractDaoPostgreSQL implements MessageDao 
 
     private Message mapMessageObject(Object[] messageObject) {
 
-        Message message = new Message();
 
         if (messageObject == null) {
             return null;
         }
 
-        message.setId((Integer) messageObject[0]);
-        message.setAuthor(this.userService.findUserById((Integer) messageObject[1]));
-        message.setTopic((String) messageObject[2]);
-        message.setText((String) messageObject[3]);
-        message.setSendDate((Date) messageObject[4]);
-
-        if(messageObject.length > 5) {
-            message.setIsRead((Boolean) messageObject[5]);
-        }
-
-        message.setReceivers(
-                this.messageReceiverService.findMessageReceivers(message.getId())
-        );
+        Message message = messageFactory.createFromObject(messageObject);
 
         return message;
     }

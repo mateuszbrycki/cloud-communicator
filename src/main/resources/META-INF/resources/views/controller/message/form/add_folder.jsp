@@ -1,4 +1,4 @@
-<%@ page import="com.cloud.communicator.module.message.FolderUrls" %>
+<%@ page import="com.cloud.communicator.module.folder.FolderUrls" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <script>

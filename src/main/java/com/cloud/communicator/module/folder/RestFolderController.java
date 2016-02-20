@@ -1,8 +1,11 @@
-package com.cloud.communicator.module.message;
+package com.cloud.communicator.module.folder;
 
 
-import com.cloud.communicator.module.message.service.FolderService;
+import com.cloud.communicator.module.folder.dto.FolderDTO;
+import com.cloud.communicator.module.folder.service.FolderService;
+import com.cloud.communicator.module.message.RestMessageController;
 import com.cloud.communicator.module.message.service.MessageService;
+import com.cloud.communicator.module.user.User;
 import com.cloud.communicator.module.user.service.UserService;
 import com.cloud.communicator.util.UserUtils;
 import org.apache.log4j.Logger;
@@ -35,6 +38,9 @@ public class RestFolderController {
     @Inject
     private MessageService messageService;
 
+    @Inject
+    private FolderAbstractFactory folderFactory;
+
     private static final Logger logger = Logger.getLogger(RestMessageController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
@@ -45,15 +51,11 @@ public class RestFolderController {
                                               Locale locale) {
 
         logger.debug(folderDTO);
-
         String[] args = {};
 
-        Folder folder = new Folder();
-        folder.setName(folderDTO.getName());
-        folder.setDescription(folderDTO.getDescription());
-        folder.setLabelColor(folderDTO.getLabel());
-        folder.setIsUserDefaultFolder(false);
-        folder.setOwner(this.userService.findUserById(UserUtils.getUserId(request, response)));
+        User owner = this.userService.findUserById(UserUtils.getUserId(request, response));
+        Folder folder = folderFactory.createFromDTO(folderDTO, owner);
+
         folderService.saveFolder(folder);
 
         return new ResponseEntity<Folder>(folder, HttpStatus.OK);
@@ -86,9 +88,10 @@ public class RestFolderController {
         if(folder == null) {
             return new ResponseEntity<Folder>(folder, HttpStatus.FORBIDDEN);
         }
-        folder.setName(folderDTO.getName());
-        folder.setDescription(folderDTO.getDescription());
-        folder.setLabelColor(folderDTO.getLabel());
+
+        User owner = this.userService.findUserById(UserUtils.getUserId(request, response));
+
+        folder = folderFactory.createFromDTO(folderDTO, owner);
         folderService.updateFolder(folder);
 
         return new ResponseEntity<Folder>(folder, HttpStatus.OK);

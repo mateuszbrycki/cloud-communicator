@@ -1,4 +1,4 @@
-package com.cloud.communicator.module.user;
+package com.cloud.communicator.module.user.dto;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;

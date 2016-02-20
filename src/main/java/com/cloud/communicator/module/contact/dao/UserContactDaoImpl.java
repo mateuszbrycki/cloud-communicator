@@ -2,7 +2,6 @@ package com.cloud.communicator.module.contact.dao;
 
 import com.cloud.communicator.AbstractDaoPostgreSQL;
 import com.cloud.communicator.module.contact.UserContact;
-import com.cloud.communicator.module.message.Folder;
 import com.cloud.communicator.module.user.service.UserService;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;

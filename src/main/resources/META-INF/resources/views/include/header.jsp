@@ -1,5 +1,5 @@
 <%@ page import="com.cloud.communicator.module.message.MessageUrls" %>
-<%@ page import="com.cloud.communicator.module.message.FolderUrls" %>
+<%@ page import="com.cloud.communicator.module.folder.FolderUrls" %>
 <%@ page import="com.cloud.communicator.module.user.UserUrls" %>
 <%@ page import="com.cloud.communicator.module.contact.UserContact" %>
 <%@ page import="com.cloud.communicator.module.contact.UserContactUrls" %>

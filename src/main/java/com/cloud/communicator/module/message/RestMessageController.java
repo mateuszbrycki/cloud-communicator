@@ -1,6 +1,7 @@
 package com.cloud.communicator.module.message;
 
-
+import com.cloud.communicator.module.message.dto.MessageDTO;
+import com.cloud.communicator.module.message.factory.MessageFactory;
 import com.cloud.communicator.module.message.service.MessageReceiverService;
 import com.cloud.communicator.module.message.service.MessageService;
 import com.cloud.communicator.module.message.service.UserMessageFolderService;
@@ -18,8 +19,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -36,10 +35,13 @@ public class RestMessageController {
     private MessageSource messageSource;
 
     @Inject
-    MessageReceiverService messageReceiverService;
+    private MessageReceiverService messageReceiverService;
 
     @Inject
-    UserMessageFolderService userMessageFolderService;
+    private UserMessageFolderService userMessageFolderService;
+
+    @Inject
+    private MessageAbstractFactory messageFactory;
 
     private static final Logger logger = Logger.getLogger(RestMessageController.class);
 
@@ -51,19 +53,25 @@ public class RestMessageController {
                                               Locale locale) {
 
         logger.debug(messageDTO);
-
         String[] args = {};
 
-        String receiversField = messageDTO.getReceivers();
+        User author = userService.findUserById(UserUtils.getUserId(request, response));
 
-        //map DTO to message object
-        Message message = new Message();
-        message.setAuthor(userService.findUserById(UserUtils.getUserId(request, response)));
-        message.setTopic(messageDTO.getTopic());
-        message.setText(messageDTO.getText());
-        message.setSendDate(new Date());
+        Message message = messageFactory.createFromDTO(messageDTO, author);
+
+        String receiversField = messageDTO.getReceivers();
+        List<User> receiversList = this.prepareReceiverList(receiversField);
+
+        //TODO mbrycki zmiana na command?
+        messageService.sendMessage(message, receiversList);
+
+        return new ResponseEntity<String>(messageSource.getMessage("message.success.send", args, locale), HttpStatus.OK);
+    }
+
+    private List<User> prepareReceiverList(String receiversField) {
 
         List<User> receiversList = new ArrayList<User>();
+
         for(String receiver : receiversField.split(" ")) {
 
             User receiverObject;
@@ -73,18 +81,11 @@ public class RestMessageController {
                 receiverObject = userService.findUserByUsername(receiver);
             }
 
-            if(receiverObject == null) {
-                return new ResponseEntity<String>(messageSource.getMessage("message.receiver.not.found", args, locale), HttpStatus.NOT_ACCEPTABLE);
-            }
-
             receiversList.add(receiverObject);
         }
 
-        messageService.sendMessage(message, receiversList);
-
-        return new ResponseEntity<String>(messageSource.getMessage("message.success.send", args, locale), HttpStatus.OK);
+        return receiversList;
     }
-
 
     @RequestMapping(value = MessageUrls.Api.MESSAGE_CHANGE_READ_STATUS_ID, method = RequestMethod.GET)
     public ResponseEntity<Message> markAsUnread(@PathVariable("messageId") Integer id,
@@ -141,8 +142,7 @@ public class RestMessageController {
                                                       HttpServletRequest request,
                                                       HttpServletResponse response){
         Integer userId =  UserUtils.getUserId(request,response);
-
-            UserMessageFolder userMessageFolder =
+        UserMessageFolder userMessageFolder =
                     userMessageFolderService.getUserMessageFolder(messageId, userId);
 
         if(userMessageFolder == null) {

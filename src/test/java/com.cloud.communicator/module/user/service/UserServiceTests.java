@@ -1,10 +1,9 @@
 package com.cloud.communicator.module.user.service;
 
 import com.cloud.communicator.config.AppConfig;
-import com.cloud.communicator.module.message.Folder;
-import com.cloud.communicator.module.message.service.FolderService;
+import com.cloud.communicator.module.folder.Folder;
+import com.cloud.communicator.module.folder.service.FolderService;
 import com.cloud.communicator.module.user.User;
-import com.cloud.communicator.module.user.service.UserService;
 import com.cloud.communicator.module.userrole.service.UserRoleService;
 
 import static org.junit.Assert.*;
@@ -20,7 +19,6 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
