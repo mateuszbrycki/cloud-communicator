@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
-
+//TODO mbrycki this entity shouldn't exists or be type of User
 @Entity
 @Table(name="message_receiver")
 public class MessageReceiver implements Serializable{

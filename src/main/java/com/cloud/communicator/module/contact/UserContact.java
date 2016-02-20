@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+//TODO mbrycki should this entity exists?
 @Entity
 @Table(name="user_contacts")
 public class UserContact implements Serializable {

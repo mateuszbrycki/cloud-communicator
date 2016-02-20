@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-
+//TODO mbrycki this entity shouldn't exist
 @Entity
 @Table(name="user_message_folder")
 public class UserMessageFolder implements Serializable {

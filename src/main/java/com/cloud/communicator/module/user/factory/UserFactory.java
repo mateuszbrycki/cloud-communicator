@@ -7,7 +7,7 @@ import com.cloud.communicator.module.userrole.UserRole;
 import com.cloud.communicator.module.userrole.service.UserRoleService;
 
 import javax.inject.Inject;
-
+//TODO mbrycki broken SRP
 public class UserFactory implements UserAbstractFactory {
 
     @Inject

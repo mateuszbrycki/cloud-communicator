@@ -37,6 +37,8 @@ public class UserController {
 
     private String viewPath = "controller/user/";
 
+    private String[] args = {};
+
     @RequestMapping(value = UserUrls.USER_LOGOUT, method = RequestMethod.GET)
     public String logoutPage() {
 
@@ -56,13 +58,11 @@ public class UserController {
     @RequestMapping(value = UserUrls.USER_REGISTER, method = RequestMethod.POST, headers = "content-type=application/x-www-form-urlencoded")
     public String registerPage(@ModelAttribute @Valid UserDTO userDTO,
                                ModelMap model, Locale locale) {
-
-        String[] args = {};
         logger.debug(userDTO);
 
-        Boolean passwordsAreEqual = userDTO.getPassword().equals(userDTO.getPasswordRepeat());
-        if (passwordsAreEqual) {
+        Boolean passwordsAreEqual = arePasswordsEqual(userDTO.getPassword(), userDTO.getPasswordRepeat());
 
+        if (passwordsAreEqual) {
             User user = userFactory.createFromDTO(userDTO);
 
             //TODO mbrycki command object
@@ -90,30 +90,38 @@ public class UserController {
     public String changePasswordPage(HttpServletRequest request,
                                      HttpServletResponse response,
                                      @RequestParam("password_old") String oldPassword,
-                                     @RequestParam("password") String password,
+                                     @RequestParam("password") String newPassword,
                                      @RequestParam("password_repeat") String passwordRepeat,
                                      RedirectAttributes attributes, Locale locale) {
 
         Integer userId = UserUtils.getUserId(request, response);
-        String[] args = {};
 
-        User user = userService.findUserById(userId);
+        User user = this.userService.findUserById(userId);
 
-        //check if passwords are equals
-        Boolean passwordsAreEqual = password.equals(passwordRepeat);
-        Boolean oldPasswordIsGood = user.getPassword().equals(oldPassword);
+        Boolean arePasswordsEqual = this.arePasswordsEqual(newPassword, passwordRepeat);
+        Boolean isOldPasswordCorrect = this.isOldPasswordCorrect(oldPassword, user);
 
-        if (passwordsAreEqual && oldPasswordIsGood) {
-            //update user
-            user.setPassword(password);
-            userService.updateUser(user);
-
+        if (arePasswordsEqual && isOldPasswordCorrect) {
+            this.updateUserPassword(user, newPassword);
             attributes.addFlashAttribute("success", messageSource.getMessage("user.message.success.passwords", args, locale));
         } else {
             attributes.addFlashAttribute("error", messageSource.getMessage("user.message.error.passwords", args, locale));
         }
 
         return "redirect:" + UserUrls.USER_MANAGEMENT_FULL;
+    }
+
+    private Boolean arePasswordsEqual(String password, String passwordRepeat) {
+        return password.equals(passwordRepeat);
+    }
+
+    private Boolean isOldPasswordCorrect(String oldPassword, User user) {
+        return user.getPassword().equals(oldPassword);
+    }
+
+    private void updateUserPassword(User user, String newPassword) {
+        user.setPassword(newPassword);
+        this.userService.updateUser(user);
     }
 
     @RequestMapping(value = UserUrls.USER_USERNAME_CHANGE, method = RequestMethod.POST)
@@ -124,17 +132,11 @@ public class UserController {
 
         Integer userId = UserUtils.getUserId(request, response);
 
-        String[] args = {};
-
         //check if username doesn't exist in database
-        Boolean usernameExists = userService.checkIfUserWithUsernameExists(username);
+        Boolean usernameExists = this.doesUserExist(username);
 
         if(!usernameExists) {
-            //update user
-            User user = userService.findUserById(userId);
-            user.setUsername(username);
-            userService.updateUser(user);
-
+            this.updateUserUsername(userId, username);
             attributes.addFlashAttribute("success", messageSource.getMessage("user.message.success.username", args, locale));
         } else {
             attributes.addFlashAttribute("error", messageSource.getMessage("user.message.error.username", args, locale));
@@ -143,21 +145,28 @@ public class UserController {
         return "redirect:" + UserUrls.USER_MANAGEMENT_FULL;
     }
 
+    private Boolean doesUserExist(String username) {
+        return this.userService.checkIfUserWithUsernameExists(username);
+    }
+
+    private void updateUserUsername(Integer userId, String newUsername) {
+        User user = this.userService.findUserById(userId);
+        user.setUsername(newUsername);
+        this.userService.updateUser(user);
+    }
+
     @RequestMapping(value = UserUrls.USER_DELETE, method = RequestMethod.POST)
     public String deleteAccountAction(HttpServletRequest request,
                                       HttpServletResponse response,
                                       @RequestParam("password") String password,
                                       RedirectAttributes attributes, Locale locale) {
+
         Integer userId = UserUtils.getUserId(request, response);
+        User user = this.userService.findUserById(userId);
 
-        User user = userService.findUserById(userId);
-
-        String[] args = {};
-
-        //delete user
-        if(user.getPassword().equals(password)) {
-            userService.deleteUserById(userId);
-
+        Boolean isOldPasswordCorrect = this.isOldPasswordCorrect(password, user);
+        if(isOldPasswordCorrect) {
+            this.userService.deleteUserById(userId);
             attributes.addFlashAttribute("success", messageSource.getMessage("user.message.success.delete", args, locale));
             return "redirect:" + UserUrls.USER_LOGOUT_FULL;
         }

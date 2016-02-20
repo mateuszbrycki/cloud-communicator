@@ -21,12 +21,14 @@ public class RestMessagesController {
     @Inject
     private MessageService messageService;
 
+    //TODO mbrycki services?, model -> repositories
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<List<Message>> inboxList(HttpServletRequest request, HttpServletResponse response) {
 
         Integer userId = UserUtils.getUserId(request, response);
 
-        List<Message> messages = messageService.findUserInboxMessages(userId);
+        List<Message> messages = this.messageService.findUserInboxMessages(userId);
         return new ResponseEntity<List<Message>>(messages, HttpStatus.OK);
     }
 
@@ -38,7 +40,7 @@ public class RestMessagesController {
 
         Integer userId = UserUtils.getUserId(request, response);
 
-        List<Message> messages = messageService.findUserFolderMessages(userId, folderId);
+        List<Message> messages = this.messageService.findUserFolderMessages(userId, folderId);
         return new ResponseEntity<List<Message>>(messages, HttpStatus.OK);
     }
 

@@ -11,7 +11,5 @@ public class SearchUrls {
         public static final String SEARCH = "/api"  + SearchUrls.SEARCH;
 
         public static final String SEARCH_PHRASE = Api.SEARCH  + "/{searchPhrase}";
-
     }
-
 }

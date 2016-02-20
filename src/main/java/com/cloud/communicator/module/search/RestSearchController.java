@@ -28,12 +28,11 @@ public class RestSearchController {
             @RequestBody SearchDTO searchPhrase,
             HttpServletRequest request,
             HttpServletResponse response) {
+        logger.debug(searchPhrase);
 
         Integer userId = UserUtils.getUserId(request, response);
 
-        logger.debug(searchPhrase);
-
-        List<Message> messages = messageService.findUserMessagesByPhrase(userId, searchPhrase.getPhrase());
+        List<Message> messages = this.messageService.findUserMessagesByPhrase(userId, searchPhrase.getPhrase());
         return new ResponseEntity<List<Message>>(messages, HttpStatus.OK);
     }
 

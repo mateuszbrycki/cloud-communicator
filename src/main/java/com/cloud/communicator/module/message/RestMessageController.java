@@ -1,7 +1,6 @@
 package com.cloud.communicator.module.message;
 
 import com.cloud.communicator.module.message.dto.MessageDTO;
-import com.cloud.communicator.module.message.factory.MessageFactory;
 import com.cloud.communicator.module.message.service.MessageReceiverService;
 import com.cloud.communicator.module.message.service.MessageService;
 import com.cloud.communicator.module.message.service.UserMessageFolderService;
@@ -45,6 +44,8 @@ public class RestMessageController {
 
     private static final Logger logger = Logger.getLogger(RestMessageController.class);
 
+    private String[] args = {};
+
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseEntity<String> sendMessage(HttpServletRequest request,
                                               HttpServletResponse response,
@@ -53,19 +54,17 @@ public class RestMessageController {
                                               Locale locale) {
 
         logger.debug(messageDTO);
-        String[] args = {};
 
-        User author = userService.findUserById(UserUtils.getUserId(request, response));
-
-        Message message = messageFactory.createFromDTO(messageDTO, author);
+        User author = this.userService.findUserById(UserUtils.getUserId(request, response));
+        Message message = this.messageFactory.createFromDTO(messageDTO, author);
 
         String receiversField = messageDTO.getReceivers();
         List<User> receiversList = this.prepareReceiverList(receiversField);
 
-        //TODO mbrycki zmiana na command?
-        messageService.sendMessage(message, receiversList);
+        //TODO mbrycki zmiana na command
+        this.messageService.sendMessage(message, receiversList);
 
-        return new ResponseEntity<String>(messageSource.getMessage("message.success.send", args, locale), HttpStatus.OK);
+        return new ResponseEntity<String>(this.messageSource.getMessage("message.success.send", args, locale), HttpStatus.OK);
     }
 
     private List<User> prepareReceiverList(String receiversField) {
@@ -94,6 +93,7 @@ public class RestMessageController {
 
         try {
             Integer userId = UserUtils.getUserId(request, response);
+            //TODO mbrycki command object
             messageReceiverService.changeMessageReadStatus(id, userId);
         } catch (NullPointerException e) {
             return new ResponseEntity<Message>(messageService.findMessageById(id), HttpStatus.FORBIDDEN);
@@ -122,18 +122,21 @@ public class RestMessageController {
                                                  HttpServletResponse response,
                                                  Locale locale) {
 
-        String[] args = {};
-        Message message = messageService.findMessageById(id);
+        Message message = this.messageService.findMessageById(id);
         Integer userId = UserUtils.getUserId(request, response);
 
-        if (messageService.isAllowedToSeeMessage(message, userId))
-        {
-            messageReceiverService.setMessageAsRead(message.getId(), userId);
+        Boolean isUserAllowedToSeeMessage = this.isUserAllowedToSeeMessage(message, userId);
+        if (isUserAllowedToSeeMessage) {
+            this.messageReceiverService.setMessageAsRead(message.getId(), userId);
             return new ResponseEntity<Object>(message, HttpStatus.OK);
         }
 
-        messageReceiverService.setMessageAsRead(message.getId(), userId);
-        return new ResponseEntity<Object>(messageSource.getMessage("message.user.notallowed", args, locale), HttpStatus.FORBIDDEN);
+        this.messageReceiverService.setMessageAsRead(message.getId(), userId);
+        return new ResponseEntity<Object>(this.messageSource.getMessage("message.user.notallowed", args, locale), HttpStatus.FORBIDDEN);
+    }
+
+    private Boolean isUserAllowedToSeeMessage(Message message, Integer userId) {
+        return messageService.isAllowedToSeeMessage(message, userId);
     }
 
     @RequestMapping(value = MessageUrls.Api.MESSAGE_FOLDER_ID, method = RequestMethod.GET)
@@ -143,7 +146,7 @@ public class RestMessageController {
                                                       HttpServletResponse response){
         Integer userId =  UserUtils.getUserId(request,response);
         UserMessageFolder userMessageFolder =
-                    userMessageFolderService.getUserMessageFolder(messageId, userId);
+                this.userMessageFolderService.getUserMessageFolder(messageId, userId);
 
         if(userMessageFolder == null) {
             return new ResponseEntity<Object>(userMessageFolder, HttpStatus.FORBIDDEN);
@@ -151,7 +154,7 @@ public class RestMessageController {
 
         userMessageFolder.setFolderId(folderId);
 
-        userMessageFolderService.updateUserMessageFolder(messageId, userId, folderId);
+        this.userMessageFolderService.updateUserMessageFolder(messageId, userId, folderId);
 
         return new ResponseEntity<Object>(userMessageFolder, HttpStatus.OK);
     }

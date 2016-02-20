@@ -39,7 +39,7 @@ public class ApplicationController {
     @RequestMapping(method = RequestMethod.GET)
     public String listAction(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
 
-        
+        //TODO mbrycki not services, model -> repository?
         Integer userId = UserUtils.getUserId(request, response);
         logger.debug(userId);
 

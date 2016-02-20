@@ -7,7 +7,7 @@ import com.cloud.communicator.module.user.User;
 import com.cloud.communicator.module.user.service.UserService;
 
 import javax.inject.Inject;
-
+//TODO mbrycki broken SRP
 public class FolderFactory implements FolderAbstractFactory{
 
     @Inject

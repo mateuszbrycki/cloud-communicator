@@ -10,6 +10,7 @@ import com.cloud.communicator.module.user.service.UserService;
 import javax.inject.Inject;
 import java.util.Date;
 
+//TODO mbrycki broken SRP
 public class MessageFactory implements MessageAbstractFactory {
 
     @Inject

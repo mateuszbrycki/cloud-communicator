@@ -24,6 +24,7 @@ public class RestFoldersController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<List<Folder>> inboxList(HttpServletRequest request, HttpServletResponse response) {
 
+        //TODO mbrycki services?, model -> repository
         Integer userId = UserUtils.getUserId(request, response);
         List<Folder> folders = folderService.findUserFoldersByUserId(userId);
 

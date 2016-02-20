@@ -4,12 +4,10 @@ package com.cloud.communicator.module.folder;
 import com.cloud.communicator.module.folder.dto.FolderDTO;
 import com.cloud.communicator.module.folder.service.FolderService;
 import com.cloud.communicator.module.message.RestMessageController;
-import com.cloud.communicator.module.message.service.MessageService;
 import com.cloud.communicator.module.user.User;
 import com.cloud.communicator.module.user.service.UserService;
 import com.cloud.communicator.util.UserUtils;
 import org.apache.log4j.Logger;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
@@ -27,16 +25,10 @@ import java.util.Locale;
 public class RestFolderController {
 
     @Inject
-    private MessageSource messageSource;
-
-    @Inject
     private FolderService folderService;
 
     @Inject
     private UserService userService;
-
-    @Inject
-    private MessageService messageService;
 
     @Inject
     private FolderAbstractFactory folderFactory;
@@ -51,12 +43,11 @@ public class RestFolderController {
                                               Locale locale) {
 
         logger.debug(folderDTO);
-        String[] args = {};
 
         User owner = this.userService.findUserById(UserUtils.getUserId(request, response));
-        Folder folder = folderFactory.createFromDTO(folderDTO, owner);
+        Folder folder = this.folderFactory.createFromDTO(folderDTO, owner);
 
-        folderService.saveFolder(folder);
+        this.folderService.saveFolder(folder);
 
         return new ResponseEntity<Folder>(folder, HttpStatus.OK);
     }
@@ -67,7 +58,7 @@ public class RestFolderController {
                                             @PathVariable("folderId") Integer folderId) {
         Integer userId = UserUtils.getUserId(request, response);
 
-        Folder folder = folderService.findFolderById(folderId, userId);
+        Folder folder = this.folderService.findFolderById(folderId, userId);
 
         if(folder == null) {
             return new ResponseEntity<>(new Folder(), HttpStatus.FORBIDDEN);

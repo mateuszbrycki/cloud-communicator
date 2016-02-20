@@ -29,9 +29,6 @@ public class RestUserContactController {
     @Inject
     UserService userService;
 
-    @Inject
-    private MessageSource messageSource;
-
     private static final Logger logger = Logger.getLogger(RestUserContactController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
@@ -41,24 +38,33 @@ public class RestUserContactController {
 
         Integer userId = UserUtils.getUserId(request, response);
 
+        List<User> userContactList = this.prepareContactsInput(userContactDTO.getContacts());
+        User user = this.userService.findUserById(userId);
+
+        //TODO mbrycki command object
+        this.userContactService.addUsersToAddressBook(user, userContactList);
+
+        return new ResponseEntity<>(userContactService.findContactsByUserId(userId), HttpStatus.OK);
+    }
+
+    private List<User> prepareContactsInput(String contactsInput) {
         List<User> userContactList = new ArrayList<>();
 
-        for(String contactUser : userContactDTO.getContacts().split(" ")) {
+        for(String contactUser : contactsInput.split(" ")) {
 
             User contactObject;
             try {
-                contactObject = userService.findUserById(Integer.parseInt(contactUser));
+                contactObject = this.userService.findUserById(Integer.parseInt(contactUser));
             } catch(NumberFormatException e) {
-                contactObject = userService.findUserByUsername(contactUser);
+                contactObject = this.userService.findUserByUsername(contactUser);
             }
 
             if(contactObject != null) {
                 userContactList.add(contactObject);
             }
         }
-        userContactService.addUsersToAddressBook(userService.findUserById(userId), userContactList);
 
-        return new ResponseEntity<>(userContactService.findContactsByUserId(userId), HttpStatus.OK);
+        return userContactList;
     }
 
     @RequestMapping(value = UserContactUrls.Api.USER_CONTACT_DELETE_ID, method = RequestMethod.DELETE)
@@ -68,9 +74,8 @@ public class RestUserContactController {
 
         Integer userId = UserUtils.getUserId(request, response);
 
-        userContactService.deleteUserContact(userId, personInBookId);
-
-        return new ResponseEntity<>(userContactService.findContactsByUserId(userId), HttpStatus.OK);
+        this.userContactService.deleteUserContact(userId, personInBookId);
+        return new ResponseEntity<>(this.userContactService.findContactsByUserId(userId), HttpStatus.OK);
     }
 
 }
