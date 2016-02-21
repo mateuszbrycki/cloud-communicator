@@ -2,6 +2,7 @@ package com.cloud.communicator.config;
 
 import com.cloud.communicator.config.factory.FactoryConfig;
 import com.cloud.communicator.config.filter.SiteMeshFilter;
+import com.cloud.communicator.config.translator.TranslatorConfig;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
@@ -24,7 +25,7 @@ import java.util.Locale;
 @EnableWebMvc
 @Configuration
 @ComponentScan({"com.cloud.communicator"})
-@Import({ SecurityConfig.class, HibernateConfig.class, Pac4jConfig.class, FactoryConfig.class})
+@Import({ SecurityConfig.class, HibernateConfig.class, Pac4jConfig.class, FactoryConfig.class, TranslatorConfig.class})
 @PropertySource(value = { "classpath:application.properties" })
 public class AppConfig extends WebMvcConfigurerAdapter {
 

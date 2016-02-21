@@ -1,11 +1,15 @@
 package com.cloud.communicator.module.message;
 
 import com.cloud.communicator.module.message.dto.MessageDTO;
+import com.cloud.communicator.module.message.factory.DTOContext;
 import com.cloud.communicator.module.message.service.MessageReceiverService;
 import com.cloud.communicator.module.message.service.MessageService;
 import com.cloud.communicator.module.message.service.UserMessageFolderService;
 import com.cloud.communicator.module.user.User;
 import com.cloud.communicator.module.user.service.UserService;
+import com.cloud.communicator.translator.Translator;
+import com.cloud.communicator.translator.TranslatorFactory;
+import com.cloud.communicator.translator.context.AbstractContext;
 import com.cloud.communicator.util.UserUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
@@ -42,6 +46,9 @@ public class RestMessageController {
     @Inject
     private MessageAbstractFactory messageFactory;
 
+    @Inject
+    private TranslatorFactory translatorFactory;
+
     private static final Logger logger = Logger.getLogger(RestMessageController.class);
 
     private String[] args = {};
@@ -57,6 +64,12 @@ public class RestMessageController {
 
         User author = this.userService.findUserById(UserUtils.getUserId(request, response));
         Message message = this.messageFactory.createFromDTO(messageDTO, author);
+
+        /*
+            Translator<Message> translator = translatorFactory.getMessageTranslator();
+            AbstractContext<Message> context = new DTOContext(messageDTO, author);
+            Message message = translator.translate(context);
+         */
 
         String receiversField = messageDTO.getReceivers();
         List<User> receiversList = this.prepareReceiverList(receiversField);
